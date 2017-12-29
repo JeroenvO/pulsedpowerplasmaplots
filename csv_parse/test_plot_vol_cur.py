@@ -1,14 +1,21 @@
-import numpy as np
 import matplotlib.pyplot as plt
 from b_correct_lines import correct_lines
 from a_easyscope_parser import parse_file
 from scipy import integrate
 
+# file='../../20171227 glasstube, spectrometer, plasma/1/800v-full'
+# file='../../20171228 glasstube/1/500v-full'
+file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20171227 glasstube, spectrometer, plasma/1/950v-pulse.csv'
 
-file='../../20171227 glasstube, spectrometer, plasma/1/800v-full'
-# line_objs = parse_file(file='../../20171228 glasstube/1/500v-full')  # file to parse
 line_objs = parse_file(file)  # file to parse
-x_axis, y_axes = correct_lines(line_objs)
+
+offsets = [
+    {'val_div_correct': 1000},
+    {'v_shift': -16},
+    {},
+    {}
+]
+x_axis, y_axes = correct_lines(line_objs, offsets=offsets)
 y1 = y_axes[0]
 y2 = y_axes[1]
 
@@ -17,7 +24,7 @@ y3=integrate.cumtrapz(y1, x_axis, initial=0)*-50
 p = y1*y2
 fig, ax1 = plt.subplots()
 ax1.plot(x_axis, y1, 'b-')
-ax1.set_xlabel('time [ns]')
+ax1.set_xlabel('time [s]')
 # Make the y-axis label, ticks and tick labels match the line color.
 ax1.set_ylabel('current [A]', color='b')
 ax1.tick_params('y', colors='b')
@@ -31,14 +38,15 @@ ax2.tick_params('y', colors='r')
 # ax1.axis([2000,5000,-0.5,0.5])
 
 fig.tight_layout()
-
+ax1.axis('tight')
 
 fig, ax1 = plt.subplots()
-ax1.plot(x_axis, p, 'b-') # power
+ax1.plot(x_axis, p/1e3, 'b-', label='Power [kW]') # power
+fig.legend()
 fig.tight_layout()
 
 fig, ax1 = plt.subplots()
-ax1.plot(x_axis, integrate.cumtrapz(p, x_axis, initial=0), 'b-') # energy
+ax1.plot(x_axis, integrate.cumtrapz(p, x_axis, initial=0), 'b-', label='Energy [J]') # energy
 fig.tight_layout()
 
 plt.show()
