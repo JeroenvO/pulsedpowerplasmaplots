@@ -5,19 +5,19 @@ from scipy import integrate
 
 # file='../../20171227 glasstube, spectrometer, plasma/1/800v-full'
 # file='../../20171228 glasstube/1/500v-full'
-file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20171227 glasstube, spectrometer, plasma/1/950v-pulse.csv'
+file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20171229/scope/250.csv'
 
 line_objs = parse_file(file)  # file to parse
 
 offsets = [
-    {'val_div_correct': 1000},
     {'v_shift': -16},
-    {},
-    {}
+    {'val_div_correct': -100},
+    # {},
+    # {}
 ]
 x_axis, y_axes = correct_lines(line_objs, offsets=offsets)
-y1 = y_axes[0]
-y2 = y_axes[1]
+y1 = y_axes[1]
+y2 = y_axes[0]
 
 y3=integrate.cumtrapz(y1, x_axis, initial=0)*-50
 

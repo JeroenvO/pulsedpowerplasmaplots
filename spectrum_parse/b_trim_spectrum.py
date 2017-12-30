@@ -1,5 +1,5 @@
 #!/bin/python3
-from molina_absorbtion import absorbtions
+from spectrum_parse.molina_absorbtion import absorbtions
 import numpy as np
 
 # min and max values of spectrum
@@ -48,8 +48,5 @@ def trim_spectrum(freqs, vals):
     freqs_abso = np.extract(cond, freqs_abso)
     abso = np.extract(cond, abso)
     vals = [np.extract(cond, val) for val in vals]
-
-    # convert abso coeff to Mol/m3, it is 10^-20cm^2/molecule
-    abso *= 1e-24
 
     return [freqs_abso, abso, freqs_meas, vals]

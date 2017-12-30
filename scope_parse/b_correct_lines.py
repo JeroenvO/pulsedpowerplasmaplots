@@ -28,7 +28,7 @@ def correct_lines(line_objs, time_point = 1e-9, div_zero = 128.0, div_point = 25
             if 'val_div_correct' in offsets[i]: # sometimes val_div is not correctly exported. 'mili' tends to be ignored.
                 y /= offsets[i]['val_div_correct']
             if 'v_shift' in offsets[i]:  # vertical shift of n-elements to account for delay in probe/cables.
-                np.roll(y, offsets[i]['v_shift'])
+                y = np.roll(y, offsets[i]['v_shift'])
         y_axes.append(y)
 
     return [x_axis, y_axes]
