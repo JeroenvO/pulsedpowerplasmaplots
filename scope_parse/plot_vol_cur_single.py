@@ -1,24 +1,13 @@
 import matplotlib.pyplot as plt
-from b_correct_lines import correct_lines
-from a_easyscope_parser import parse_file
 from scipy import integrate
-
+from scope_parse.c_get_lines import get_vol_cur_single
 # file='../../20171227 glasstube, spectrometer, plasma/1/800v-full'
 # file='../../20171228 glasstube/1/500v-full'
 file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20171229/scope/250.csv'
 
-line_objs = parse_file(file)  # file to parse
-
-offsets = [
-    {'v_shift': -16},
-    {'val_div_correct': -100},
-    # {},
-    # {}
-]
-x_axis, y_axes = correct_lines(line_objs, offsets=offsets)
-y1 = y_axes[1]
-y2 = y_axes[0]
-
+x_axis, vol, cur = get_vol_cur_single(file)
+y1=vol
+y2=cur
 y3=integrate.cumtrapz(y1, x_axis, initial=0)*-50
 
 p = y1*y2
