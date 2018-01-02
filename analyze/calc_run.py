@@ -20,7 +20,8 @@ from analyze.spectrum_parse.c_concentration import ozone_concentration, ozone_pp
 # * log.txt
 # * spect/m00000.txt  with spectral data
 # * scope/000.csv with 000=used input voltage
-run_dir = "G:/Prive/MIJN-Documenten/TU/62-Stage/20171229"
+# run_dir = "G:/Prive/MIJN-Documenten/TU/62-Stage/20171229"
+run_dir = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/run1"
 spect_dir = '/spect'
 scope_dir = '/scope'
 log_file = 'log.xlsx'  # must be xlsx with at least [voltage, freq, v18,9ohm input, spectfile, Temp, airflow]

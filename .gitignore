@@ -1,4 +1,5 @@
 *.xls*
 *.txt
 *.csv
-.*
+.idea
+molina_absorbtion.py

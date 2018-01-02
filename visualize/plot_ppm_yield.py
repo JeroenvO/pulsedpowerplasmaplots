@@ -4,7 +4,8 @@ from visualize.helpers.helpers import load_pickle, get_values
 from visualize.helpers.colors import color_list
 import matplotlib.pylab as pl
 
-data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20171229/data.pkl")
+# data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20171229/data.pkl")
+data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/run1/data.pkl")
 
 
 y = get_values(data, 'input_yield_gkwh')
