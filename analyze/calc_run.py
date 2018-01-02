@@ -12,9 +12,9 @@ import pickle
 from openpyxl.reader.excel import load_workbook, Workbook
 from scipy import integrate
 import numpy as np
-from scope_parse.c_get_lines import get_vol_cur_single
-from scope_parse.d_calc import calc
-from spectrum_parse.c_concentration import ozone_concentration, ozone_ppm
+from analyze.scope_parse.c_get_lines import get_vol_cur_single
+from analyze.scope_parse.d_calc import calc
+from analyze.spectrum_parse.c_concentration import ozone_concentration, ozone_ppm
 
 # Folder with measuremtn. Folder has to contain:
 # * log.txt
@@ -106,8 +106,8 @@ for row in sheet.iter_rows(min_row=2):
         'output_energy': output_e,
 
         # o3 generation efficiency
-        'input_eff_gj': o3f/P,          # efficiency in gram/Joule
-        'input_eff_gkwh': o3f/Pk,       # efficiency in gram/kWh
+        'input_yield_gj': o3f/P,          # efficiency in gram/Joule
+        'input_yield_gkwh': o3f/Pk,       # efficiency in gram/kWh
 
     }
     try:
@@ -123,21 +123,36 @@ with open(run_dir+'/data.pkl', 'wb') as f:
     pickle.dump(data, f, )
 
 
-
+# save xlsx
 wb = Workbook()
 ws = wb.active
 ws.title = "data"
-# make header row:
-ws.append(list(data[5].keys()))
-# fill data
+# make header row. row 5 probably contains all headers, since the first few will miss some as they are reference lines.
+keys = []
+for key, value in data[4].items():
+    # don't save arrays of values, it is too much information
+    try:
+        value = float(value)
+        if not np.isfinite(value):  # replace inf and -inf with 0
+            value = 0
+    except:
+        # skip columns with arrays as value.
+        continue
+    keys.append(key)
+ws.append(keys)
+
+# fill data for all keys
 for meas in data:
     row = []
-    for value in meas.values():
-        # don't save arrays of values, it is too much information
+    for key in keys:
         try:
-            value = float(value)
+            value = meas[key]
+            if not np.isfinite(value):  # replace inf and -inf with 0
+                value = 0
         except:
-            value = '<array>'
+            value = 0
         row.append(value)
     ws.append(row)
 wb.save(filename = run_dir+'/data.xlsx')
+
+print("finished writing")

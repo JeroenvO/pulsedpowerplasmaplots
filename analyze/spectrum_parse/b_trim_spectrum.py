@@ -1,5 +1,5 @@
 #!/bin/python3
-from spectrum_parse.molina_absorbtion import absorbtions
+from analyze.spectrum_parse.molina_absorbtion import absorbtions
 import numpy as np
 
 # min and max values of spectrum

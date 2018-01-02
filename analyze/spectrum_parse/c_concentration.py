@@ -17,13 +17,14 @@ Lambert-Beer law: ln(I(lambda)/I0(lambda)) = C03 * eps(lambda) *d
 Jeroen van Oorschot 2017-2018, Eindhoven University of Technology
 jeroen@jjvanoorschot.nl
 """
-from spectrum_parse.a_spectrasuite_parser import parse_file
-from spectrum_parse.b_trim_spectrum import trim_spectrum
+from analyze.spectrum_parse.a_spectrasuite_parser import parse_file
+from analyze.spectrum_parse.b_trim_spectrum import trim_spectrum
 import numpy as np
 
 def ozone_concentration(path_name = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20171229/spect',
                         opt_path=0.03,
-                        plot=False):
+                        plot_spect=False,
+                        plot_result=False):
     # read the file
     freqs, vals = parse_file(path_name=path_name, start_index=0)
     # align the spectrum with the molina absorbtion rates, and trim it to an fmin/fmax
@@ -38,7 +39,7 @@ def ozone_concentration(path_name = 'G:/Prive/MIJN-Documenten/TU/62-Stage/201712
     Na = 6.02214e23  # avagadro constant
     results = [-np.log(val/vals[0])/(opt_path * abso * Na) for val in vals]
     results_mean = [np.mean(result) for result in results]
-    if plot:
+    if plot_result:
         # validate the stability of the values over frequency.
         import matplotlib.pyplot as plt
         for i,r in enumerate(results):
@@ -46,8 +47,23 @@ def ozone_concentration(path_name = 'G:/Prive/MIJN-Documenten/TU/62-Stage/201712
     #        plt.axhline(results_mean[i])
 
         plt.legend()
-        plt.ylabel('O3 [molecules/m3]')
+        plt.ylabel('O3 [Mol/m3]')
         plt.xlabel('wavelength [nm]')
+        plt.show()
+    if plot_spect:
+        # check the spectrum
+        import matplotlib.pyplot as plt
+        markers = [',', '+', '.', 'o', '*','v','>','<']
+        for i,v in enumerate(vals[1:]):
+            plt.plot(freqs_meas, v, label=i, linewidth=0.5, marker=markers[i], markersize=1)
+
+        plt.legend(('09:23','09:40','09:55','10:26'))
+        plt.title('Since 9:19')
+        plt.ylabel('amplitude')
+        plt.xlabel('wavelength [nm]')
+        plt.savefig('lamp_warming.eps', bbox_inches='tight')
+        plt.savefig('lamp_warming.png', bbox_inches='tight')
+        plt.savefig('lamp_warming.pdf', bbox_inches='tight')
         plt.show()
 
     return results_mean

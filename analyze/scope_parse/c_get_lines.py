@@ -1,11 +1,11 @@
 try:
     from b_correct_lines import correct_lines
 except ImportError:
-    from scope_parse.b_correct_lines import correct_lines
+    from analyze.scope_parse.b_correct_lines import correct_lines
 try:
     from a_easyscope_parser import parse_file
 except ImportError:
-    from scope_parse.a_easyscope_parser import parse_file
+    from analyze.scope_parse.a_easyscope_parser import parse_file
     
 import os
 
@@ -18,7 +18,7 @@ def get_vol_cur_single(file):
     """
     line_objs = parse_file(file)  # file to parse
     offsets = [
-        {'v_shift': -16},
+        {'v_shift': 0},  # -16 works fine for exact match of waveforms
         {'val_div_correct': -100},
         # {},
         # {}
