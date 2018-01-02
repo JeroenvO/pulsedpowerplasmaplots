@@ -29,7 +29,7 @@ def get_vol_cur_single(file):
 
     return [time_axis, v, i]
 
-def get_vol_cur(path):
+def get_vol_cur_dir(path):
     """
     Get list of [[time, vol, cur], .. ] for each file in 'path'
 
