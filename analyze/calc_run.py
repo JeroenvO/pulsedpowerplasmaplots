@@ -27,18 +27,21 @@ from analyze.spectrum_parse.c_concentration import ozone_concentration, ozone_pp
 # * spect/m00000.txt  with spectral data
 # * scope/000.csv with 000=used input voltage
 # run_dir = "G:/Prive/MIJN-Documenten/TU/62-Stage/20171229"
-run_dir = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/run3-800v-width"
+run_dir = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180103/run2-1us"
 spect_dir = '/spect'
 scope_dir = '/scope'
 log_file = 'log.xlsx'  # must be xlsx with at least [voltage, freq, v18,9ohm input, spectfile, Temp, airflow]
-scope_file_name_index = 2  # which column of log.xlsx contains the filename for scope. 0=volt, 1=freq, 2=pulsew
+scope_file_name_index = 0  # which column of log.xlsx contains the filename for scope. 0=volt, 1=freq, 2=pulsew
+long_meas = 0.111
+short_meas = 0.03
+meas = short_meas
 
 ######################
 # script starts here #
 ######################
 
 # Get ozone concentrations:
-all_ozone = ozone_concentration(path_name=run_dir+spect_dir)
+all_ozone = ozone_concentration(path_name=run_dir+spect_dir, opt_path=meas)
 all_ppm = ozone_ppm(all_ozone)
 
 # assuming format: voltage, freq, voltage on 18,9ohm input, meting spect, Temp, airflow

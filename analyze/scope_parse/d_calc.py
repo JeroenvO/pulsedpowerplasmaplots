@@ -110,6 +110,8 @@ def calc(line):
         'e': e,
         'p_rise': p_rise,
         'e_rise': e_rise,
+        'start': t[settling_start],
+        'end': t[end_pulse],
         # 'test': i_time_settling
     }
     return data
