@@ -1,6 +1,6 @@
 import pickle
-import functools
-import operator
+
+markers = ['+', 'o', '*','v','x','d','>','<', ',', '.']
 
 def load_pickle(file):
     with open(file, 'rb') as f:

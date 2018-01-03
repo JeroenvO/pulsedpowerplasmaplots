@@ -1,7 +1,13 @@
 """
+Convert all output of a measurement to a pickle and xlsx file. These files can be used for plotting data.
+
 Parse log excel file
 Get ozone concentration
 Get scope plots
+
+Ocean optics HR2000 -> SpectraSuite -> CSV -> spectrum_parse.{a,b,c} ↴
+LeCroy WaveAce 224 -> EasyScope 	-> CSV -> scope_parse.{a,b,c,d}  ↴
+Manual written log 					-> XLSX -> calc_run.py			-|-> data.pkl & data.xlsx
 
 Make list of dicts. Each dict is one measurement and contains all relevant input and output values.
 Jeroen van Oorschot 2017-2018, Eindhoven University of Technology
@@ -9,9 +15,9 @@ jeroen@jjvanoorschot.nl
 """
 import pickle
 
-from openpyxl.reader.excel import load_workbook, Workbook
-from scipy import integrate
 import numpy as np
+from openpyxl.reader.excel import load_workbook, Workbook
+
 from analyze.scope_parse.c_get_lines import get_vol_cur_single
 from analyze.scope_parse.d_calc import calc
 from analyze.spectrum_parse.c_concentration import ozone_concentration, ozone_ppm
@@ -21,11 +27,11 @@ from analyze.spectrum_parse.c_concentration import ozone_concentration, ozone_pp
 # * spect/m00000.txt  with spectral data
 # * scope/000.csv with 000=used input voltage
 # run_dir = "G:/Prive/MIJN-Documenten/TU/62-Stage/20171229"
-run_dir = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/run1"
+run_dir = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/run3-800v-width"
 spect_dir = '/spect'
 scope_dir = '/scope'
 log_file = 'log.xlsx'  # must be xlsx with at least [voltage, freq, v18,9ohm input, spectfile, Temp, airflow]
-scope_file_name_index = 0  # which column of log.xlsx contains the filename for scope. 0=volt, 1=freq, 2=pulsew
+scope_file_name_index = 2  # which column of log.xlsx contains the filename for scope. 0=volt, 1=freq, 2=pulsew
 
 ######################
 # script starts here #
@@ -73,10 +79,8 @@ for row in sheet.iter_rows(min_row=2):
     try:
         line = get_vol_cur_single(run_dir+scope_dir+'/'+str(data_row[scope_file_name_index])+'.csv')
         output_time, output_v, output_i = line
-        output_p = output_i * output_v
-        output_e = integrate.cumtrapz(output_p, output_time, initial=0)
     except IOError:
-        output_time = output_v = output_i = output_p = output_e = 0
+        output_time = output_v = output_i = 0
         line = None
 
     dic = {
@@ -103,8 +107,6 @@ for row in sheet.iter_rows(min_row=2):
         'output_time': output_time,
         'output_voltage': output_v,
         'output_current': output_i,
-        'output_power': output_p,
-        'output_energy': output_e,
 
         # o3 generation efficiency
         'input_yield_gj': o3f/P,          # efficiency in gram/Joule

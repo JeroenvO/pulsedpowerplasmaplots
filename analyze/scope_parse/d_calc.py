@@ -94,7 +94,8 @@ def calc(line):
     p = v*c
     e = integrate.cumtrapz(p, t, initial=0)
     p_rise = p[settling_start:pulse_stable]
-    e_rise = e[settling_start:pulse_stable]
+    e_rise = e[settling_start:pulse_stable][-1]
+
     data = {
         'i_min': i_min,
         'i_max': i_max,
@@ -109,7 +110,7 @@ def calc(line):
         'e': e,
         'p_rise': p_rise,
         'e_rise': e_rise,
-        'test': i_time_settling
+        # 'test': i_time_settling
     }
     return data
 #
