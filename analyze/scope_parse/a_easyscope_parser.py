@@ -54,7 +54,7 @@ def parse_file(file = 'ceramic-700v-measure.csv', prepend_length = 4, append_len
             vars = line[-append_lenght:]
             if not vars[4] == 'Trig\'d\r\n':
                 print("Warning: scope was not triggered!")
-            t_div = to_nr(vars[0])
+            t_div = vars[0].strip()
             t_shift = to_nr(vars[1])
             val_div = to_nr(vars[2])
             line_objs.append({

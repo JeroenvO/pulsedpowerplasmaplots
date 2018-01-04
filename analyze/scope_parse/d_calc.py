@@ -116,10 +116,10 @@ def calc(line):
     }
     return data
 #
-# #test_calc
-# from scope_parse.c_get_lines import get_vol_cur_single
-# import matplotlib.pyplot as plt
-#
-# file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20171229/scope/250.csv'
-# line = get_vol_cur_single(file)
-# vals = calc(line)
+#test_calc
+from analyze.scope_parse.c_get_lines import get_vol_cur_single
+import matplotlib.pyplot as plt
+
+file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-100hz/run10-40us/scope/600.csv'
+line = get_vol_cur_single(file)
+vals = calc(line)

@@ -1,14 +1,16 @@
 import matplotlib.pyplot as plt
 from scipy import integrate
 from analyze.scope_parse.c_get_lines import get_vol_cur_single
+from visualize.helpers.helpers import save_file
+
 # file='../../20171227 glasstube, spectrometer, plasma/1/800v-full'
 # file='../../20171228 glasstube/1/500v-full'
-file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180103/run2-1us/scope/750.csv'
+file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-100hz/run10-40us/scope/950.csv'
 
 x_axis, vol, cur = get_vol_cur_single(file)
-y1=vol
-y2=cur
-y3=integrate.cumtrapz(y1, x_axis, initial=0)*-50
+y1=cur
+y2=vol
+# y3=integrate.cumtrapz(y1, x_axis, initial=0)*-50
 
 p = y1*y2
 fig, ax1 = plt.subplots()
@@ -23,6 +25,7 @@ ax2.plot(x_axis, y2, 'r-') # voltage
 # ax2.plot(x_axis, y3, 'g-') # integrated current
 ax2.set_ylabel('voltage [V]', color='r')
 ax2.tick_params('y', colors='r')
+plt.title('V and I for 05us, 15kV pulse')
 plt.show()
 # ax2.axis([2000,5000,-9000,9000])
 # ax1.axis([2000,5000,-0.5,0.5])
@@ -40,4 +43,5 @@ plt.show()
 #
 
 plt.show()
+# save_file(fig, name='')
 print('finish')

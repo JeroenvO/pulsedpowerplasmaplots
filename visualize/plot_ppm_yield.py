@@ -66,5 +66,5 @@ for iv in vs:
     x = get_values(d, 'o3_ppm')
     plt.plot(x,y, linewidth=0.2, c='black')
 ax.grid(True)
-save_file(fig)
+save_file(fig, name='ppm_yield')
 plt.show()

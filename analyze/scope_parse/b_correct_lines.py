@@ -1,6 +1,6 @@
 import numpy as np
 
-def correct_lines(line_objs, time_point = 1e-9, div_zero = 128.0, div_point = 25, offsets=[]):
+def correct_lines(line_objs, div_zero = 128.0, offsets=[]):
     """
     correct and scale scope lines from easyscope parser. Assumes all lines have 0 v_offset (which is point 128)
     Scope is 8-bit, so 256 datapoints. Center is at 128. 25 points/div so little more than 5divs vertical.
@@ -15,7 +15,21 @@ def correct_lines(line_objs, time_point = 1e-9, div_zero = 128.0, div_point = 25
 
     line_length = line_objs[0]['line_length']  # lenght of time axis.
     t_shift = line_objs[0]['t_shift']  # trigger point
-    n_lines = len(line_objs)-1
+    t_div = line_objs[0]['t_div']
+    div_point = 25 # vertical
+    if t_div == '25000000':
+        sample_rate = 1e9
+    elif t_div == '1.000000uu':
+        assert line_length == 6000
+        sample_rate = 5e8
+    elif t_div == '2.5000000u':
+        assert line_length == 7500
+        sample_rate = 2.5e8
+    elif t_div == '5.000000u':
+        assert line_length == 3000
+        sample_rate = 5e7
+    time_point = 1/sample_rate
+    n_lines = len(line_objs)-1  # usually 2; current and voltage.
 
     # make x-axis
     x_axis = np.linspace(-line_length / 2, line_length / 2, line_length) * time_point + t_shift

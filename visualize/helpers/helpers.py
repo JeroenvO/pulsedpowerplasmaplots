@@ -1,5 +1,7 @@
-import pickle
 import os
+import pickle
+
+import numpy as np
 
 markers = ['+', 'o', '*','v','x','d','>','<', ',', '.']
 
@@ -8,7 +10,17 @@ def load_pickle(file):
         return pickle.load(f)
 
 def get_values(dicts, key):
-    return [d[key] if key in d else 0 for d in dicts]
+    """
+    Get all values from a list of dicts with a given key
+    stop if list is empty or zero
+
+    :param dicts: the list of dicts to search
+    :param key: the key to search each dict for
+    :return: list of values
+    """
+    a = np.array([d[key] if key in d else 0 for d in dicts])
+    assert any(a)
+    return a
 
 def load_pickles(dir, filename='data.pkl'):
     """

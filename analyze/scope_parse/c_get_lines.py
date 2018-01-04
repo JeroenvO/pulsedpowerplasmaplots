@@ -19,7 +19,7 @@ def get_vol_cur_single(file):
     line_objs = parse_file(file)  # file to parse
     offsets = [
         {'v_shift': 0},  # -16 works fine for exact match of waveforms
-        {'val_div_correct': -0.100},
+        {'val_div_correct': -100},
         # {},
         # {}
     ]
