@@ -17,17 +17,19 @@ def correct_lines(line_objs, div_zero = 128.0, offsets=[]):
     t_shift = line_objs[0]['t_shift']  # trigger point
     t_div = line_objs[0]['t_div']
     div_point = 25 # vertical
-    if t_div == '25000000':
-        sample_rate = 1e9
-    elif t_div == '1.000000uu':
+    if t_div == '1.000000u':
         assert line_length == 6000
         sample_rate = 5e8
-    elif t_div == '2.5000000u':
+    elif t_div == '2.500000u':
         assert line_length == 7500
         sample_rate = 2.5e8
     elif t_div == '5.000000u':
         assert line_length == 3000
         sample_rate = 5e7
+    else:
+        assert float(t_div)  # default, maximum sample rate of 1GSa
+        sample_rate = 1e9
+
     time_point = 1/sample_rate
     n_lines = len(line_objs)-1  # usually 2; current and voltage.
 

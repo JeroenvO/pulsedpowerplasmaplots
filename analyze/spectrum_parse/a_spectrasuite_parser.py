@@ -1,5 +1,7 @@
 import csv
+
 import numpy as np
+
 
 def parse_file(path_name, base_name='m', padding_digits=5, extension='txt', start_index=0):
     """
@@ -45,5 +47,5 @@ def parse_file(path_name, base_name='m', padding_digits=5, extension='txt', star
             break
         file_counter += 1
     print('Parsed '+str(file_counter)+' files (including reference).')
-    
+    assert freqs, "ERROR! No spectra files found. Please check dir: "+path_name
     return [np.array(freqs), vals]

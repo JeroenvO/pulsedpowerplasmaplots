@@ -36,6 +36,8 @@ def match_molina(freqs):
 
 
 def trim_spectrum(freqs, vals):
+    assert any(freqs)
+    assert any(vals)
     # prune_spectrum to match it up with the molina data
     indices = match_molina(freqs)  # indices of freqs-array that are usable for the script.
     vals = [np.take(val, indices) for val in vals]  # prune vals same as freqs.

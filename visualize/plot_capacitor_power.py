@@ -1,5 +1,5 @@
 from analyze.scope_parse.c_get_lines import get_vol_cur_single
-from analyze.scope_parse.d_calc import calc
+from analyze.scope_parse.d_calc import calc_output
 import matplotlib.pyplot as plt
 from scipy import integrate
 from matplotlib.pyplot import plot as pl
@@ -14,7 +14,7 @@ v_out = v_in*15
 p_in = i_in * v_in
 f = 1000
 e_in_pulse = p_in/f
-output = calc(line)
+output = calc_output(line)
 p_out = v*i
 e_cap_expected = 0.5*c*output['v_pulse']**2
 e_cap_output = output['e_rise'][-1]

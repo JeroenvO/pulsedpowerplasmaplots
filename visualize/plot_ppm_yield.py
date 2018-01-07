@@ -12,15 +12,18 @@ from visualize.helpers.helpers import load_pickles, load_pickle, get_values, sav
 # data += load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/run3-800v-width/data.pkl")
 
 # very good measurements with different voltages and pulsewidths
-data = load_pickles('G:/Prive/MIJN-Documenten/TU/62-Stage/20180103')
+# data = load_pickles('G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz')
+
+data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run1-1us/data.pkl")
+data += load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run2-1us-q/data.pkl")
 
 # filter all values above 700v input, because below that is no plasma
 data = [d for d in data if d['input_yield_gkwh']>2]
 
-y = get_values(data, 'input_yield_gkwh')
+y = get_values(data, 'output_yield_gkwh')
 x = get_values(data, 'o3_ppm')
-v = get_values(data, 'input_voltage_output')
-w = get_values(data, 'pulse_duration')
+v = get_values(data, 'input_v_output')
+w = get_values(data, 'input_l')
 
 assert len(y) == len(x) == len(v)
 
@@ -39,7 +42,7 @@ for ix, iy, iw, iv in zip(x, y, w, v):
 
 plt.xlabel('Concentration [PPM]')
 plt.ylabel('Yield [g/kWh]')
-plt.title('Concentration vs Yield (1kHz, 2ls/min, 26$\mu$H)')
+plt.title('Concentration vs Yield (100Hz-1kHz, 2ls/min, 26$\mu$H)')
 
 # legend for pulsewidth, colors
 marker_legends = []
@@ -60,11 +63,11 @@ for i, iv in enumerate(vs):
 lgd2 = plt.legend(handles=marker_legends, loc='lower center')
 
 # connect voltages with lines
-for iv in vs:
-    d = [d for d in data if d['input_voltage_output'] == iv]
-    y = get_values(d, 'input_yield_gkwh')
-    x = get_values(d, 'o3_ppm')
-    plt.plot(x,y, linewidth=0.2, c='black')
+# for iv in vs:
+#     d = [d for d in data if d['input_v_output'] == iv]
+#     y = get_values(d, 'input_yield_gkwh')
+#     x = get_values(d, 'o3_ppm')
+#     plt.plot(x,y, linewidth=0.2, c='black')
 ax.grid(True)
-save_file(fig, name='ppm_yield')
+save_file(fig, name='ppm_yield_freq')
 plt.show()

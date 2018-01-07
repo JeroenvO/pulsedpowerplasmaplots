@@ -43,11 +43,14 @@ def find_longest_ranges(range, howmany):
     else:
         return range[-1]
 
-def calc(line):
+def calc_output(line, react_cap, gen_res_high = 225, gen_res_low = 50):
     """
     Calc all kinds of properties for a line. The line should be an list of arrays.
 
     :param line: list of arrays: [time, voltage, current]
+    :param react_cap: capacitance of used reactor. Used to calculated capacitance loss
+    :param gen_res_high: Series resistance of generator on on-switch. Used to calculated resistive loss
+    :param gen_res_low: Series resistance of generator on off-switch. Used to calculated resistive loss
     :return: dict with properties of the line.
     """
     # unpack
@@ -67,14 +70,20 @@ def calc(line):
     # Find the settling time of the current. Than use the time where the current is stable
     # to calculate the final pulse voltage. This pulse final voltage is then used to calculate
     # the settling time and risetime of the voltage.
-    i_time_settling_options = [abs(x)<0.05*i_max for x in c[0:cur_valley_time]]  # all parts of current inside 10% of maximum, till end of pulse
+    i_time_settling_options = [abs(x)<0.1*i_max for x in c[0:cur_valley_time]]  # all parts of current inside 10% of maximum, till end of pulse
     ranges = count_ranges(i_time_settling_options)
     range_before, range_pulse = find_longest_ranges(ranges, 2)  # [end, length]
     end_pulse = range_pulse[0]
     i_time_settling = range_pulse[0]-range_pulse[1]
     v_pulse = np.mean(v[i_time_settling:end_pulse])  # average of voltage during pulse when current is < 5% of max current
-    v_time_settling_options = [abs(x-v_pulse) < (0.1 * v_pulse) for x in v]  # all parts of current inside 10% of maximum, till end of pulse
+    # all parts of current inside 10% of maximum, till end of pulse
+    v_time_settling_options = [abs(x-v_pulse) < (0.1 * v_pulse) for x in v]
     ranges = count_ranges(v_time_settling_options)
+    if ranges == []:  # if too much oscillations, a range cannot be found. Increase the bounds:
+        # all parts of current inside 10% of maximum, till end of pulse
+        v_time_settling_options = [abs(x - v_pulse) < (0.3 * v_pulse) for x in v]
+        ranges = count_ranges(v_time_settling_options)
+    assert ranges != [], "Error! Line is too unstable."
     pulse = find_longest_ranges(ranges, 1)  # pulse=[end,length]
     settling_end = pulse[0]-pulse[1]
     t_settling_end = t[settling_end]
@@ -89,13 +98,18 @@ def calc(line):
     t_rise = t_rise_end - t_rise_start
     rise_rate = (v90-v10)/(t_rise)
     v_overshoot = v_max/v_pulse
-    pulse_stable = int((settling_end + end_pulse) /2)# point where the pulse is very stable
+    pulse_stable = int((settling_end + end_pulse) /2)  # point where the pulse is very stable
     # energy
-    p = v*c
+    p = v*c  # for this to be correct, make sure lines are aligned in b_correct_lines using offset 'v_div'
     e = integrate.cumtrapz(p, t, initial=0)
     p_rise = p[settling_start:pulse_stable]
     e_rise = e[settling_start:pulse_stable][-1]
+    p_res = np.append(c[0:pulse_stable]**2*gen_res_high, c[pulse_stable:]**2*gen_res_low)
+    e_cap = 1/2 * react_cap * v_pulse**2  # 1/2*C*V^2 is energy stored in capacitor, which is lost after discharging pulse.
+    e_res = integrate.cumtrapz(p_res, t, initial=0)
+    e_plasma = e_rise-e_cap  # energy to plasma is energy in positive pulse except charge on capacitor.
 
+    # all these values are added to the pickle and xlsx with 'output_' prepend in calc_run.py
     data = {
         'i_min': i_min,
         'i_max': i_max,
@@ -110,16 +124,22 @@ def calc(line):
         'e': e,
         'p_rise': p_rise,
         'e_rise': e_rise,
+
+        'p_res': p_res,
+        'e_res': e_res,
+        'e_cap': e_cap,
+        'e_plasma': e_plasma,
+
         'start': t[settling_start],
         'end': t[end_pulse],
         # 'test': i_time_settling
     }
     return data
+# #
+# #test_calc
+# from analyze.scope_parse.c_get_lines import get_vol_cur_single
+# import matplotlib.pyplot as plt
 #
-#test_calc
-from analyze.scope_parse.c_get_lines import get_vol_cur_single
-import matplotlib.pyplot as plt
-
-file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-100hz/run10-40us/scope/600.csv'
-line = get_vol_cur_single(file)
-vals = calc(line)
+# file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-100hz/run2-1us/scope/600.csv'
+# line = get_vol_cur_single(file)
+# vals = calc_output(line)
