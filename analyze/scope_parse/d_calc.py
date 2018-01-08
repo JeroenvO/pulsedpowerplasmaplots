@@ -21,7 +21,7 @@ def count_ranges(a):
         if v == 1:  # same as previous value
             count += 1
         else:
-            if count>1:
+            if count > 1:
                 ranges.append([i, count])  # [end, length]
             count = 0
     return ranges
@@ -38,12 +38,13 @@ def find_longest_ranges(range, howmany):
     range.sort(key=lambda x: x[1])  # sort by length
     if howmany > 1:
         range = range[-howmany:]  # get last few
-        range.sort(key=lambda x: x[0]) # sorted by starttime
+        range.sort(key=lambda x: x[0])  # sorted by starttime
         return range
     else:
         return range[-1]
 
-def calc_output(line, react_cap, gen_res_high = 225, gen_res_low = 50):
+
+def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
     """
     Calc all kinds of properties for a line. The line should be an list of arrays.
 
@@ -55,13 +56,13 @@ def calc_output(line, react_cap, gen_res_high = 225, gen_res_low = 50):
     """
     # unpack
     t, v, c = line
-    t_diff = t[1]-t[0]
+    t_diff = t[1] - t[0]
     # assert t_diff == 1e-9  # time scale should be 1ns.
     # values based on current measurment. Assuming voltage waveform is aligned.
     cur_peak_time = c.argmax()
     cur_valley_time = c.argmin()
     i_max = max(c)
-    assert c[cur_peak_time ] == i_max
+    assert c[cur_peak_time] == i_max
     i_min = min(c)
     assert c[cur_valley_time] == i_min
 
@@ -70,14 +71,16 @@ def calc_output(line, react_cap, gen_res_high = 225, gen_res_low = 50):
     # Find the settling time of the current. Than use the time where the current is stable
     # to calculate the final pulse voltage. This pulse final voltage is then used to calculate
     # the settling time and risetime of the voltage.
-    i_time_settling_options = [abs(x)<0.1*i_max for x in c[0:cur_valley_time]]  # all parts of current inside 10% of maximum, till end of pulse
+    i_time_settling_options = [abs(x) < 0.1 * i_max for x in
+                               c[0:cur_valley_time]]  # all parts of current inside 10% of maximum, till end of pulse
     ranges = count_ranges(i_time_settling_options)
     range_before, range_pulse = find_longest_ranges(ranges, 2)  # [end, length]
     end_pulse = range_pulse[0]
-    i_time_settling = range_pulse[0]-range_pulse[1]
-    v_pulse = np.mean(v[i_time_settling:end_pulse])  # average of voltage during pulse when current is < 5% of max current
+    i_time_settling = range_pulse[0] - range_pulse[1]
+    v_pulse = np.mean(
+        v[i_time_settling:end_pulse])  # average of voltage during pulse when current is < 5% of max current
     # all parts of current inside 10% of maximum, till end of pulse
-    v_time_settling_options = [abs(x-v_pulse) < (0.1 * v_pulse) for x in v]
+    v_time_settling_options = [abs(x - v_pulse) < (0.1 * v_pulse) for x in v]
     ranges = count_ranges(v_time_settling_options)
     if ranges == []:  # if too much oscillations, a range cannot be found. Increase the bounds:
         # all parts of current inside 10% of maximum, till end of pulse
@@ -85,29 +88,30 @@ def calc_output(line, react_cap, gen_res_high = 225, gen_res_low = 50):
         ranges = count_ranges(v_time_settling_options)
     assert ranges != [], "Error! Line is too unstable."
     pulse = find_longest_ranges(ranges, 1)  # pulse=[end,length]
-    settling_end = pulse[0]-pulse[1]
+    settling_end = pulse[0] - pulse[1]
     t_settling_end = t[settling_end]
-    v05 = 0.05*v_pulse
+    v05 = 0.05 * v_pulse
     settling_start = np.where(v > v05)[0][0]
-    t_settling_start = t[settling_start] # when v first rises above 0.05 of final
+    t_settling_start = t[settling_start]  # when v first rises above 0.05 of final
     t_settling = t_settling_end - t_settling_start
-    v10 = 0.1*v_pulse
-    v90 = 0.9*v_pulse
-    t_rise_start = t[np.where(v>v10)[0][0]]
-    t_rise_end = t[np.where(v>v90)[0][0]]
+    v10 = 0.1 * v_pulse
+    v90 = 0.9 * v_pulse
+    t_rise_start = t[np.where(v > v10)[0][0]]
+    t_rise_end = t[np.where(v > v90)[0][0]]
     t_rise = t_rise_end - t_rise_start
-    rise_rate = (v90-v10)/(t_rise)
-    v_overshoot = v_max/v_pulse
-    pulse_stable = int((settling_end + end_pulse) /2)  # point where the pulse is very stable
+    rise_rate = (v90 - v10) / (t_rise)
+    v_overshoot = v_max / v_pulse
+    pulse_stable = int((settling_end + end_pulse) / 2)  # point where the pulse is very stable
     # energy
-    p = v*c  # for this to be correct, make sure lines are aligned in b_correct_lines using offset 'v_div'
+    p = v * c  # for this to be correct, make sure lines are aligned in b_correct_lines using offset 'v_div'
     e = integrate.cumtrapz(p, t, initial=0)
     p_rise = p[settling_start:pulse_stable]
     e_rise = e[settling_start:pulse_stable][-1]
-    p_res = np.append(c[0:pulse_stable]**2*gen_res_high, c[pulse_stable:]**2*gen_res_low)
-    e_cap = 1/2 * react_cap * v_pulse**2  # 1/2*C*V^2 is energy stored in capacitor, which is lost after discharging pulse.
+    p_res = np.append(c[0:pulse_stable] ** 2 * gen_res_high, c[pulse_stable:] ** 2 * gen_res_low)
+    # 1/2*C*V^2 is energy stored in capacitor, which is lost after discharging pulse.
+    e_cap = 1 / 2 * react_cap * v_pulse ** 2
     e_res = integrate.cumtrapz(p_res, t, initial=0)
-    e_plasma = e_rise-e_cap  # energy to plasma is energy in positive pulse except charge on capacitor.
+    e_plasma = e_rise - e_cap  # energy to plasma is energy in positive pulse except charge on capacitor.
 
     # all these values are added to the pickle and xlsx with 'output_' prepend in calc_run.py
     data = {

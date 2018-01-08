@@ -14,9 +14,10 @@ def match_molina(freqs):
     
     :param freqs: array with too much frequencies
     :return: freqs filtered list
-    """    
-    def find_nearest(array,value):
-        idx = (np.abs(array-value)).argmin()
+    """
+
+    def find_nearest(array, value):
+        idx = (np.abs(array - value)).argmin()
         return idx
 
     # validation of input data. Spectrum should be higher reso than Molina
@@ -45,7 +46,7 @@ def trim_spectrum(freqs, vals):
     freqs_abso, abso = np.array(absorbtions).T  # transpose of molina absorbtions gives absorbtions values array.
 
     # trim data based on fmin and fmax
-    cond = (fmin<=freqs_abso) & (freqs_abso<=fmax)
+    cond = (fmin <= freqs_abso) & (freqs_abso <= fmax)
     freqs_meas = np.extract(cond, freqs_meas)
     freqs_abso = np.extract(cond, freqs_abso)
     abso = np.extract(cond, abso)

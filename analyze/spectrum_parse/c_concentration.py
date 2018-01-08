@@ -21,7 +21,8 @@ from analyze.spectrum_parse.a_spectrasuite_parser import parse_file
 from analyze.spectrum_parse.b_trim_spectrum import trim_spectrum
 import numpy as np
 
-def ozone_concentration(path_name = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20171229/spect',
+
+def ozone_concentration(path_name='G:/Prive/MIJN-Documenten/TU/62-Stage/20171229/spect',
                         opt_path=0.03,
                         plot_spect=False,
                         plot_result=False):
@@ -37,14 +38,14 @@ def ozone_concentration(path_name = 'G:/Prive/MIJN-Documenten/TU/62-Stage/201712
     # divide each array of values (= one measurement) by the reference (=vals[0])
     # and calculate ozone concentration in Moles.
     Na = 6.02214e23  # avagadro constant
-    results = [-np.log(val/vals[0])/(opt_path * abso * Na) for val in vals]
+    results = [-np.log(val / vals[0]) / (opt_path * abso * Na) for val in vals]
     results_mean = [np.mean(result) for result in results]
     if plot_result:
         # validate the stability of the values over frequency.
         import matplotlib.pyplot as plt
-        for i,r in enumerate(results):
+        for i, r in enumerate(results):
             plt.plot(freqs_meas, r, label=i)
-    #        plt.axhline(results_mean[i])
+        #        plt.axhline(results_mean[i])
 
         plt.legend()
         plt.ylabel('O3 [Mol/m3]')
@@ -53,11 +54,11 @@ def ozone_concentration(path_name = 'G:/Prive/MIJN-Documenten/TU/62-Stage/201712
     if plot_spect:
         # check the spectrum
         import matplotlib.pyplot as plt
-        markers = [',', '+', '.', 'o', '*','v','>','<']
-        for i,v in enumerate(vals[1:]):
+        markers = [',', '+', '.', 'o', '*', 'v', '>', '<']
+        for i, v in enumerate(vals[1:]):
             plt.plot(freqs_meas, v, label=i, linewidth=0.5, marker=markers[i], markersize=1)
 
-        plt.legend(('09:23','09:40','09:55','10:26'))
+        plt.legend(('09:23', '09:40', '09:55', '10:26'))
         plt.title('Since 9:19')
         plt.ylabel('amplitude')
         plt.xlabel('wavelength [nm]')

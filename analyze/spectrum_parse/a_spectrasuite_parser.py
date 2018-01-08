@@ -21,7 +21,7 @@ def parse_file(path_name, base_name='m', padding_digits=5, extension='txt', star
     row_counter = 0
     while True:
         # make filename from base and incrementing counter, then try to open the file. If it doesn't exists, finish.
-        file = base_file + str(file_counter+start_index).zfill(padding_digits) + '.' + extension
+        file = base_file + str(file_counter + start_index).zfill(padding_digits) + '.' + extension
         try:
             with open(file, newline='') as f:
                 reader = csv.reader(f, delimiter='\t', quoting=csv.QUOTE_NONE)
@@ -32,20 +32,20 @@ def parse_file(path_name, base_name='m', padding_digits=5, extension='txt', star
                     freq_fl = float(row[0].replace(',', '.'))
                     if file_counter == 0:  # reference file, set frequency array
                         freqs.append(freq_fl)
-                    else: # check frequency consistency
+                    else:  # check frequency consistency
                         if freqs[row_counter] != freq_fl:
                             print("File " + file + " has different frequency axis than reference! Aborting.")
                             break
                     # store values
-                    vals[file_counter].append(np.array(float(row[1].replace(',','.'))))  # values
+                    vals[file_counter].append(np.array(float(row[1].replace(',', '.'))))  # values
                     row_counter += 1
         except IOError:
             # File does not exist, all files are finished reading
             break
-        except:
-            print('something went wrong wile reading the files. Please check: ' + file)
+        except Exception as e:
+            print('Something went wrong wile reading the files (' + str(e) + '). Please check: ' + file)
             break
         file_counter += 1
-    print('Parsed '+str(file_counter)+' files (including reference).')
-    assert freqs, "ERROR! No spectra files found. Please check dir: "+path_name
+    print('Parsed ' + str(file_counter) + ' files (including reference).')
+    assert freqs, "ERROR! No spectra files found. Please check dir: " + path_name
     return [np.array(freqs), vals]

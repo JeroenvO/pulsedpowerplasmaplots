@@ -5,11 +5,12 @@ from visualize.helpers.colors import color_list
 from visualize.helpers.helpers import load_pickle, save_file
 from analyze.scope_parse.c_get_lines import get_vol_cur_dir
 from visualize.helpers.helpers import filter_data
+
 data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500Hz/run9-20us/data.pkl")
 data = filter_data(data, input_v_output=15e3)
-lw = 0.4 # linewidth
+lw = 0.4  # linewidth
 # colors = color_list(len(data))
-fig, ax = plt.subplots(3,1, sharex=True, figsize=(5,15))
+fig, ax = plt.subplots(3, 1, sharex=True, figsize=(5, 15))
 
 tit = fig.suptitle('Power in pulse (20us, 500Hz, 26$\mu$H, avg32, 15kV)')
 for i, line in enumerate(data):
@@ -35,8 +36,8 @@ for i, line in enumerate(data):
     ax[2].plot(t, e_res, label='generator', color=c, linewidth=lw)
 
     # total energy
-    ax[2].plot(t, [e_in]*len(t), label='input', color=c, linewidth=lw)
-    ax[2].plot(t, e_res+e_out, label='sum', color=c, linewidth=lw)
+    ax[2].plot(t, [e_in] * len(t), label='input', color=c, linewidth=lw)
+    ax[2].plot(t, e_res + e_out, label='sum', color=c, linewidth=lw)
 
 # lgd = ax[0].legend(loc='upper left', bbox_to_anchor=(1,1))
 ax[2].legend()

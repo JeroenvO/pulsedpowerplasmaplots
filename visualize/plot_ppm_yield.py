@@ -18,7 +18,7 @@ data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run1-1us/
 data += load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run2-1us-q/data.pkl")
 
 # filter all values above 700v input, because below that is no plasma
-data = [d for d in data if d['input_yield_gkwh']>2]
+data = [d for d in data if d['input_yield_gkwh'] > 2]
 
 y = get_values(data, 'output_yield_gkwh')
 x = get_values(data, 'o3_ppm')
@@ -35,9 +35,9 @@ fig, ax = plt.subplots()
 
 # scatterplot for each point
 for ix, iy, iw, iv in zip(x, y, w, v):
-    c = colors[np.where(ws == iw)[0][0]] # color for each pulsewidth
+    c = colors[np.where(ws == iw)[0][0]]  # color for each pulsewidth
     i = np.where(vs == iv)[0][0]
-    m = (i+2, 2, 0)  # marker for each voltage
+    m = (i + 2, 2, 0)  # marker for each voltage
     ax.scatter(ix, iy, c=c, marker=m)
 
 plt.xlabel('Concentration [PPM]')
@@ -48,7 +48,7 @@ plt.title('Concentration vs Yield (100Hz-1kHz, 2ls/min, 26$\mu$H)')
 marker_legends = []
 for iw, c in zip(ws, colors):
     label = str(iw) + " $\mu$s"
-    marker_legends.append(mlines.Line2D([],[], color=c, marker='.', label=label))
+    marker_legends.append(mlines.Line2D([], [], color=c, marker='.', label=label))
 
 lgd1 = plt.legend(handles=marker_legends, loc='best')
 axleg1 = plt.gca().add_artist(lgd1)
@@ -56,8 +56,8 @@ axleg1 = plt.gca().add_artist(lgd1)
 # legend for voltage, markers
 marker_legends = []
 for i, iv in enumerate(vs):
-    label = str((iv/1000))+'kV'
-    m = (i+2, 2, 0)
+    label = str((iv / 1000)) + 'kV'
+    m = (i + 2, 2, 0)
     marker_legends.append(mlines.Line2D([], [], marker=m, label=label, linewidth=0, color='black'))
 
 lgd2 = plt.legend(handles=marker_legends, loc='lower center')

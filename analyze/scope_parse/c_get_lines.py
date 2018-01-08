@@ -1,13 +1,8 @@
-try:
-    from b_correct_lines import correct_lines
-except ImportError:
-    from analyze.scope_parse.b_correct_lines import correct_lines
-try:
-    from a_easyscope_parser import parse_file
-except ImportError:
-    from analyze.scope_parse.a_easyscope_parser import parse_file
-    
 import os
+
+from analyze.scope_parse.a_easyscope_parser import parse_file
+from analyze.scope_parse.b_correct_lines import correct_lines
+
 
 def get_vol_cur_single(file):
     """
@@ -28,6 +23,7 @@ def get_vol_cur_single(file):
     i = y_axes[1]
 
     return [time_axis, v, i]
+
 
 def get_vol_cur_dir(path):
     """

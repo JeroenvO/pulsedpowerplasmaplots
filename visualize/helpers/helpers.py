@@ -3,11 +3,13 @@ import pickle
 
 import numpy as np
 
-markers = ['+', 'o', '*','v','x','d','>','<', ',', '.']
+markers = ['+', 'o', '*', 'v', 'x', 'd', '>', '<', ',', '.']
+
 
 def load_pickle(file):
     with open(file, 'rb') as f:
         return pickle.load(f)
+
 
 def get_values(dicts, key):
     """
@@ -22,6 +24,7 @@ def get_values(dicts, key):
     assert any(a)
     return a
 
+
 def load_pickles(dir, filename='data.pkl'):
     """
     Load pickles from all directories in a path.
@@ -33,7 +36,7 @@ def load_pickles(dir, filename='data.pkl'):
     dirs = os.listdir(dir, )
     for tdir in dirs:
         try:
-            data += load_pickle(dir+'/'+tdir+'/'+filename)
+            data += load_pickle(dir + '/' + tdir + '/' + filename)
         except:
             pass  # invalid dir
     return data
@@ -49,9 +52,9 @@ def save_file(fig, name='plot', path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_py
     :param kwargs: extra kwargs to send to savefig, for instance bbox_extra_artists
     :return: None
     """
-    fig.savefig(path+'/'+name+'.png', bbox_inches='tight', **kwargs)
-    fig.savefig(path+'/'+name+'.eps', bbox_inches='tight', **kwargs)
-    fig.savefig(path+'/'+name+'.pdf', bbox_inches='tight', **kwargs)
+    fig.savefig(path + '/' + name + '.png', bbox_inches='tight', **kwargs)
+    fig.savefig(path + '/' + name + '.eps', bbox_inches='tight', **kwargs)
+    fig.savefig(path + '/' + name + '.pdf', bbox_inches='tight', **kwargs)
 
 
 def filter_data(data, **kwargs):
@@ -64,16 +67,16 @@ def filter_data(data, **kwargs):
     """
     for key, value in kwargs.items():
         assert key in data[0]  # only check data[0], assume all dicts have the same keys
-        data = [d for d in data if d[key]==value]
+        data = [d for d in data if d[key] == value]
     return data
+
 
 def sort_data(data, key):
     """
     Sort a list of dicts by a given key
 
-    :param data:
-    :param key:
-    :return:
+    :param data: input list of dicts
+    :param key: key to sort
+    :return: sorted list of dicts
     """
-    #TODO
-    assert False
+    return sorted(data, key=lambda k: k[key])

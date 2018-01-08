@@ -10,7 +10,7 @@ data1 = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/run2-longmeas
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/run1/data.pkl")
 
 # filter all values above 700v input, because below that is no plasma
-#data = [d for d in data if d['input_voltage']>700]
+# data = [d for d in data if d['input_voltage']>700]
 
 # y = get_values(data, 'input_yield_gkwh')
 v1 = get_values(data1, 'o3_ppm')

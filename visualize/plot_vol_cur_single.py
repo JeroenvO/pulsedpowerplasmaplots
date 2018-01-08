@@ -9,11 +9,11 @@ from visualize.helpers.helpers import save_file
 file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run2-1us-q/scope/1000-single1.csv'
 
 x_axis, vol, cur = get_vol_cur_single(file)
-y1=cur
-y2=vol
+y1 = cur
+y2 = vol
 # y3=integrate.cumtrapz(y1, x_axis, initial=0)*-50
 
-p = y1*y2
+p = y1 * y2
 fig, ax1 = plt.subplots()
 ax1.plot(x_axis, y1, 'b-')
 ax1.set_xlabel('time [s]')
@@ -22,7 +22,7 @@ ax1.set_ylabel('current [A]', color='b')
 ax1.tick_params('y', colors='b')
 
 ax2 = ax1.twinx()
-ax2.plot(x_axis, y2, 'r-') # voltage
+ax2.plot(x_axis, y2, 'r-')  # voltage
 # ax2.plot(x_axis, y3, 'g-') # integrated current
 ax2.set_ylabel('voltage [V]', color='r')
 ax2.tick_params('y', colors='r')

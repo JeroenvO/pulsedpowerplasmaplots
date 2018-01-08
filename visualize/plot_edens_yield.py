@@ -16,7 +16,7 @@ data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run2-1us-
 # data = [d for d in data if d['input_l'] <=4 ]
 
 
-fig, ax_dens = plt.subplots(4,1, figsize=(5,12))
+fig, ax_dens = plt.subplots(4, 1, figsize=(5, 12))
 # data = filter_data(data, input_v_output=15e3)
 
 plt.suptitle('Energy density (short glass 4 electr., 100Hz-1kHz, 2ls/min) \n (o) output energy. (x) input energy')
@@ -35,7 +35,7 @@ for power in ['input', 'output']:
         l = power
         iw = line['input_l']
         c = colors[np.where(ws == iw)[0][0]]  # color for each pulsewidth
-        ax_dens[0].scatter(edens, line[power+'_yield_gkwh'], label=l, c=c, marker=m)
+        ax_dens[0].scatter(edens, line[power + '_yield_gkwh'], label=l, c=c, marker=m)
         # ax_freq[0].scatter(freq, line['input_yield_gkwh'])
         ax_dens[1].scatter(edens, line['o3_gramsec'], label=l, c=c, marker=m)
         # ax_freq[1].scatter(freq, line['o3_gramsec'])
@@ -50,9 +50,9 @@ for power in ['input', 'output']:
 marker_legends = []
 for iw, c in zip(ws, colors):
     label = str(iw) + " $\mu$s"
-    marker_legends.append(mlines.Line2D([],[], color=c, marker='.', label=label))
+    marker_legends.append(mlines.Line2D([], [], color=c, marker='.', label=label))
 
-lgd = ax_dens[0].legend(handles=marker_legends, loc='upper left', bbox_to_anchor=(1,1))
+lgd = ax_dens[0].legend(handles=marker_legends, loc='upper left', bbox_to_anchor=(1, 1))
 # lgd = plt.legend()
 
 ax_dens[0].set_ylabel('Yield [g/kWh]')
