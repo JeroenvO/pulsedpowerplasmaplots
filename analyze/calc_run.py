@@ -19,7 +19,7 @@ import pickle
 import numpy as np
 from openpyxl.reader.excel import load_workbook, Workbook
 
-from analyze.scope_parse.c_get_lines import get_vol_cur_single
+from analyze.scope_parse.c_get_lines import get_vol_cur_single, get_vol_cur_multiple
 from analyze.scope_parse.d_calc import calc_output
 from analyze.spectrum_parse.c_concentration import ozone_concentration, ozone_ppm
 from visualize.helpers.helpers import sort_data
@@ -44,6 +44,7 @@ def calc_run(run_dir,
              react_cap,
              spect_dir='spect',
              scope_dir='scope',
+             scope_multiple = False,
              log_file='log.xlsx',
              scope_file_name_index=0,
              meas=short_meas_len):
@@ -105,7 +106,10 @@ def calc_run(run_dir,
         # get output waveforms
         dic = {}
         try:
-            line = get_vol_cur_single(run_dir + scope_dir + '/' + str(data_row[scope_file_name_index]) + '.csv')
+            if scope_multiple:
+                lines = get_vol_cur_multiple(run_dir + scope_dir + '/' + str(data_row[scope_file_name_index]))
+            else:
+                line = get_vol_cur_single(run_dir + scope_dir + '/' + str(data_row[scope_file_name_index]))
             output_time, output_v, output_i = line
             # check scaling of current waveform
             assert 2 <= max(output_i) < 30  # max current between 2A and 30A
@@ -214,18 +218,24 @@ def calc_run(run_dir,
 
 # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/" # directory with subdirectories with measurements
 # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/"  # directory with subdirectories with measurements
-path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/"  # directory with subdirectories with measurements
+# path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/"  # directory with subdirectories with measurements
+path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180103-1000Hz/"  # directory with subdirectories with measurements
 ### to run dir with subdirs:
-# dirs = os.listdir(path)
+dirs = os.listdir(path)
 ### to run one dir
-dirs = ['run1-1us']
+# dirs = ['run1-1us']
+# length of used measure cell
 meas_len = short_meas_len
+# capacitance of used reactor
 react_cap = reactor_glass_long  # reactor_glass_short_quad
-scope_file_name_index = 1  # which column of log.xlsx contains the filename for scope. 0=volt, 1=freq, 2=pulsew
+# which column of log.xlsx contains the filename for scope. 0=volt, 1=freq, 2=pulsew
+scope_file_name_index = 0
+# whether multiple scope spectra are stored for each measurement. If true, save as xxx_y.csv with y as index number
+scope_multiple = False
 for dir in dirs:
     run_dir = path + dir + '/'
     if os.path.isdir(run_dir):
         print(run_dir)
         # scope_file_name_index which column of log.xlsx contains the filename for scope.
         # 0=volt, 1=freq, 2=pulsew
-        calc_run(run_dir, meas=meas_len, scope_file_name_index=scope_file_name_index, react_cap=react_cap)
+        calc_run(run_dir, meas=meas_len, scope_file_name_index=scope_file_name_index, scope_multiple=scope_multiple, react_cap=react_cap)

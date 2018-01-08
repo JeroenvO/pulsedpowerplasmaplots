@@ -80,3 +80,17 @@ def sort_data(data, key):
     :return: sorted list of dicts
     """
     return sorted(data, key=lambda k: k[key])
+
+
+def align_lines(data):
+    """
+    align all arrays in all measurements of data by start_pulse
+
+    :param data: list of dicts with measurements
+    :return: data, with changed lines
+    """
+    for i, meas in enumerate(data):
+        assert type(meas['output_t']).__name__ == 'ndarray'
+        start = meas['output_start']
+        data[i]['output_t'] = meas['output_t'] - start
+    return data

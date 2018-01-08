@@ -42,8 +42,8 @@ def correct_lines(line_objs, div_zero=128.0, offsets=[]):
     for i, line in enumerate(line_objs[1:]):  # first line_obj is generic data.
         y = (line['points'] - div_zero) / div_point * line['val_div']  # current
         if offsets:
-            if 'val_div_correct' in offsets[
-                i]:  # sometimes val_div is not correctly exported. 'mili' tends to be ignored.
+            # sometimes val_div is not correctly exported. 'mili' tends to be ignored.
+            if 'val_div_correct' in offsets[i]:
                 y /= offsets[i]['val_div_correct']
             if 'v_shift' in offsets[i]:  # vertical shift of n-elements to account for delay in probe/cables.
                 y = np.roll(y, offsets[i]['v_shift'])

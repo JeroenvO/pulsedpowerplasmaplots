@@ -136,6 +136,8 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
 
         'start': t[settling_start],
         'end': t[end_pulse],
+        # 'start_index': settling_start,
+        # 'end_index': end_pulse,
         # 'test': i_time_settling
     }
     return data

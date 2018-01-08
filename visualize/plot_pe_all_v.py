@@ -3,7 +3,7 @@ from scipy import integrate
 from visualize.helpers.helpers import sort_data
 
 from visualize.helpers.colors import color_list
-from visualize.helpers.helpers import load_pickle, save_file
+from visualize.helpers.helpers import load_pickle, save_file, align_lines
 
 data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run1-1us/data.pkl")
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500Hz/run2-1us/data.pkl")
@@ -14,6 +14,7 @@ colors = color_list(len(data))
 fig, ax = plt.subplots(6, 1, sharex=True, figsize=(5, 15))
 
 tit = fig.suptitle('Power in pulse (15kV, 1us, 100Hz-1kHz, 26$\mu$H, avg32)')
+
 for i, line in enumerate(data):
     p = line['output_p']
     e_out = line['output_e']
