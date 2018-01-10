@@ -68,6 +68,11 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
 
     v_min = min(v)
     v_max = max(v)
+
+    # some validation
+    assert 500 <= v_max < 30e3, 'Max voltage (' + str(v_max) + 'V) should be between 0.5kV and 30kV!'
+    assert 2 <= i_max < 30, 'Max current (' + str(i_max) + 'A) should be between 2A and 30A!'
+
     # Find the settling time of the current. Than use the time where the current is stable
     # to calculate the final pulse voltage. This pulse final voltage is then used to calculate
     # the settling time and risetime of the voltage.
@@ -113,10 +118,17 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
     e_res = integrate.cumtrapz(p_res, t, initial=0)
     e_plasma = e_rise - e_cap  # energy to plasma is energy in positive pulse except charge on capacitor.
 
+    # Correct the time axis to have 0 at the start of the pulse
+    start = t[settling_start]
+    t = t - start
+
     # all these values are added to the pickle and xlsx with 'output_' prepend in calc_run.py
     data = {
-        'i_min': i_min,
-        'i_max': i_max,
+        't': t,
+        'v': v,
+        'c': c,
+        'c_min': i_min,
+        'c_max': i_max,
         'v_min': v_min,
         'v_max': v_max,
         'v_pulse': v_pulse,
@@ -134,7 +146,7 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
         'e_cap': e_cap,
         'e_plasma': e_plasma,
 
-        'start': t[settling_start],
+        'start': start,
         'end': t[end_pulse],
         # 'start_index': settling_start,
         # 'end_index': end_pulse,

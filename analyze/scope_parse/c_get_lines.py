@@ -4,7 +4,9 @@ from analyze.scope_parse.a_easyscope_parser import parse_file
 from analyze.scope_parse.b_correct_lines import correct_lines
 
 
-def get_vol_cur_single(filename):
+def get_vol_cur_single(filename,
+                       current_scaling=20,
+                       delay=0):
     """
     Parse voltage and current from waveforms.
 
@@ -13,8 +15,8 @@ def get_vol_cur_single(filename):
     """
     line_objs = parse_file(filename + '.csv')  # file to parse
     offsets = [
-        {'v_shift': 0},  # -16 works fine for exact match of waveforms
-        {'val_div_correct': -100},
+        {'v_shift': delay},  # -16 works fine for exact match of waveforms
+        {'val_div_correct': current_scaling},  # -100 for Pearson 0.1v/a inverted.
         # {},
         # {}
     ]
@@ -45,7 +47,9 @@ def get_vol_cur_dir(path):
     return lines
 
 
-def get_vol_cur_multiple(base_filename):
+def get_vol_cur_multiple(base_filename,
+                         current_scaling,
+                         delay):
     """
     Used if multiple scope waveforms are captured per measurement.
     These waveforms are all appended to the data in calc_run.py
@@ -58,8 +62,12 @@ def get_vol_cur_multiple(base_filename):
     lines = []
     while True:
         try:
-            lines.append(get_vol_cur_single(base_filename+'_'+str(i)))
+            lines.append(get_vol_cur_single(base_filename+'_'+str(i),
+                         current_scaling=current_scaling,
+                         delay=delay))
             i += 1
-        except:
+        except IOError:
             break
+        except Exception:
+            raise Exception
     return lines

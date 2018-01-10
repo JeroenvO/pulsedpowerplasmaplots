@@ -1,12 +1,12 @@
 import matplotlib.pyplot as plt
 
 from visualize.helpers.colors import color_list
-from visualize.helpers.helpers import load_pickle, save_file, load_pickles, filter_data, align_lines, get_values
+from visualize.helpers.helpers import load_pickle, save_file, load_pickles, filter_data, get_values
 from analyze.scope_parse.c_get_lines import get_vol_cur_dir
 import numpy as np
 data = load_pickles("G:/Prive/MIJN-Documenten/TU/62-Stage/20180103-1000hz")
 # data = filter_data(data, input_l=1)
-data = align_lines(data)
+# data = align_lines(data)
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180103/run2-1us/data.pkl")
 data_nocoil_length = 0
 lw = 0.4  # linewidth

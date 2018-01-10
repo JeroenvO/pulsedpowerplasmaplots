@@ -1,5 +1,7 @@
 """
-Convert all output of a measurement to a pickle and xlsx file. These files can be used for plotting data.
+Convert all output of a run to a pickle and xlsx file. These files can be used for plotting data.
+
+In one run, multiple measurements are made. Each measurement can contain multiple scope spectra.
 
 Parse log excel file
 Get ozone concentration
@@ -21,17 +23,18 @@ from openpyxl.reader.excel import load_workbook, Workbook
 
 from analyze.scope_parse.c_get_lines import get_vol_cur_single, get_vol_cur_multiple
 from analyze.scope_parse.d_calc import calc_output
+from analyze.scope_parse.e_average import calc_output_avg
 from analyze.spectrum_parse.c_concentration import ozone_concentration, ozone_ppm
 from visualize.helpers.helpers import sort_data
 
 # defines, (usages see bottom of script)
-long_meas_len = 0.111
-short_meas_len = 0.03
-reactor_glass_long = 14e-12  # long glass reactor capacitance
-reactor_glass_short = 6.2e-12  # short glass reactor capacitance
-reactor_glass_short_quad = 9e-12  # short glass reactor capacitance with four small electrodes parallel
-reactor_ceramic = 391e-12
-reactor_alixpress = 161e-12
+LONG_MEAS_LEN = 0.111
+SHORT_MEAS_LEN = 0.03
+REACTOR_GLASS_LONG = 14E-12  # long glass reactor capacitance
+REACTOR_GLASS_SHORT = 6.2E-12  # short glass reactor capacitance
+REACTOR_GLASS_SHORT_QUAD = 9e-12  # short glass reactor capacitance with four small electrodes parallel
+REACTOR_CERAMIC = 391E-12
+REACTOR_ALIXPRESS = 161E-12
 
 # Folder with measuremtn. Folder has to contain:
 # * log.txt
@@ -47,7 +50,9 @@ def calc_run(run_dir,
              scope_multiple = False,
              log_file='log.xlsx',
              scope_file_name_index=0,
-             meas=short_meas_len):
+             meas=SHORT_MEAS_LEN,
+             current_scaling=20,
+             delay=0):
     """
     Calculate all parameters for one measure run. Output to a pickle and xlsx file.
 
@@ -58,6 +63,8 @@ def calc_run(run_dir,
     :param log_file: name of the logfile with input parameters [voltage, freq, v18,9ohm input, spectfile, Temp, airflow]
     :param scope_file_name_index: column of log_file that is used for the scope filenames, 0=volt, 1=freq, 2=pulsew
     :param meas: lenght of the measure cell
+    :param current_scaling: Scale of the current. 20 for red sensor, 100 for green sensor
+    :param delay: Delay for the first scope line, to align lines.
     :return: none
     """
     if log_file not in os.listdir(run_dir):
@@ -107,20 +114,26 @@ def calc_run(run_dir,
         dic = {}
         try:
             if scope_multiple:
-                lines = get_vol_cur_multiple(run_dir + scope_dir + '/' + str(data_row[scope_file_name_index]))
+                lines = get_vol_cur_multiple(run_dir + scope_dir + '/' + str(data_row[scope_file_name_index]),
+                                             current_scaling=current_scaling,
+                                             delay=delay
+                                             )
+                assert any(lines)
+                output_calc = calc_output_avg(lines, react_cap=react_cap, gen_res_high=225, gen_res_low=50)
             else:
-                line = get_vol_cur_single(run_dir + scope_dir + '/' + str(data_row[scope_file_name_index]))
-            output_time, output_v, output_i = line
-            # check scaling of current waveform
-            assert 2 <= max(output_i) < 30  # max current between 2A and 30A
-            # calculate output parameters from d_calc.py and append them to the dict with prepend '_output'
-            for key, val in calc_output(line, react_cap=react_cap, gen_res_high=225, gen_res_low=50).items():
+                line = get_vol_cur_single(run_dir + scope_dir + '/' + str(data_row[scope_file_name_index]),
+                                          current_scaling=current_scaling,
+                                          delay=delay)
+                assert line
+                # calculate output parameters from d_calc.py and append them to the dict with prepend '_output'
+                output_calc = calc_output(line, react_cap=react_cap, gen_res_high=225, gen_res_low=50)
+            # append calculated output values to measure dict.
+            for key, val in output_calc.items():
                 dic['output_' + key] = val
             # output power on plasma [Watt], compensated for capacitance
             output_p_plasma = (dic['output_e_plasma'] * data_row[1])
         except IOError:
-            output_time = output_v = output_i = output_p_plasma = 0
-            line = None
+            output_p_plasma = 0
 
         dic = {**dic,
                # manually noted values (inputs)
@@ -144,11 +157,6 @@ def calc_run(run_dir,
                'o3_molm3': co3,  # o3 concentration in Mol/m3
                'o3_ppm': all_ppm[data_row[4]],  # o3 concentration in ppm
                'o3_gramsec': o3f,  # o3 production in gram/second
-
-               # scope spectra
-               'output_t': output_time,
-               'output_v': output_v,
-               'output_c': output_i,
 
                # o3 generation efficiency
                'input_yield_gj': o3f / P,  # efficiency in gram/Joule
@@ -181,10 +189,12 @@ def calc_run(run_dir,
     ws = wb.active
     ws.title = "data"
     # make header row.
-    # row 5 probably contains all headers, since the first few will miss some as they are reference lines.
     keys = []
-
-    for key, value in sorted(data[4].items()):
+    try:  # row 5 probably contains all headers, since the first few will miss some as they are reference lines.
+        ref_line = data[4]
+    except:  # if row 5 does not exists, for very short runs.
+        ref_line = data[0]
+    for key, value in sorted(ref_line.items()):
         # don't save arrays of values, it is too much information
         try:
             value = float(value)
@@ -209,7 +219,7 @@ def calc_run(run_dir,
             row.append(value)
         ws.append(row)
     # make unique filename because excel cannot open multiple workbooks with the same name
-    file_name = '-'.join(run_dir.split('/')[-3:])
+    file_name = '-'.join(run_dir.split('/')[-3:]).strip().strip('-')
     wb.save(filename=run_dir + '/' + file_name + '.xlsx')
 
     print("finished writing")
@@ -218,24 +228,32 @@ def calc_run(run_dir,
 
 # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/" # directory with subdirectories with measurements
 # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/"  # directory with subdirectories with measurements
-# path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/"  # directory with subdirectories with measurements
-path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180103-1000Hz/"  # directory with subdirectories with measurements
+path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/"  # directory with subdirectories with measurements
+# path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180109/"  # directory with subdirectories with measurementspath = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180103-1000Hz/"  # directory with subdirectories with measurements
 ### to run dir with subdirs:
-dirs = os.listdir(path)
+# dirs = os.listdir(path)
 ### to run one dir
-# dirs = ['run1-1us']
+dirs = ['run2-1us-q']
 # length of used measure cell
-meas_len = short_meas_len
+meas_len = SHORT_MEAS_LEN
 # capacitance of used reactor
-react_cap = reactor_glass_long  # reactor_glass_short_quad
+react_cap = REACTOR_GLASS_SHORT_QUAD
 # which column of log.xlsx contains the filename for scope. 0=volt, 1=freq, 2=pulsew
-scope_file_name_index = 0
+scope_file_name_index = 1
 # whether multiple scope spectra are stored for each measurement. If true, save as xxx_y.csv with y as index number
 scope_multiple = False
+# scaling for current sensor is not done in scope, do it manually
+current_scaling = -100  # 20 for red current probe, -100 for pearson (inverted).
+# compensate for delay in line, in array index (=usually 1ns)
+delay = -16
 for dir in dirs:
     run_dir = path + dir + '/'
     if os.path.isdir(run_dir):
         print(run_dir)
-        # scope_file_name_index which column of log.xlsx contains the filename for scope.
-        # 0=volt, 1=freq, 2=pulsew
-        calc_run(run_dir, meas=meas_len, scope_file_name_index=scope_file_name_index, scope_multiple=scope_multiple, react_cap=react_cap)
+        calc_run(run_dir,
+                 meas=meas_len,
+                 scope_file_name_index=scope_file_name_index,
+                 scope_multiple=scope_multiple,
+                 react_cap=react_cap,
+                 current_scaling=current_scaling,
+                 delay=delay)
