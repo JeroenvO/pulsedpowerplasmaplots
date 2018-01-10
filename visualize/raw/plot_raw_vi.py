@@ -6,9 +6,10 @@ from visualize.helpers.helpers import save_file
 # file='../../20171227 glasstube, spectrometer, plasma/1/800v-full'
 # file='../../20171228 glasstube/1/500v-full'
 # file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-100hz/run2-1us/scope/600.csv'
-file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run2-1us-q/scope/1000-single1.csv'
+# file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run2-1us-q/scope/1000-single1.csv'
+file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180110/run5-4/scope/200_22.csv'
 
-x_axis, vol, cur = get_vol_cur_single(file)
+x_axis, vol, cur = get_vol_cur_single(file, current_scaling=-0.5)
 y1 = cur
 y2 = vol
 # y3=integrate.cumtrapz(y1, x_axis, initial=0)*-50
@@ -27,7 +28,7 @@ ax2.plot(x_axis, y2, 'r-')  # voltage
 ax2.set_ylabel('voltage [V]', color='r')
 ax2.tick_params('y', colors='r')
 plt.title('V and I for 05us, 15kV pulse')
-plt.xlim([0, 0.2e-6])
+# plt.xlim([0, 0.2e-6])
 plt.show()
 
 # ax2.axis([2000,5000,-9000,9000])

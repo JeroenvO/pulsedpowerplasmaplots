@@ -13,7 +13,6 @@ def parse_file(path_name, base_name='m', padding_digits=5, extension='txt', star
     :param start_index: index number of the first file to use. This file is the reference.
     :return: freqs and values [<array of freqs>, [<array of val>, <array of val>, ..]]
     """
-
     base_file = path_name + '/' + base_name
     freqs = []  # array of all frequencies
     vals = []  # first array is reference, next arrays are measurements

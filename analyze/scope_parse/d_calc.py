@@ -70,20 +70,22 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
     v_max = max(v)
 
     # some validation
+    assert cur_peak_time < cur_valley_time, 'Current valley before peak, signal is inverted!'
     assert 500 <= v_max < 30e3, 'Max voltage (' + str(v_max) + 'V) should be between 0.5kV and 30kV!'
     assert 2 <= i_max < 30, 'Max current (' + str(i_max) + 'A) should be between 2A and 30A!'
 
     # Find the settling time of the current. Than use the time where the current is stable
     # to calculate the final pulse voltage. This pulse final voltage is then used to calculate
     # the settling time and risetime of the voltage.
-    i_time_settling_options = [abs(x) < 0.1 * i_max for x in
-                               c[0:cur_valley_time]]  # all parts of current inside 10% of maximum, till end of pulse
+
+    # all parts of current inside 10% of maximum, till end of pulse
+    i_time_settling_options = [abs(x) < 0.1 * i_max for x in c[0:cur_valley_time]]
     ranges = count_ranges(i_time_settling_options)
     range_before, range_pulse = find_longest_ranges(ranges, 2)  # [end, length]
     end_pulse = range_pulse[0]
     i_time_settling = range_pulse[0] - range_pulse[1]
-    v_pulse = np.mean(
-        v[i_time_settling:end_pulse])  # average of voltage during pulse when current is < 5% of max current
+    # average of voltage during pulse when current is < 5% of max current
+    v_pulse = np.mean(v[i_time_settling:end_pulse])
     # all parts of current inside 10% of maximum, till end of pulse
     v_time_settling_options = [abs(x - v_pulse) < (0.1 * v_pulse) for x in v]
     ranges = count_ranges(v_time_settling_options)
@@ -108,7 +110,7 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
     v_overshoot = v_max / v_pulse
     pulse_stable = int((settling_end + end_pulse) / 2)  # point where the pulse is very stable
     # energy
-    p = v * c  # for this to be correct, make sure lines are aligned in b_correct_lines using offset 'v_div'
+    p = abs(v * c)  # for this to be correct, make sure lines are aligned in b_correct_lines using offset 'v_div'
     e = integrate.cumtrapz(p, t, initial=0)
     p_rise = p[settling_start:pulse_stable]
     e_rise = e[settling_start:pulse_stable][-1]
@@ -116,7 +118,7 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
     # 1/2*C*V^2 is energy stored in capacitor, which is lost after discharging pulse.
     e_cap = 1 / 2 * react_cap * v_pulse ** 2
     e_res = integrate.cumtrapz(p_res, t, initial=0)
-    e_plasma = e_rise - e_cap  # energy to plasma is energy in positive pulse except charge on capacitor.
+    e_plasma = e[-1]  # energy to plasma is energy in positive pulse except charge on capacitor.
 
     # Correct the time axis to have 0 at the start of the pulse
     start = t[settling_start]

@@ -5,7 +5,7 @@ from analyze.scope_parse.b_correct_lines import correct_lines
 
 
 def get_vol_cur_single(filename,
-                       current_scaling=20,
+                       current_scaling = -0.5,
                        delay=0):
     """
     Parse voltage and current from waveforms.
@@ -13,7 +13,7 @@ def get_vol_cur_single(filename,
     :param filename: filepath without extension
     :return: [time, v, i] of waveform
     """
-    line_objs = parse_file(filename + '.csv')  # file to parse
+    line_objs = parse_file(filename)  # file to parse
     offsets = [
         {'v_shift': delay},  # -16 works fine for exact match of waveforms
         {'val_div_correct': current_scaling},  # -100 for Pearson 0.1v/a inverted.
@@ -25,7 +25,8 @@ def get_vol_cur_single(filename,
     v = y_axes[0]
     i = y_axes[1]
     if not 2 <= max(i) < 30:  # max current between 2A and 30A
-        if max(i) < 1:
+        if max(i) < 0.03:
+            print("Warning!, scope current corrected for mV to V!")
             i *= 1000
         else:
             raise Exception("Current scaling is incorrect!")
@@ -62,6 +63,7 @@ def get_vol_cur_multiple(base_filename,
     lines = []
     while True:
         try:
+            print(base_filename, i)
             lines.append(get_vol_cur_single(base_filename+'_'+str(i),
                          current_scaling=current_scaling,
                          delay=delay))

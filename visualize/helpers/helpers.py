@@ -6,8 +6,13 @@ import numpy as np
 markers = ['+', 'o', '*', 'v', 'x', 'd', '>', '<', ',', '.']
 
 
-def load_pickle(file):
-    with open(file, 'rb') as f:
+def load_pickle(filename):
+    if filename[-4:] != '.pkl':
+        if filename[-8:] != 'data.pkl':
+            filename = filename + '/data.pkl'
+        else:
+            filename = filename + '.pkl'
+    with open(filename, 'rb') as f:
         return pickle.load(f)
 
 

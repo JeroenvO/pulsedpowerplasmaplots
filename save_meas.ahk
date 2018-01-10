@@ -21,7 +21,8 @@ SetBatchLines -1
 
 F7::
 Loop
-{
+{	
+	; 5 seconds for each measurement, 100 seconds for 20
 	; Refresh scope
 	Click, 269, 384 Left, Down
 	Click, 269, 384 Left, Up
@@ -29,7 +30,7 @@ Loop
 	; Ask base filename
 	InputBox, filename, Give file name, file name prepend
 	Sleep, 100
-	Loop, 20 
+	Loop, 24
 	{
 		; Refresh scope
 		Click, 269, 384 Left, Down

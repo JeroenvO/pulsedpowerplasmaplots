@@ -40,7 +40,7 @@ def correct_lines(line_objs, div_zero=128.0, offsets=[]):
 
     y_axes = []
     for i, line in enumerate(line_objs[1:]):  # first line_obj is generic data.
-        y = (line['points'] - div_zero) / div_point * line['val_div']  # current
+        y = (line['points'] - div_zero) / div_point * line['val_div']
         if offsets:
             # sometimes val_div is not correctly exported. 'mili' tends to be ignored.
             if 'val_div_correct' in offsets[i]:

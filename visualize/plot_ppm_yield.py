@@ -14,8 +14,10 @@ from visualize.helpers.helpers import load_pickles, load_pickle, get_values, sav
 # very good measurements with different voltages and pulsewidths
 # data = load_pickles('G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz')
 
-data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run1-1us/data.pkl")
-data += load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run2-1us-q/data.pkl")
+# data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run1-1us/data.pkl")
+# data += load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run2-1us-q/data.pkl")
+
+data = load_pickles("G:/Prive/MIJN-Documenten/TU/62-Stage/20180110/")
 
 # filter all values above 700v input, because below that is no plasma
 data = [d for d in data if d['input_yield_gkwh'] > 2]
@@ -24,7 +26,7 @@ y = get_values(data, 'output_yield_gkwh')
 x = get_values(data, 'o3_ppm')
 v = get_values(data, 'input_v_output')
 w = get_values(data, 'input_l')
-
+ind = get_values(data, 'inductance')
 assert len(y) == len(x) == len(v)
 
 ws = np.unique(w)
@@ -34,21 +36,25 @@ colors = color_list(len(ws))
 fig, ax = plt.subplots()
 
 # scatterplot for each point
-for ix, iy, iw, iv in zip(x, y, w, v):
-    c = colors[np.where(ws == iw)[0][0]]  # color for each pulsewidth
+for ix, iy, iw, iv, iind in zip(x, y, w, v, ind):
+    if iind == 0:
+        c = colors[np.where(ws == iw)[0][0]]  # color for each pulsewidth
+    else:
+        c = 'black'
     i = np.where(vs == iv)[0][0]
     m = (i + 2, 2, 0)  # marker for each voltage
     ax.scatter(ix, iy, c=c, marker=m)
 
 plt.xlabel('Concentration [PPM]')
 plt.ylabel('Yield [g/kWh]')
-plt.title('Concentration vs Yield (100Hz-1kHz, 2ls/min, 26$\mu$H)')
+plt.title('Concentration vs Yield (5Hz-500Hz, 2ls/min, short glass 4 electr.)')
 
 # legend for pulsewidth, colors
 marker_legends = []
 for iw, c in zip(ws, colors):
     label = str(iw) + " $\mu$s"
     marker_legends.append(mlines.Line2D([], [], color=c, marker='.', label=label))
+marker_legends.append(mlines.Line2D([], [], color='black', marker='.', label='1 $\mu$s, 26uH'))
 
 lgd1 = plt.legend(handles=marker_legends, loc='best')
 axleg1 = plt.gca().add_artist(lgd1)

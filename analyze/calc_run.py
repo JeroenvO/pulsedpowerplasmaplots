@@ -51,7 +51,7 @@ def calc_run(run_dir,
              log_file='log.xlsx',
              scope_file_name_index=0,
              meas=SHORT_MEAS_LEN,
-             current_scaling=20,
+             current_scaling=0.5,
              delay=0):
     """
     Calculate all parameters for one measure run. Output to a pickle and xlsx file.
@@ -83,7 +83,7 @@ def calc_run(run_dir,
     data = []
     for row in sheet.iter_rows(min_row=2):
         data_row = []
-        for cell in row[0:7]:
+        for cell in row:
             # read values from workbook
             data_row.append(cell.value)
 
@@ -99,6 +99,7 @@ def calc_run(run_dir,
         # 4: spectfile      [filename]
         # 5: Temp           [deg. Cels.]
         # 6: airflow        [ls/min]
+        # 7: inductance     [uH]
         I = data_row[3] / resistor_val  # generator input current [A]
         P = I * data_row[0]  # generator input power [W]
         Pk = P / 3.6e6  # input power in kWh/s
@@ -109,6 +110,18 @@ def calc_run(run_dir,
         lss = data_row[6] / 60  # liter air per second
         m3s = lss / 1000  # ls/min/1000/60=m3/s
         o3f = co3g * m3s  # (gram/m3)*(m3/s)=gram/second o3
+
+        if len(data_row) == 8:
+            if react_cap == REACTOR_GLASS_LONG:
+                assert data_row[7] == 26  # 26 uH coil with long glass reactor
+            else:
+                assert data_row[7] == 26 or data_row[7] == 0
+        elif len(data_row) == 7:  # inductance not supplied
+            data_row.append(0)
+            if react_cap == REACTOR_GLASS_LONG:
+                data_row[7] = 26  # 26 uH coil with long glass reactor
+        else:
+            raise Exception
 
         # get output waveforms
         dic = {}
@@ -145,6 +158,7 @@ def calc_run(run_dir,
                'airflow_lm': data_row[6],  # airflow in ls/min
                'airflow_ls': lss,  # airflow in ls/s
                'airflow_m3s': m3s,  # airflow in m3/s
+               'inductance': data_row[7],
 
                # calculated values from noted values. (This is not compensated for resistive losses in generator!!)
                'input_c': I,  # input current to generator
@@ -228,12 +242,13 @@ def calc_run(run_dir,
 
 # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/" # directory with subdirectories with measurements
 # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/"  # directory with subdirectories with measurements
-path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/"  # directory with subdirectories with measurements
+path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180110/"  # directory with subdirectories with measurements
 # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180109/"  # directory with subdirectories with measurementspath = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180103-1000Hz/"  # directory with subdirectories with measurements
 ### to run dir with subdirs:
-# dirs = os.listdir(path)
+dirs = os.listdir(path)
 ### to run one dir
-dirs = ['run2-1us-q']
+# dirs = ['run5-3']
+# dirs = ['run2-1us-q']
 # length of used measure cell
 meas_len = SHORT_MEAS_LEN
 # capacitance of used reactor
@@ -241,11 +256,11 @@ react_cap = REACTOR_GLASS_SHORT_QUAD
 # which column of log.xlsx contains the filename for scope. 0=volt, 1=freq, 2=pulsew
 scope_file_name_index = 1
 # whether multiple scope spectra are stored for each measurement. If true, save as xxx_y.csv with y as index number
-scope_multiple = False
+scope_multiple = True
 # scaling for current sensor is not done in scope, do it manually
-current_scaling = -100  # 20 for red current probe, -100 for pearson (inverted).
+current_scaling = -0.5  # 0.5 for red current probe in v-range, -0.1 for pearson (inverted) in v-range, -100 for mv range.
 # compensate for delay in line, in array index (=usually 1ns)
-delay = -16
+delay = 0
 for dir in dirs:
     run_dir = path + dir + '/'
     if os.path.isdir(run_dir):

@@ -14,7 +14,13 @@ def calc_output_avg(lines, react_cap, gen_res_high=225, gen_res_low=50):
     :return: calculated output values, same as d_calc but for multiple inputs.
     """
     output = []
-    for line in lines:
+    length = -1
+    for i, line in enumerate(lines):
+        # print('Run calc for line '+str(i))
+        if length == -1:
+            length = len(line[0])
+        else:
+            assert len(line[0]) == length
         output.append(calc_output(line, react_cap=react_cap, gen_res_high=gen_res_high, gen_res_low=gen_res_low))
 
     data = {}
@@ -28,8 +34,17 @@ def calc_output_avg(lines, react_cap, gen_res_high=225, gen_res_low=50):
             assert np.isscalar(value)
             data[key] = np.average(values)
             for i, v in enumerate(values):
-                # values should deviate no more than 10% of average.
-                assert abs((data[key] - v)/v) < 0.1,\
-                    'Value (' + str(v) + ') in file ' + str(i) + ' is too far from average of measuremnt!'
+                # values should deviate no more than 15% of average, except for some unstable values.
+                if key in ['end', 'c_max', 'c_min', 'v_min']:
+                    required_stability = 1  # max double of average
+                elif key in ['start']:
+                    required_stability = 4  # max twice double.
+                else:
+                    required_stability = 0.15
+
+                if not abs((data[key] - v)/data[key]) < required_stability:
+                    print('Key "' + key + '" with value (' + str(v) + ') in file ' + str(i) + ' '
+                            'is too far from average (' + str(data[key]) + ') of measuremnt!')
+                    assert False
     assert len(output[-1]) == len(data)
     return data
