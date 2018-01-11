@@ -6,9 +6,9 @@ from visualize.helpers.helpers import save_file
 # file='../../20171227 glasstube, spectrometer, plasma/1/800v-full'
 # file='../../20171228 glasstube/1/500v-full'
 # file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-100hz/run2-1us/scope/600.csv'
-file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180110/run5-3/scope/150_'
+file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180110/run4/scope/400_'
 lines = []
-for i in range(0,20):
+for i in range(10,15):
     lines.append(get_vol_cur_single(file+str(i)))
 
 

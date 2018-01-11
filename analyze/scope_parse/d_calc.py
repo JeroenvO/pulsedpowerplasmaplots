@@ -110,7 +110,7 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
     v_overshoot = v_max / v_pulse
     pulse_stable = int((settling_end + end_pulse) / 2)  # point where the pulse is very stable
     # energy
-    p = abs(v * c)  # for this to be correct, make sure lines are aligned in b_correct_lines using offset 'v_div'
+    p = (v * c)  # for this to be correct, make sure lines are aligned in b_correct_lines using offset 'v_div'
     e = integrate.cumtrapz(p, t, initial=0)
     p_rise = p[settling_start:pulse_stable]
     e_rise = e[settling_start:pulse_stable][-1]

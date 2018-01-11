@@ -1,6 +1,6 @@
 import numpy as np
 
-
+#127.8
 def correct_lines(line_objs, div_zero=128.0, offsets=[]):
     """
     correct and scale scope lines from easyscope parser. Assumes all lines have 0 v_offset (which is point 128)

@@ -48,9 +48,7 @@ def get_vol_cur_dir(path):
     return lines
 
 
-def get_vol_cur_multiple(base_filename,
-                         current_scaling,
-                         delay):
+def get_vol_cur_multiple(base_filename, **kwargs):
     """
     Used if multiple scope waveforms are captured per measurement.
     These waveforms are all appended to the data in calc_run.py
@@ -63,10 +61,9 @@ def get_vol_cur_multiple(base_filename,
     lines = []
     while True:
         try:
-            print(base_filename, i)
+            # print(base_filename, i)
             lines.append(get_vol_cur_single(base_filename+'_'+str(i),
-                         current_scaling=current_scaling,
-                         delay=delay))
+                         **kwargs))
             i += 1
         except IOError:
             break

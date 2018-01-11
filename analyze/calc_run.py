@@ -127,6 +127,7 @@ def calc_run(run_dir,
         dic = {}
         try:
             if scope_multiple:
+                print('input csv: ' + str(data_row[scope_file_name_index]))
                 lines = get_vol_cur_multiple(run_dir + scope_dir + '/' + str(data_row[scope_file_name_index]),
                                              current_scaling=current_scaling,
                                              delay=delay

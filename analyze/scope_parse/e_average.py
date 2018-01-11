@@ -35,8 +35,8 @@ def calc_output_avg(lines, react_cap, gen_res_high=225, gen_res_low=50):
             data[key] = np.average(values)
             for i, v in enumerate(values):
                 # values should deviate no more than 15% of average, except for some unstable values.
-                if key in ['end', 'c_max', 'c_min', 'v_min']:
-                    required_stability = 1  # max double of average
+                if key in ['end', 'c_max', 'c_min', 'v_min', 'e_rise', 'e_plasma']:
+                    required_stability = 1.5  # max double of average
                 elif key in ['start']:
                     required_stability = 4  # max twice double.
                 else:

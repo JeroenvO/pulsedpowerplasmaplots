@@ -17,7 +17,7 @@ data = load_pickles("G:/Prive/MIJN-Documenten/TU/62-Stage/20180110/")
 # data = [d for d in data if d['input_l'] <=4 ]
 
 
-fig, ax_dens = plt.subplots(4, 1, figsize=(5, 12))
+fig, ax_dens = plt.subplots(5, 1, figsize=(5, 15))
 # data = filter_data(data, input_v_output=15e3)
 # data = filter_data(data, inductance=26)
 
@@ -54,6 +54,8 @@ for power in ['output']:
         #     key = 'input_p'
         ax_dens[3].scatter(edens, line['output_p_avg'], label=l, c=c, marker=m)
         ax_dens[3].scatter(edens, line['input_p'], label=l, c=c, marker='x')
+
+        ax_dens[4].scatter(edens, line['input_f'], label=l, c=c, marker=m)
     # m = 'o'
 
 marker_legends = []
@@ -72,6 +74,7 @@ ax_dens[1].set_ylim([0, 7e-5])
 # ax_dens[0].set_ylim([0, 100])
 ax_dens[2].set_ylabel('Concentration [PPM]')
 ax_dens[3].set_ylabel('Power [W]')
+ax_dens[4].set_ylabel('Frequency [Hz]')
 ax_dens[3].set_xlabel('Energy density [J/l]')
 for a in ax_dens:
     a.grid(True)
