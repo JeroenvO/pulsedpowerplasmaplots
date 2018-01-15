@@ -17,6 +17,7 @@ jeroen@jjvanoorschot.nl
 """
 import os
 import pickle
+import glob
 
 import numpy as np
 from openpyxl.reader.excel import load_workbook, Workbook
@@ -87,7 +88,7 @@ def calc_run(run_dir,
             # read values from workbook
             data_row.append(cell.value)
 
-        if all([not data for data in data_row]):  # if line is all empty
+        if all([not data for data in data_row[0:3]]):  # if line is all empty
             print('finished reading')
             break
         if None in data_row:
@@ -111,9 +112,12 @@ def calc_run(run_dir,
         m3s = lss / 1000  # ls/min/1000/60=m3/s
         o3f = co3g * m3s  # (gram/m3)*(m3/s)=gram/second o3
 
-        if len(data_row) == 8:
+        if len(data_row) >= 8:
             if react_cap == REACTOR_GLASS_LONG:
-                assert data_row[7] == 26  # 26 uH coil with long glass reactor
+                if data_row[7]:
+                    assert data_row[7] == 26  # 26 uH coil with long glass reactor
+                else:
+                    data_row[7] = 26
             else:
                 assert data_row[7] == 26 or data_row[7] == 0
         elif len(data_row) == 7:  # inductance not supplied
@@ -243,27 +247,29 @@ def calc_run(run_dir,
 
 # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/" # directory with subdirectories with measurements
 # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/"  # directory with subdirectories with measurements
-path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180110/"  # directory with subdirectories with measurements
+path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180111/"  # directory with subdirectories with measurements
 # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180109/"  # directory with subdirectories with measurementspath = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180103-1000Hz/"  # directory with subdirectories with measurements
 ### to run dir with subdirs:
-dirs = os.listdir(path)
+
+dirs = glob.glob(path+'/run*')
 ### to run one dir
-# dirs = ['run5-3']
+# dirs = ['120171229']
 # dirs = ['run2-1us-q']
 # length of used measure cell
 meas_len = SHORT_MEAS_LEN
 # capacitance of used reactor
 react_cap = REACTOR_GLASS_SHORT_QUAD
 # which column of log.xlsx contains the filename for scope. 0=volt, 1=freq, 2=pulsew
-scope_file_name_index = 1
+scope_file_name_index = 0
 # whether multiple scope spectra are stored for each measurement. If true, save as xxx_y.csv with y as index number
 scope_multiple = True
 # scaling for current sensor is not done in scope, do it manually
-current_scaling = -0.5  # 0.5 for red current probe in v-range, -0.1 for pearson (inverted) in v-range, -100 for mv range.
+current_scaling = 0.5  # 0.5 for red current probe in v-range, -0.1 for pearson (inverted) in v-range, -100 for mv range.
 # compensate for delay in line, in array index (=usually 1ns)
 delay = 0
 for dir in dirs:
-    run_dir = path + dir + '/'
+    run_dir = dir + '/'
+    run_dir = run_dir.replace('\\', '/').replace('//', '/')
     if os.path.isdir(run_dir):
         print(run_dir)
         calc_run(run_dir,
@@ -273,3 +279,5 @@ for dir in dirs:
                  react_cap=react_cap,
                  current_scaling=current_scaling,
                  delay=delay)
+    else:
+        print('Path ' + str(run_dir) + ' does not exist.')

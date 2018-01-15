@@ -59,27 +59,29 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
     t_diff = t[1] - t[0]
     # assert t_diff == 1e-9  # time scale should be 1ns.
     # values based on current measurment. Assuming voltage waveform is aligned.
-    cur_peak_time = c.argmax()
-    cur_valley_time = c.argmin()
-    i_max = max(c)
-    assert c[cur_peak_time] == i_max
-    i_min = min(c)
-    assert c[cur_valley_time] == i_min
 
+    v_max_time = v.argmax()
+
+    c_peak_time = c[0:v_max_time].argmax()  # current peak is before voltage maximum
+    c_max = c[c_peak_time]
     v_min = min(v)
     v_max = max(v)
 
+    c_valley_time = c.argmin()
+    c_min = min(c)
+    assert c[c_valley_time] == c_min
+
     # some validation
-    assert cur_peak_time < cur_valley_time, 'Current valley before peak, signal is inverted!'
-    assert 500 <= v_max < 30e3, 'Max voltage (' + str(v_max) + 'V) should be between 0.5kV and 30kV!'
-    assert 2 <= i_max < 30, 'Max current (' + str(i_max) + 'A) should be between 2A and 30A!'
+    assert c_peak_time < c_valley_time, 'Current valley before peak, signal is inverted!'
+    assert 500 <= v_max < 30e3, 'Max voltage should be between 0.5kV and 30kV!'
+    assert 2 <= c_max < 30, 'Max current should be between 2A and 30A!'
 
     # Find the settling time of the current. Than use the time where the current is stable
     # to calculate the final pulse voltage. This pulse final voltage is then used to calculate
     # the settling time and risetime of the voltage.
 
     # all parts of current inside 10% of maximum, till end of pulse
-    i_time_settling_options = [abs(x) < 0.1 * i_max for x in c[0:cur_valley_time]]
+    i_time_settling_options = [abs(x) < 0.1 * c_max for x in c[0:c_valley_time]]
     ranges = count_ranges(i_time_settling_options)
     range_before, range_pulse = find_longest_ranges(ranges, 2)  # [end, length]
     end_pulse = range_pulse[0]
@@ -129,8 +131,8 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
         't': t,
         'v': v,
         'c': c,
-        'c_min': i_min,
-        'c_max': i_max,
+        'c_min': c_min,
+        'c_max': c_max,
         'v_min': v_min,
         'v_max': v_max,
         'v_pulse': v_pulse,

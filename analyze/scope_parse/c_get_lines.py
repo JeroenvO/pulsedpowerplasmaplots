@@ -5,8 +5,9 @@ from analyze.scope_parse.b_correct_lines import correct_lines
 
 
 def get_vol_cur_single(filename,
-                       current_scaling = -0.5,
-                       delay=0):
+                       current_scaling = 0.5,
+                       delay=0,
+                       voltage_offset=0):
     """
     Parse voltage and current from waveforms.
 
@@ -15,7 +16,8 @@ def get_vol_cur_single(filename,
     """
     line_objs = parse_file(filename)  # file to parse
     offsets = [
-        {'v_shift': delay},  # -16 works fine for exact match of waveforms
+        {'v_shift': delay,  # -16 works fine for exact match of waveforms with different cable length. Otherwise 0
+        'div_zero': voltage_offset},  # if voltage has another div_zero than current
         {'val_div_correct': current_scaling},  # -100 for Pearson 0.1v/a inverted.
         # {},
         # {}
@@ -28,9 +30,12 @@ def get_vol_cur_single(filename,
         if max(i) < 0.03:
             print("Warning!, scope current corrected for mV to V!")
             i *= 1000
+        elif max(i) > 2000:
+            i /= 1000
         else:
             raise Exception("Current scaling is incorrect!")
     assert 2 <= max(v) <= 30e3, "Voltage scaling incorrect!"
+    assert 2 <= max(i) <= 25, "Current scaling incorrect!"
     return [time_axis, v, i]
 
 

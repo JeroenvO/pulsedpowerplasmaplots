@@ -65,13 +65,16 @@ def parse_file(file='ceramic-700v-measure.csv', prepend_length=4, append_length=
         line_objs = [{'t_shift': None, 'line_length': line_length, 't_div': None}]
         lines = [content[data_length * i:data_length * (1 + i)] for i in
                  range(nr_lines)]  # split content into the multiple lines
-        for line in lines:
+        for i, line in enumerate(lines):
+            print("File "+file+" line "+str(i)+' :', end='')
             vars = line[-append_length:]
-            if not vars[4] == 'Trig\'d\r\n':
-                if vars[4] == 'Stop':
-                    print('Scope was paused.')
-                else:
-                    print("Warning: scope was not triggered!")
+            if vars[4] == 'Trig\'d\r\n':
+                print("Scope was triggered")
+            if vars[4] == 'Stop\r\n':
+                print('Scope was paused.')
+            else:
+                print("Warning: scope was not triggered!")
+
             t_div = vars[0].strip()
             t_shift = to_nr(vars[1])
             val_div = to_nr(vars[2])

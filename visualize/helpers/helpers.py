@@ -1,6 +1,6 @@
 import os
 import pickle
-
+import operator
 import numpy as np
 
 markers = ['+', 'o', '*', 'v', 'x', 'd', '>', '<', ',', '.']
@@ -65,14 +65,18 @@ def save_file(fig, name='plot', path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_py
 def filter_data(data, **kwargs):
     """
     Filter a list of dicts for given key=value in the dict
+    append '__<operator>' at key to choose custom operator from operator module.
 
     :param data: data to filter, array of dicts from pickle file
     :param kwargs: key=value, where key is key of dict and value is value to filter.
     :return: filtered data
     """
     for key, value in kwargs.items():
-        assert key in data[0]  # only check data[0], assume all dicts have the same keys
-        data = [d for d in data if d[key] == value]
+        key = key.split('__')
+        op = key[1] if len(key) == 2 else 'eq'
+        f = getattr(operator, op)
+        assert key[0] in data[0], 'Key is not found in dictionary!'  # only check data[0], assume all dicts have the same keys
+        data = [d for d in data if f(d[key[0]], value)]
     return data
 
 

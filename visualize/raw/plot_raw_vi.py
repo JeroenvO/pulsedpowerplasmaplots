@@ -8,9 +8,9 @@ from visualize.helpers.helpers import save_file
 # file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-100hz/run2-1us/scope/600.csv'
 # file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run2-1us-q/scope/1000-single1.csv'
 # file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180110/run5-4/scope/200_22.csv'
-file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180110/run4/scope/400_14.csv'
+file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180115-1/run1/scope/10_0.csv'
 
-x_axis, vol, cur = get_vol_cur_single(file, current_scaling=-0.5)
+x_axis, vol, cur = get_vol_cur_single(file, current_scaling=0.5)
 y1 = cur
 y2 = vol
 # y3=integrate.cumtrapz(y1, x_axis, initial=0)*-50
