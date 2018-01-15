@@ -7,7 +7,8 @@ from visualize.helpers.colors import color_list
 
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500Hz/run2-1us/data.pkl")
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run2-1us-q/data.pkl")
-data = load_pickles("G:/Prive/MIJN-Documenten/TU/62-Stage/20180110/")
+# data = load_pickles("G:/Prive/MIJN-Documenten/TU/62-Stage/20180110/")
+data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180115/run6")
 # data2 = load_pickles("G:/Prive/MIJN-Documenten/TU/62-Stage/20180110-test")
 ## To show long glass reactor:
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run1-1us/data.pkl")

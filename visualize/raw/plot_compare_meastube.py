@@ -3,20 +3,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from visualize.helpers.colors import color_list
-from visualize.helpers.helpers import load_pickle, get_values, markers
+from visualize.helpers.helpers import load_pickle, get_values, filter_data
 
-data2 = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/run1/data.pkl")
-data1 = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/run2-longmeas/data.pkl")
-# data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/run1/data.pkl")
+# data2 = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/run1/data.pkl")
+# data1 = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/run2-longmeas/data.pkl")
 
-# filter all values above 700v input, because below that is no plasma
-# data = [d for d in data if d['input_voltage']>700]
+data2 = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180115/run1/data.pkl")
+data1 = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180115/run4/data.pkl")
+
+data2 = filter_data(data2, input_f__le=500)
+data1 = filter_data(data1, input_f__le=500)
 
 # y = get_values(data, 'input_yield_gkwh')
 v1 = get_values(data1, 'o3_ppm')
 v2 = get_values(data2, 'o3_ppm')
-x1 = get_values(data1, 'input_voltage_output')
-x2 = get_values(data2, 'input_voltage_output')
+x1 = get_values(data1, 'input_f')
+x2 = get_values(data2, 'input_f')
 # w = get_values(data, 'pulse_duration')
 
 assert len(x1) == len(v1) == len(x2) == len(v2)

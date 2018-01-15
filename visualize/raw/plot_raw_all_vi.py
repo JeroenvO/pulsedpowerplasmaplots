@@ -6,11 +6,12 @@ from visualize.helpers.helpers import save_file
 # file='../../20171227 glasstube, spectrometer, plasma/1/800v-full'
 # file='../../20171228 glasstube/1/500v-full'
 # file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-100hz/run2-1us/scope/600.csv'
-file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180115/run1/scope/802'
-lines = []
+file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180115/run6/scope/100'
+
 # for i in range(10,15):
 #     lines.append(get_vol_cur_single(file+str(i)))
-lines = get_vol_cur_multiple(file, voltage_offset=30 )
+# lines = get_vol_cur_multiple(file, voltage_offset=30)
+lines = get_vol_cur_multiple(file)
 
 fig, ax1 = plt.subplots()
 ax2 = ax1.twinx()

@@ -43,7 +43,8 @@ def correct_lines(line_objs, div_zero_default=128.0, offsets=[]):
         div_zero = div_zero_default
         if offsets:
             if 'div_zero' in offsets[i]:
-                div_zero = offsets[i]['div_zero']
+                if offsets[i]['div_zero'] is not None:
+                    div_zero = offsets[i]['div_zero']
 
         # filter noise around zero.
         y = []

@@ -29,7 +29,7 @@ from analyze.spectrum_parse.c_concentration import ozone_concentration, ozone_pp
 from visualize.helpers.helpers import sort_data
 
 # defines, (usages see bottom of script)
-LONG_MEAS_LEN = 0.111
+LONG_MEAS_LEN = 0.107
 SHORT_MEAS_LEN = 0.03
 REACTOR_GLASS_LONG = 14E-12  # long glass reactor capacitance
 REACTOR_GLASS_SHORT = 6.2E-12  # short glass reactor capacitance
@@ -53,7 +53,8 @@ def calc_run(run_dir,
              scope_file_name_index=0,
              meas=SHORT_MEAS_LEN,
              current_scaling=0.5,
-             delay=0):
+             delay=0,
+             voltage_offset=None):
     """
     Calculate all parameters for one measure run. Output to a pickle and xlsx file.
 
@@ -68,12 +69,13 @@ def calc_run(run_dir,
     :param delay: Delay for the first scope line, to align lines.
     :return: none
     """
+    print("Calc run for "+run_dir)
     if log_file not in os.listdir(run_dir):
         return
     assert spect_dir in os.listdir(run_dir)
     assert scope_dir in os.listdir(run_dir)
     # Get ozone concentrations:
-    all_ozone = ozone_concentration(path_name=run_dir + spect_dir, opt_path=meas)
+    all_ozone = ozone_concentration(path_name=run_dir + '/' + spect_dir, opt_path=meas)
     all_ppm = ozone_ppm(all_ozone)
 
     # assuming format: voltage, freq, voltage on 18,9ohm input, meting spect, Temp, airflow
@@ -91,7 +93,7 @@ def calc_run(run_dir,
         if all([not data for data in data_row[0:3]]):  # if line is all empty
             print('finished reading')
             break
-        if None in data_row:
+        if None in data_row[0:7]:
             print("Error! Some empty cells found in: " + str(data_row))
         # 0: voltage        [V]
         # 1: freq           [Hz]
@@ -115,11 +117,11 @@ def calc_run(run_dir,
         if len(data_row) >= 8:
             if react_cap == REACTOR_GLASS_LONG:
                 if data_row[7]:
-                    assert data_row[7] == 26  # 26 uH coil with long glass reactor
+                    assert data_row[7] in [26, 46]  # 26 uH coil with long glass reactor
                 else:
                     data_row[7] = 26
             else:
-                assert data_row[7] == 26 or data_row[7] == 0
+                assert data_row[7] in [26, 0, 8]  # valid values for inductance
         elif len(data_row) == 7:  # inductance not supplied
             data_row.append(0)
             if react_cap == REACTOR_GLASS_LONG:
@@ -132,16 +134,16 @@ def calc_run(run_dir,
         try:
             if scope_multiple:
                 print('input csv: ' + str(data_row[scope_file_name_index]))
-                lines = get_vol_cur_multiple(run_dir + scope_dir + '/' + str(data_row[scope_file_name_index]),
+                lines = get_vol_cur_multiple(run_dir + '/' + scope_dir + '/' + str(data_row[scope_file_name_index]),
                                              current_scaling=current_scaling,
-                                             delay=delay
+                                             delay=delay, voltage_offset=voltage_offset
                                              )
                 assert any(lines)
                 output_calc = calc_output_avg(lines, react_cap=react_cap, gen_res_high=225, gen_res_low=50)
             else:
                 line = get_vol_cur_single(run_dir + scope_dir + '/' + str(data_row[scope_file_name_index]),
                                           current_scaling=current_scaling,
-                                          delay=delay)
+                                          delay=delay, voltage_offset=voltage_offset)
                 assert line
                 # calculate output parameters from d_calc.py and append them to the dict with prepend '_output'
                 output_calc = calc_output(line, react_cap=react_cap, gen_res_high=225, gen_res_low=50)
@@ -244,40 +246,40 @@ def calc_run(run_dir,
     print("finished writing")
     return 1
 
+if __name__ == 'main':
+    # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/" # directory with subdirectories with measurements
+    # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/"  # directory with subdirectories with measurements
+    # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180111/"  # directory with subdirectories with measurements
+    path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180109/"  # directory with subdirectories with measurementspath = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180103-1000Hz/"  # directory with subdirectories with measurements
+    ### to run dir with subdirs:
 
-# path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/" # directory with subdirectories with measurements
-# path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/"  # directory with subdirectories with measurements
-path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180111/"  # directory with subdirectories with measurements
-# path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180109/"  # directory with subdirectories with measurementspath = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180103-1000Hz/"  # directory with subdirectories with measurements
-### to run dir with subdirs:
-
-dirs = glob.glob(path+'/run*')
-### to run one dir
-# dirs = ['120171229']
-# dirs = ['run2-1us-q']
-# length of used measure cell
-meas_len = SHORT_MEAS_LEN
-# capacitance of used reactor
-react_cap = REACTOR_GLASS_SHORT_QUAD
-# which column of log.xlsx contains the filename for scope. 0=volt, 1=freq, 2=pulsew
-scope_file_name_index = 0
-# whether multiple scope spectra are stored for each measurement. If true, save as xxx_y.csv with y as index number
-scope_multiple = True
-# scaling for current sensor is not done in scope, do it manually
-current_scaling = 0.5  # 0.5 for red current probe in v-range, -0.1 for pearson (inverted) in v-range, -100 for mv range.
-# compensate for delay in line, in array index (=usually 1ns)
-delay = 0
-for dir in dirs:
-    run_dir = dir + '/'
-    run_dir = run_dir.replace('\\', '/').replace('//', '/')
-    if os.path.isdir(run_dir):
-        print(run_dir)
-        calc_run(run_dir,
-                 meas=meas_len,
-                 scope_file_name_index=scope_file_name_index,
-                 scope_multiple=scope_multiple,
-                 react_cap=react_cap,
-                 current_scaling=current_scaling,
-                 delay=delay)
-    else:
-        print('Path ' + str(run_dir) + ' does not exist.')
+    dirs = glob.glob(path+'/run*')
+    ### to run one dir
+    # dirs = ['120171229']
+    # dirs = ['run2-1us-q']
+    # length of used measure cell
+    meas_len = SHORT_MEAS_LEN
+    # capacitance of used reactor
+    react_cap = REACTOR_GLASS_SHORT_QUAD
+    # which column of log.xlsx contains the filename for scope. 0=volt, 1=freq, 2=pulsew
+    scope_file_name_index = 0
+    # whether multiple scope spectra are stored for each measurement. If true, save as xxx_y.csv with y as index number
+    scope_multiple = True
+    # scaling for current sensor is not done in scope, do it manually
+    current_scaling = 0.5  # 0.5 for red current probe in v-range, -0.1 for pearson (inverted) in v-range, -100 for mv range.
+    # compensate for delay in line, in array index (=usually 1ns)
+    delay = 0
+    for dir in dirs:
+        run_dir = dir + '/'
+        run_dir = run_dir.replace('\\', '/').replace('//', '/')
+        if os.path.isdir(run_dir):
+            print(run_dir)
+            calc_run(run_dir,
+                     meas=meas_len,
+                     scope_file_name_index=scope_file_name_index,
+                     scope_multiple=scope_multiple,
+                     react_cap=react_cap,
+                     current_scaling=current_scaling,
+                     delay=delay)
+        else:
+            print('Path ' + str(run_dir) + ' does not exist.')

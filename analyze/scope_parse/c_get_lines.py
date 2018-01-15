@@ -7,7 +7,7 @@ from analyze.scope_parse.b_correct_lines import correct_lines
 def get_vol_cur_single(filename,
                        current_scaling = 0.5,
                        delay=0,
-                       voltage_offset=0):
+                       voltage_offset=None):
     """
     Parse voltage and current from waveforms.
 
@@ -34,8 +34,10 @@ def get_vol_cur_single(filename,
             i /= 1000
         else:
             raise Exception("Current scaling is incorrect!")
-    assert 2 <= max(v) <= 30e3, "Voltage scaling incorrect!"
+    assert 1e3 <= max(v) <= 30e3, "Voltage scaling incorrect!"
+    assert -5e3 <= min(v) <= 500
     assert 2 <= max(i) <= 25, "Current scaling incorrect!"
+    assert -25 <= min(i) <= -2, "Current scaling incorrect!"
     return [time_axis, v, i]
 
 

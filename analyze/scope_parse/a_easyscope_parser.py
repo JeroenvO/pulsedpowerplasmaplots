@@ -70,7 +70,7 @@ def parse_file(file='ceramic-700v-measure.csv', prepend_length=4, append_length=
             vars = line[-append_length:]
             if vars[4] == 'Trig\'d\r\n':
                 print("Scope was triggered")
-            if vars[4] == 'Stop\r\n':
+            elif vars[4] == 'Stop\r\n':
                 print('Scope was paused.')
             else:
                 print("Warning: scope was not triggered!")

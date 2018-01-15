@@ -13,7 +13,9 @@ def load_pickle(filename):
         else:
             filename = filename + '.pkl'
     with open(filename, 'rb') as f:
-        return pickle.load(f)
+        d = pickle.load(f)
+        assert any(d)
+        return d
 
 
 def get_values(dicts, key):
@@ -44,6 +46,7 @@ def load_pickles(dir, filename='data.pkl'):
             data += load_pickle(dir + '/' + tdir + '/' + filename)
         except:
             pass  # invalid dir
+    assert any(data)
     return data
 
 
