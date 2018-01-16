@@ -6,7 +6,7 @@ Using definitions of https://nl.mathworks.com/help/control/ref/stepinfo.html
 """
 import numpy as np
 from scipy import integrate
-
+from analyze.defines import *
 
 def count_ranges(a):
     """
@@ -55,33 +55,37 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
     :return: dict with properties of the line.
     """
     # unpack
-    t, v, c = line
+    t, v, i = line
     t_diff = t[1] - t[0]
     # assert t_diff == 1e-9  # time scale should be 1ns.
     # values based on current measurment. Assuming voltage waveform is aligned.
 
-    v_max_time = v.argmax()
+    # validation on the real maxima/minima of current
+    assert i.argmax() < i.argmin(), 'Current valley before peak, signal is inverted!'
 
-    c_peak_time = c[0:v_max_time].argmax()  # current peak is before voltage maximum
-    c_max = c[c_peak_time]
     v_min = min(v)
     v_max = max(v)
+    v_max_time = np.where(v == v_max)[0][0]   # first value where voltage has maximum
+    # v_min_time = np.where(v == v_min)[0][-1]  # last value where voltage has minimum
+    # assert v_max_time < v_min_time, 'Voltage valley before peak, signal inverted!'
+    c_peak_time = i[0:v_max_time].argmax()  # current peak is before voltage maximum
+    c_max = i[c_peak_time]
 
-    c_valley_time = c.argmin()
-    c_min = min(c)
-    assert c[c_valley_time] == c_min
+    c_valley_time = i.argmin()
+    c_min = min(i)
+    assert i[c_valley_time] == c_min
 
     # some validation
     assert c_peak_time < c_valley_time, 'Current valley before peak, signal is inverted!'
-    assert 500 <= v_max < 30e3, 'Max voltage should be between 0.5kV and 30kV!'
-    assert 2 <= c_max < 30, 'Max current should be between 2A and 30A!'
+    assert MAX_VOLTAGE_MIN <= v_max < MAX_VOLTAGE_MAX, 'Max voltage error (%r' % v_max
+    assert MAX_CURRENT_MIN <= c_max < MAX_CURRENT_MAX, 'Max current error (%r)' % c_max
 
     # Find the settling time of the current. Than use the time where the current is stable
     # to calculate the final pulse voltage. This pulse final voltage is then used to calculate
     # the settling time and risetime of the voltage.
 
     # all parts of current inside 10% of maximum, till end of pulse
-    i_time_settling_options = [abs(x) < 0.1 * c_max for x in c[0:c_valley_time]]
+    i_time_settling_options = [abs(x) < 0.1 * c_max for x in i[0:c_valley_time]]
     ranges = count_ranges(i_time_settling_options)
     range_before, range_pulse = find_longest_ranges(ranges, 2)  # [end, length]
     end_pulse = range_pulse[0]
@@ -95,10 +99,14 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
         # all parts of current inside 10% of maximum, till end of pulse
         v_time_settling_options = [abs(x - v_pulse) < (0.3 * v_pulse) for x in v]
         ranges = count_ranges(v_time_settling_options)
+        print('Warning, voltage settling options increased from 10% to 30%!')
     assert ranges != [], "Error! Line is too unstable."
-    pulse = find_longest_ranges(ranges, 1)  # pulse=[end,length]
-    settling_end = pulse[0] - pulse[1]
-    t_settling_end = t[settling_end]
+    pulse = find_longest_ranges(ranges, 1)  # pulse=[end,length] of voltage pulse stable
+    settling_end = pulse[0] - pulse[1]  # voltage pulse stable start
+    # recalculate pulse voltage
+    v_pulse_new = np.mean(v[settling_end:pulse[0]])
+    assert abs(v_pulse-v_pulse_new)/v_pulse_new < 0.01
+    t_settling_end = t[settling_end]  # voltage pulse stable start time
     v05 = 0.05 * v_pulse
     settling_start = np.where(v > v05)[0][0]
     t_settling_start = t[settling_start]  # when v first rises above 0.05 of final
@@ -112,11 +120,11 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
     v_overshoot = v_max / v_pulse
     pulse_stable = int((settling_end + end_pulse) / 2)  # point where the pulse is very stable
     # energy
-    p = (v * c)  # for this to be correct, make sure lines are aligned in b_correct_lines using offset 'v_div'
+    p = (v * i)  # for this to be correct, make sure lines are aligned in b_correct_lines using offset 'v_div'
     e = integrate.cumtrapz(p, t, initial=0)
     p_rise = p[settling_start:pulse_stable]
     e_rise = e[settling_start:pulse_stable][-1]
-    p_res = np.append(c[0:pulse_stable] ** 2 * gen_res_high, c[pulse_stable:] ** 2 * gen_res_low)
+    p_res = np.append(i[0:pulse_stable] ** 2 * gen_res_high, i[pulse_stable:] ** 2 * gen_res_low)
     # 1/2*C*V^2 is energy stored in capacitor, which is lost after discharging pulse.
     e_cap = 1 / 2 * react_cap * v_pulse ** 2
     e_res = integrate.cumtrapz(p_res, t, initial=0)
@@ -130,7 +138,7 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
     data = {
         't': t,
         'v': v,
-        'c': c,
+        'c': i,
         'c_min': c_min,
         'c_max': c_max,
         'v_min': v_min,

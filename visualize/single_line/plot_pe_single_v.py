@@ -7,7 +7,7 @@ from analyze.scope_parse.c_get_lines import get_vol_cur_dir
 from visualize.helpers.helpers import filter_data
 
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500Hz/run9-20us/data.pkl")
-data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run2-1us-q/data.pkl")
+data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180115/run2-1us-q/data.pkl")
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180109/run1/data.pkl")
 data = filter_data(data, input_v_output=15e3)
 lw = 0.4  # linewidth

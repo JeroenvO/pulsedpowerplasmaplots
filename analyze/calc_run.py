@@ -27,15 +27,7 @@ from analyze.scope_parse.d_calc import calc_output
 from analyze.scope_parse.e_average import calc_output_avg
 from analyze.spectrum_parse.c_concentration import ozone_concentration, ozone_ppm
 from visualize.helpers.helpers import sort_data
-
-# defines, (usages see bottom of script)
-LONG_MEAS_LEN = 0.107
-SHORT_MEAS_LEN = 0.03
-REACTOR_GLASS_LONG = 14E-12  # long glass reactor capacitance
-REACTOR_GLASS_SHORT = 6.2E-12  # short glass reactor capacitance
-REACTOR_GLASS_SHORT_QUAD = 9e-12  # short glass reactor capacitance with four small electrodes parallel
-REACTOR_CERAMIC = 391E-12
-REACTOR_ALIXPRESS = 161E-12
+from analyze.defines import *
 
 # Folder with measuremtn. Folder has to contain:
 # * log.txt
@@ -117,11 +109,11 @@ def calc_run(run_dir,
         if len(data_row) >= 8:
             if react_cap == REACTOR_GLASS_LONG:
                 if data_row[7]:
-                    assert data_row[7] in [26, 46]  # 26 uH coil with long glass reactor
+                    assert data_row[7] in INDUCTANCE_LONG_REACTOR  # 26 uH coil with long glass reactor
                 else:
-                    data_row[7] = 26
+                    data_row[7] = 26  # uH
             else:
-                assert data_row[7] in [26, 0, 8]  # valid values for inductance
+                assert data_row[7] in INDUCTANCE_SHORT_REACTOR  # valid values for inductance
         elif len(data_row) == 7:  # inductance not supplied
             data_row.append(0)
             if react_cap == REACTOR_GLASS_LONG:
@@ -141,7 +133,7 @@ def calc_run(run_dir,
                 assert any(lines)
                 output_calc = calc_output_avg(lines, react_cap=react_cap, gen_res_high=225, gen_res_low=50)
             else:
-                line = get_vol_cur_single(run_dir + scope_dir + '/' + str(data_row[scope_file_name_index]),
+                line = get_vol_cur_single(run_dir + '/' + scope_dir + '/' + str(data_row[scope_file_name_index]),
                                           current_scaling=current_scaling,
                                           delay=delay, voltage_offset=voltage_offset)
                 assert line
@@ -180,12 +172,12 @@ def calc_run(run_dir,
                'o3_gramsec': o3f,  # o3 production in gram/second
 
                # o3 generation efficiency
-               'input_yield_gj': o3f / P,  # efficiency in gram/Joule
-               'input_yield_gkwh': o3f / Pk,  # efficiency in gram/kWh
+               'input_yield_gj': o3f / P if P else 0,  # efficiency in gram/Joule
+               'input_yield_gkwh': o3f / Pk if Pk else 0,  # efficiency in gram/kWh
                'output_p_avg': output_p_plasma,
                'output_energy_dens': output_p_plasma / lss,
-               'output_yield_gj': o3f / output_p_plasma,
-               'output_yield_gkwh': o3f / (output_p_plasma / 3.6e6),
+               'output_yield_gj': o3f / output_p_plasma if output_p_plasma else 0,
+               'output_yield_gkwh': o3f / (output_p_plasma / 3.6e6) if output_p_plasma else 0,
                }
 
         # add this measurement to the total list.
@@ -219,7 +211,7 @@ def calc_run(run_dir,
         # don't save arrays of values, it is too much information
         try:
             value = float(value)
-            if not np.isfinite(value):  # replace inf and -inf with 0
+            if not np.isfinite(value):
                 continue
         except:
             # skip columns with arrays as value.
@@ -240,13 +232,14 @@ def calc_run(run_dir,
             row.append(value)
         ws.append(row)
     # make unique filename because excel cannot open multiple workbooks with the same name
-    file_name = '-'.join(run_dir.split('/')[-3:]).strip().strip('-')
+    file_name = '-'.join(run_dir.split('/')[-2:]).strip().strip('-')
     wb.save(filename=run_dir + '/' + file_name + '.xlsx')
 
     print("finished writing")
     return 1
 
-if __name__ == 'main':
+
+if __name__ == '__main__':
     # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/" # directory with subdirectories with measurements
     # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/"  # directory with subdirectories with measurements
     # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180111/"  # directory with subdirectories with measurements

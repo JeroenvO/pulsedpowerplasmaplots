@@ -1,0 +1,5 @@
+backend      : TkAgg
+axes.formatter.use_mathtext : True
+
+font.family         : serif
+font.size           : 8.0

@@ -3,12 +3,15 @@ from scipy import integrate
 from visualize.helpers.helpers import sort_data
 
 from visualize.helpers.colors import color_list
-from visualize.helpers.helpers import load_pickle, save_file
+from visualize.helpers.helpers import load_pickle, save_file, filter_data
 
-data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run1-1us/data.pkl")
+# data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run1-1us/data.pkl")
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500Hz/run2-1us/data.pkl")
 # data = filter_data(data, input_v_output=15e3)
-data = sort_data(data, key='input_f')
+# data = sort_data(data, key='input_f')
+data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180115/run5/data.pkl")
+data = filter_data(data, input_v_output=15e3)
+data = filter_data(data, input_f=10)
 lw = 0.4  # linewidth
 colors = color_list(len(data))
 fig, ax = plt.subplots(6, 1, sharex=True, figsize=(5, 15))
@@ -26,7 +29,7 @@ for i, line in enumerate(data):
     ax[0].plot(t, p, label=l, color=colors[i], linewidth=lw)
 
     # plot power loss in resistors
-    ax[1].plot(t, line['output_p_res'], label=l, color=colors[i], linewidth=lw)
+    # ax[1].plot(t, line['output_p_res'], label=l, color=colors[i], linewidth=lw)
 
     # output reactor energy
     ax[2].plot(t, e_out, label=l, color=colors[i], linewidth=lw)
@@ -35,8 +38,8 @@ for i, line in enumerate(data):
     ax[2].plot(t, line['output_e_res'], label=l, color=colors[i], linewidth=lw)
 
     # total energy
-    ax[3].axhline(e_in, color=colors[i], linewidth=lw)
-    ax[3].plot(t, line['output_e_res'] + e_out, label=l, color=colors[i], linewidth=lw)
+    # ax[3].axhline(e_in, color=colors[i], linewidth=lw)
+    # ax[3].plot(t, line['output_e_res'] + e_out, label=l, color=colors[i], linewidth=lw)
 
     # voltage and current
     ax[4].plot(t, line['output_v'], label=l, color=colors[i], linewidth=lw)

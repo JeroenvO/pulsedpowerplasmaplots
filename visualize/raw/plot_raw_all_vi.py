@@ -1,17 +1,20 @@
 import matplotlib.pyplot as plt
 from scipy import integrate
 from analyze.scope_parse.c_get_lines import get_vol_cur_single, get_vol_cur_multiple
+from analyze.scope_parse.d_calc import calc_output
 from visualize.helpers.helpers import save_file
-
+from analyze.defines import *
 # file='../../20171227 glasstube, spectrometer, plasma/1/800v-full'
 # file='../../20171228 glasstube/1/500v-full'
 # file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-100hz/run2-1us/scope/600.csv'
-file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180115/run6/scope/100'
+# file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180111/run2/scope/850'
+file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180115/run3/'
 
 # for i in range(10,15):
-#     lines.append(get_vol_cur_single(file+str(i)))
+lines = [(get_vol_cur_single(file, current_scaling=-0.1))]
+calc = calc_output(lines[0], REACTOR_GLASS_LONG)
 # lines = get_vol_cur_multiple(file, voltage_offset=30)
-lines = get_vol_cur_multiple(file)
+# lines = get_vol_cur_multiple(file, current_scaling=-0.5)
 
 fig, ax1 = plt.subplots()
 ax2 = ax1.twinx()
@@ -30,6 +33,9 @@ ax1.tick_params('y', colors='b')
 ax2.tick_params('y', colors='r')
 plt.title('V and I for 1us, 15kV pulse, small_glass')
 plt.show()
+
+fig4,ax4 = plt.subplots()
+ax4.plot(calc['t'], calc['e'])
 
 # ax2.axis([2000,5000,-9000,9000])
 # ax1.axis([2000,5000,-0.5,0.5])
