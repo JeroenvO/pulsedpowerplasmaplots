@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from visualize.helpers.colors import color_list
-from visualize.helpers.helpers import load_pickle, get_values, filter_data
+from visualize.helpers.data import load_pickle, get_values, filter_data
 
 # data2 = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/run1/data.pkl")
 # data1 = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/run2-longmeas/data.pkl")

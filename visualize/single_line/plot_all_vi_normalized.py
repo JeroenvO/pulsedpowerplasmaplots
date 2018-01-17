@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 from visualize.helpers.colors import color_list
-from visualize.helpers.helpers import load_pickle, save_file
+from visualize.helpers.data import load_pickle, save_file
 
 data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180103/run2-1us/data.pkl")
 

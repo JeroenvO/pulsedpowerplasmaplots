@@ -2,7 +2,8 @@ import matplotlib.pyplot as plt
 
 from analyze.spectrum_parse.a_spectrasuite_parser import parse_file
 
-data = parse_file('G:/Prive/MIJN-Documenten/TU/62-Stage/20180110/run5-4/spect/')
+data = parse_file('G:/Prive/MIJN-Documenten/TU/62-Stage/20180115/run1/spect/')
+data[1] = data[1][10:]
 
 fig, ax = plt.subplots()
 for d in data[1]:

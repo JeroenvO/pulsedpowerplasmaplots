@@ -77,5 +77,5 @@ def calc_output_avg(lines, react_cap, gen_res_high=225, gen_res_low=50):
                 if data[key] != 0 and abs((data[key] - v)/data[key]) > required_stability:
                     raise Exception('Key "' + key + '" with value (' + str(v) + ') in file ' + str(i) +
                                     ' is too far from average (' + str(data[key]) + ') of measurement!')
-    assert len(output[-1]) == len(data)
+    # assert len(output[-1]) == len(data)
     return data

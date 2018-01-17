@@ -1,13 +1,14 @@
 import matplotlib.pyplot as plt
 
 from visualize.helpers.colors import color_list
-from visualize.helpers.helpers import load_pickles, save_file, get_values
+from visualize.helpers.data import load_pickles, save_file, get_values, filter_data
 from analyze.scope_parse.c_get_lines import get_vol_cur_dir
 import numpy as np
 
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180103/run2-1us/data.pkl")
-data = load_pickles('G:/Prive/MIJN-Documenten/TU/62-Stage/20180111')
-data = [d for d in data if d['input_v'] > 600]
+# data = load_pickles('G:/Prive/MIJN-Documenten/TU/62-Stage/20180111')
+data = load_pickles('20180104-500hz')
+data = filter_data(data, input_v__gt=600)
 
 lw = 0.4  # linewidth
 

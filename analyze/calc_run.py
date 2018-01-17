@@ -26,7 +26,7 @@ from analyze.scope_parse.c_get_lines import get_vol_cur_single, get_vol_cur_mult
 from analyze.scope_parse.d_calc import calc_output
 from analyze.scope_parse.e_average import calc_output_avg
 from analyze.spectrum_parse.c_concentration import ozone_concentration, ozone_ppm
-from visualize.helpers.helpers import sort_data
+from visualize.helpers.data import sort_data
 from analyze.defines import *
 
 # Folder with measuremtn. Folder has to contain:
@@ -144,8 +144,9 @@ def calc_run(run_dir,
                 dic['output_' + key] = val
             # output power on plasma [Watt], compensated for capacitance
             output_p_plasma = (dic['output_e_plasma'] * data_row[1])
+            output_p_plasma_single = np.array(dic['output_e_plasma_single']) * data_row[1]
         except IOError:
-            output_p_plasma = 0
+            output_p_plasma = output_p_plasma_single = 0
 
         dic = {**dic,
                # manually noted values (inputs)
@@ -178,6 +179,9 @@ def calc_run(run_dir,
                'output_energy_dens': output_p_plasma / lss,
                'output_yield_gj': o3f / output_p_plasma if output_p_plasma else 0,
                'output_yield_gkwh': o3f / (output_p_plasma / 3.6e6) if output_p_plasma else 0,
+               'output_energy_dens_single': output_p_plasma_single / lss,
+               'output_yield_gj_single': o3f / output_p_plasma_single if any(output_p_plasma_single) else 0,
+               'output_yield_gkwh_single': o3f / (output_p_plasma_single / 3.6e6) if any(output_p_plasma_single) else 0,
                }
 
         # add this measurement to the total list.

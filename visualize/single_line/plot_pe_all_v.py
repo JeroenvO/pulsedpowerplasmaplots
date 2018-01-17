@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 from scipy import integrate
-from visualize.helpers.helpers import sort_data
+from visualize.helpers.data import sort_data
 
 from visualize.helpers.colors import color_list
-from visualize.helpers.helpers import load_pickle, save_file, filter_data
+from visualize.helpers.data import load_pickle, save_file, filter_data
 
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run1-1us/data.pkl")
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500Hz/run2-1us/data.pkl")

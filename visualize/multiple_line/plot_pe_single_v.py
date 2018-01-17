@@ -2,9 +2,9 @@ from scipy import integrate
 import matplotlib.pyplot as plt
 
 from visualize.helpers.colors import color_list
-from visualize.helpers.helpers import load_pickle, save_file
+from visualize.helpers.data import load_pickle, save_file
 from analyze.scope_parse.c_get_lines import get_vol_cur_dir
-from visualize.helpers.helpers import filter_data
+from visualize.helpers.data import filter_data
 
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500Hz/run9-20us/data.pkl")
 data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180115/run3/data.pkl")

@@ -1,67 +1,7 @@
-import os
-import pickle
-import operator
 import numpy as np
+from scipy.interpolate import interp1d
 
 markers = ['+', 'o', '*', 'v', 'x', 'd', '>', '<', ',', '.']
-
-
-def load_pickle(path):
-    if path[-4:] != '.pkl':
-        if path[-5] == '.' or path[-4] == '.':
-            # random file with extension
-            return None
-        elif path[-8:] != 'data.pkl':
-            path = path + '/data.pkl'
-        else:
-            path = path + '.pkl'
-
-    if not os.path.exists(path):
-        path = 'G:/Prive/MIJN-Documenten/TU/62-Stage/' + path  # try full path.
-
-    assert os.path.exists(path)
-
-    with open(path, 'rb') as f:
-        d = pickle.load(f)
-        assert any(d)
-        return d
-
-
-def get_values(dicts, key):
-    """
-    Get all values from a list of dicts with a given key
-    stop if list is empty or zero
-
-    :param dicts: the list of dicts to search
-    :param key: the key to search each dict for
-    :return: list of values
-    """
-    a = np.array([d[key] if key in d else 0 for d in dicts])
-    # assert any(a)
-    return a
-
-
-def load_pickles(dir, filename='data.pkl'):
-    """
-    Load pickles from all directories in a path.
-
-    :param dir: dir with subdirs which have data.pkl
-    :return: list of dicts with processed measure data
-    """
-    data = []
-    if not os.path.exists(dir):
-        dir = 'G:/Prive/MIJN-Documenten/TU/62-Stage/' + dir  # try full path.
-
-    dirs = os.listdir(dir, )
-
-    for tdir in dirs:
-        if os.path.isdir(dir+'/'+tdir):
-            try:
-                data += load_pickle(dir + '/' + tdir + '/' + filename)
-            except:
-                pass  # invalid dir
-    assert any(data)
-    return data
 
 
 def save_file(fig, name='plot', path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots', **kwargs):
@@ -80,40 +20,7 @@ def save_file(fig, name='plot', path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_py
     fig.savefig(path + '/' + name + '.pdf', bbox_inches='tight', **kwargs)
 
 
-def filter_data(data, **kwargs):
-    """
-    Filter a list of dicts for given key=value in the dict
-    append '__<operator>' at key to choose custom operator from operator module.
-
-    :param data: data to filter, array of dicts from pickle file
-    :param kwargs: key=value, where key is key of dict and value is value to filter.
-    :return: filtered data
-    """
-    assert any(data)
-    for key, value in kwargs.items():
-        key = key.split('__')
-        op = key[1] if len(key) == 2 else 'eq'
-        f = getattr(operator, op)
-        assert key[0] in data[0], 'Key is not found in dictionary!'  # only check data[0], assume all dicts have the same keys
-        if op in ['contains']:  # reverse order of arguments for these ops.
-            data = [d for d in data if f(value, d[key[0]])]
-        else:
-            data = [d for d in data if f(d[key[0]], value)]
-    return data
-
-
-def sort_data(data, key):
-    """
-    Sort a list of dicts by a given key
-
-    :param data: input list of dicts
-    :param key: key to sort
-    :return: sorted list of dicts
-    """
-    return sorted(data, key=lambda k: k[key])
-
-
-def move_sn_y(ax, offs=0, dig=0, side='left', omit_last=False):
+def move_sn_y(ax, offs=0, dig=0, side='left', omit_last=False, lower_limit=1e-3, upper_limit=1e3):
     """
     Copied from https://github.com/prisae/blog-notebooks/blob/master/MoveSciNot.ipynb
     https://werthmuller.org/blog/2014/move-scientific-notation/
@@ -146,14 +53,13 @@ def move_sn_y(ax, offs=0, dig=0, side='left', omit_last=False):
     ax.ticklabel_format
     ax.yaxis.major.formatter.set_offset_string
     """
-    import matplotlib.pyplot as plt
     # Get the ticks
     locs = ax.get_yticks()
 
     # Put the last entry into a string, ensuring it is in scientific notation
     # E.g: 123456789 => '1.235e+08'
     # only if it is already in powers
-    if 1e3 > locs[0] > 1000:
+    if locs[-1] > upper_limit or locs[-1] < lower_limit:
         llocs = '%.3e' % locs[-1]
 
         # Get the magnitude, hence the number after the 'e'
@@ -187,7 +93,7 @@ def move_sn_y(ax, offs=0, dig=0, side='left', omit_last=False):
         return locs
 
 
-def set_plot(fig, plot_height=1, pulse=False):
+def set_plot(fig, plot_height=1, pulse=False, subplot=True):
     """
     Set plot settings for IEEE paper, combined with /plots_final/matplotlibrc
     https://www.bastibl.net/publication-quality-plots/
@@ -197,14 +103,78 @@ def set_plot(fig, plot_height=1, pulse=False):
     :param pulse: Whether a pulse is shown (cuts the plot to 1us pulse time)
     :return:
     """
-    width = 3.487
+    width = 3.7
     height = width / 1.618 * plot_height
-
+    if not subplot:
+        fig.axes[0].grid(True)  # only one ax has grid
     for ax in fig.axes:
-        ax.grid(True)
         if pulse:
             ax.set_xlim([-0.2, 2])
             ax.set_xlabel('time [$\mu$s]')
-        locs = move_sn_y(ax, offs=0.03, side='left', dig=1)
-    fig.set_size_inches(width, height)
+        if subplot:
+            ax.grid(True)
+        # locs = move_sn_y(ax, offs=0.03, side='left', dig=1)
     fig.subplots_adjust(left=.15, bottom=.16, right=.99, top=.97)
+    fig.set_size_inches(width, height, forward=True)
+    fig.tight_layout()
+
+
+def align_y_axis(ax1, ax2, minresax1, minresax2, ticks=7):
+    """ Sets tick marks of twinx axes to line up with 7 total tick marks
+    https://stackoverflow.com/questions/26752464/how-do-i-align-gridlines-for-two-y-axis-scales-using-matplotlib
+
+    ax1 and ax2 are matplotlib axes
+    Spacing between tick marks will be a factor of minresax1 and minresax2
+    """
+
+    ax1ylims = ax1.get_ybound()
+    ax2ylims = ax2.get_ybound()
+    ax1factor = minresax1 * ticks-1
+    ax2factor = minresax2 * ticks-1
+    ax1.set_yticks(np.linspace(ax1ylims[0],
+                               ax1ylims[1]+(ax1factor -
+                               (ax1ylims[1]-ax1ylims[0]) % ax1factor) %
+                               ax1factor,
+                               ticks))
+    ax2.set_yticks(np.linspace(ax2ylims[0],
+                               ax2ylims[1]+(ax2factor -
+                               (ax2ylims[1]-ax2ylims[0]) % ax2factor) %
+                               ax2factor,
+                               ticks))
+
+
+def interpolate(x, y, num=1000, kind='cubic'):
+    """
+    Interpolate a line for all points [x, y] and return a x,y line of num length
+
+    :param x: array of x points
+    :param y: array of y points
+    :param num: number of points in the interpolated line
+    :param kind: type of interpolation
+    :return:
+    """
+    assert any(x)
+    assert any(y)
+    assert len(x) > 3
+    assert len(y) > 3
+    x_i = np.linspace(min(x), max(x), num)
+    f = interp1d(x, y, kind=kind)
+    y_i = f(x_i)
+    return (x_i, y_i)
+
+
+def interpolate_plot(ax, x, y, **kwargs):
+    """
+    Plot an interpolated line on ax for x,y
+
+    :param ax: ax to plot interpolated line
+    :param x: xpoints to interpolate
+    :param y: ypoints to interpolate
+    :param kwargs:
+    :return: None
+    """
+    x, y = interpolate(x, y, **kwargs)
+    assert any(x)
+    assert any(y)
+    ax.plot(x, y, c='grey', zorder=-1, lw=0.9)
+

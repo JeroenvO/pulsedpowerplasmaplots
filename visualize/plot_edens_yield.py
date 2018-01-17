@@ -2,7 +2,7 @@ import matplotlib.lines as mlines
 
 import matplotlib.pyplot as plt
 import numpy as np
-from visualize.helpers.helpers import load_pickle, save_file, load_pickles, filter_data, get_values
+from visualize.helpers.data import load_pickle, save_file, load_pickles, filter_data, get_values
 from visualize.helpers.colors import color_list
 
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500Hz/run2-1us/data.pkl")
