@@ -2,7 +2,8 @@ from scipy import integrate
 import matplotlib.pyplot as plt
 
 from visualize.helpers.colors import color_list
-from visualize.helpers.data import load_pickle, save_file
+from visualize.helpers.data import load_pickle
+from visualize.helpers.plot import save_file
 from analyze.scope_parse.c_get_lines import get_vol_cur_dir
 from visualize.helpers.data import filter_data
 
