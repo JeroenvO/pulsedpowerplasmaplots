@@ -40,11 +40,16 @@ def correct_lines(line_objs, div_zero_default=128.0, offsets=[]):
 
     y_axes = []
     for i, line in enumerate(line_objs[1:]):  # first line_obj is generic data.
+        # each axis in the data
+
+        # set zero point
         div_zero = div_zero_default
         if offsets:
             if 'div_zero' in offsets[i]:
                 if offsets[i]['div_zero'] is not None:
                     div_zero = offsets[i]['div_zero']
+
+        assert abs(line['points'][0]-div_zero) < 3, 'Error! Line does not start at zero potential! (zero: %r)' % div_zero
 
         # filter noise around zero.
         y = []

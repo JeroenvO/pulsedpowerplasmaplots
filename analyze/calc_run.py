@@ -46,7 +46,8 @@ def calc_run(run_dir,
              meas=SHORT_MEAS_LEN,
              current_scaling=0.5,
              delay=0,
-             voltage_offset=None):
+             voltage_offset=None,
+             waveform_loose_stability=False):
     """
     Calculate all parameters for one measure run. Output to a pickle and xlsx file.
 
@@ -58,6 +59,7 @@ def calc_run(run_dir,
     :param scope_file_name_index: column of log_file that is used for the scope filenames, 0=volt, 1=freq, 2=pulsew
     :param meas: lenght of the measure cell
     :param current_scaling: Scale of the current. 20 for red sensor, 100 for green sensor
+    :param waveform_loose_stability: Set to True if the waveforms are very bad, this sets the stability checking less strict. Only used with scope_multiple=true
     :param delay: Delay for the first scope line, to align lines.
     :return: none
     """
@@ -100,7 +102,7 @@ def calc_run(run_dir,
         Pk = P / 3.6e6  # input power in kWh/s
         iEp = P / data_row[1]  # input energy per pulse [J]
         # iEpk = iEp / 1000 * 3600  # input energy per pulse {kWh]
-        co3 = all_ozone[data_row[4]]  # mol/m3
+        co3 = all_ozone[data_row[4]]  # mol/m3,
         co3g = co3 * 48  # gram/m3 o3
         lss = data_row[6] / 60  # liter air per second
         m3s = lss / 1000  # ls/min/1000/60=m3/s
@@ -131,7 +133,7 @@ def calc_run(run_dir,
                                              delay=delay, voltage_offset=voltage_offset
                                              )
                 assert any(lines)
-                output_calc = calc_output_avg(lines, react_cap=react_cap, gen_res_high=225, gen_res_low=50)
+                output_calc = calc_output_avg(lines, react_cap=react_cap, gen_res_high=225, gen_res_low=50, loose_stability=waveform_loose_stability)
             else:
                 line = get_vol_cur_single(run_dir + '/' + scope_dir + '/' + str(data_row[scope_file_name_index]),
                                           current_scaling=current_scaling,
@@ -247,7 +249,7 @@ if __name__ == '__main__':
     # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/" # directory with subdirectories with measurements
     # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/"  # directory with subdirectories with measurements
     # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180111/"  # directory with subdirectories with measurements
-    path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180109/"  # directory with subdirectories with measurementspath = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180103-1000Hz/"  # directory with subdirectories with measurements
+    # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180109/"  # directory with subdirectories with measurementspath = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180103-1000Hz/"  # directory with subdirectories with measurements
     ### to run dir with subdirs:
 
     dirs = glob.glob(path+'/run*')

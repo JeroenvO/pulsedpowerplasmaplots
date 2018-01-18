@@ -1,17 +1,17 @@
 import matplotlib.pyplot as plt
-from scipy import integrate
-from analyze.scope_parse.c_get_lines import get_vol_cur_single, get_vol_cur_multiple
-from analyze.scope_parse.d_calc import calc_output
-from visualize.helpers.data import save_file
+
 from analyze.defines import *
+from analyze.scope_parse.c_get_lines import get_vol_cur_single
+from analyze.scope_parse.d_calc import calc_output
+
 # file='../../20171227 glasstube, spectrometer, plasma/1/800v-full'
 # file='../../20171228 glasstube/1/500v-full'
 # file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-100hz/run2-1us/scope/600.csv'
 # file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180111/run2/scope/850'
-file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180115/run3/'
+file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180118-def2/run3-2/scope/400_4'
 
 # for i in range(10,15):
-lines = [(get_vol_cur_single(file, current_scaling=-0.1))]
+lines = [(get_vol_cur_single(file, current_scaling=0.5))]
 calc = calc_output(lines[0], REACTOR_GLASS_LONG)
 # lines = get_vol_cur_multiple(file, voltage_offset=30)
 # lines = get_vol_cur_multiple(file, current_scaling=-0.5)

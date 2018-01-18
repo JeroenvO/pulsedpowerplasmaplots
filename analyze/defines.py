@@ -3,9 +3,12 @@ Jeroen van Oorschot 2017-2018, Eindhoven University of Technology
 jeroen@jjvanoorschot.nl
 """
 
-# Measure tubes length
-LONG_MEAS_LEN = 0.107
-SHORT_MEAS_LEN = 0.03
+# Measure tubes length, original from matlab -> wrong
+# LONG_MEAS_LEN = 0.111
+# SHORT_MEAS_LEN = 0.03
+# Measure tubes length, as measured on 18-01-2018 by JvO
+LONG_MEAS_LEN = 0.113
+SHORT_MEAS_LEN = 0.036
 
 # Reactors
 REACTOR_GLASS_LONG = 14E-12  # long glass reactor capacitance

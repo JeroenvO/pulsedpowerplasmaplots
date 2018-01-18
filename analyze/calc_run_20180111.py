@@ -4,7 +4,7 @@ base = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180111/'
 
 # Multiple waveforms for each measurement are captured, and scope is not averaging.
 # Most waveforms have voltage and current of different triggerpoint, this is wrong.
-#
+
 # short quad 100hz
 calc_run(base + 'run1',
          REACTOR_GLASS_SHORT_QUAD,

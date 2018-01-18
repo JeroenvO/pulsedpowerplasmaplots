@@ -1,6 +1,11 @@
 from analyze.calc_run import *
+
+# first final measurement for normal pulses.
+
 d=-5 # delay
-base = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180115/'
+
+base = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180115-def1/'
+
 # short quad nocoil
 calc_run(base + 'run1',
          REACTOR_GLASS_SHORT_QUAD,

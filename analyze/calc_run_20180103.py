@@ -1,5 +1,7 @@
 from analyze.calc_run import *
 
+# ozone spectrum had boxcar width of 8 with these, so measurements less accurate
+
 base = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180103-1000hz/'
 
 dirs = glob.glob(base + '/run*')

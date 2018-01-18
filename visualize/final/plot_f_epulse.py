@@ -17,14 +17,17 @@ def plot_f_epulse(data, reactor):
     data = filter_data(data, input_v_output=15e3, input_l=1)
 
     fig, ax = plt.subplots()
-
+    uf = np.unique(get_values(data, 'input_f'))
     plotdata = []
-    for line in data:
-        epuls = np.array(line['output_e_plasma_single'])*1000
+    for f in uf:
+        d = filter_data(data, input_f=f)
+        l = get_values(d, key='output_e_plasma_single')  # returns list of arrays with values.
+        v = np.concatenate(l)
+        epuls = np.array(v)*1000  # array of values
         plotdata.append(epuls)
 
     plt.boxplot(plotdata)
-    plt.xticks(list(range(len(data)+1)), ['']+list(get_values(data, 'input_f')))
+    plt.xticks(list(range(len(uf)+1)), ['']+list(uf), rotation=45)
     ax.set_xlabel('Frequency [Hz]')
     ax.set_ylabel('Pulse plasma energy [mJ]')
     set_plot(fig)
@@ -36,15 +39,15 @@ if __name__ == '__main__':
     reactor = reactors[3]
     print(reactor)
     if reactor == 'long-glass-46uH':
-        data = load_pickle("20180115/run6")
+        data = load_pickle("20180115-def1/run6")
     elif reactor == 'long-glass-26uH':
-        data = load_pickle("20180115/run5")
+        data = load_pickle("20180115-def1/run5")
     elif reactor == 'short-glass-26uH':
-        data = load_pickle("20180115/run2")
+        data = load_pickle("20180115-def1/run2")
     elif reactor == 'short-glass-8uH':
-        data = load_pickle("20180115/run3")
+        data = load_pickle("20180115-def1/run3")
     elif reactor == 'short-glass-nocoil':
-        data = load_pickle("20180115/run1")
+        data = load_pickle("20180115-def1/run1")
     else:
         raise Exception("No input!")
     plot_f_epulse(data, reactor)

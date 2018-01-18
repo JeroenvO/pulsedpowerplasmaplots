@@ -1,6 +1,9 @@
 from analyze.calc_run import *
 
 base = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/'
+
+# ozone spectrum had boxcar width of 8 with these, so measurements less accurate
+
 # long reactor normal
 calc_run(base + 'run1',
          REACTOR_GLASS_LONG,

@@ -22,10 +22,28 @@ from analyze.spectrum_parse.b_trim_spectrum import trim_spectrum
 import numpy as np
 
 
-def ozone_concentration(path_name='G:/Prive/MIJN-Documenten/TU/62-Stage/20171229/spect',
-                        opt_path=0.03,
+REQUIRED_STABILITY_NORMAL = 0.04  # deviation max in individual results between wavelengths.
+REQUIRED_STABILITY_0 = 0.05
+REQUIRED_STABILITY_1 = 0.10  # more error on small ppm values, up to 75 PPM
+REQUIRED_STABILITY_2 = 0.20  # more error on small ppm values, up to 25 PPM
+REQUIRED_STABILITY_3 = 1  # more error on small ppm values, up to 12 PPM
+
+
+def ozone_concentration(path_name,
+                        opt_path,
                         plot_spect=False,
-                        plot_result=False):
+                        plot_result=False,
+                        validate=True):
+    """
+
+    :param path_name: path of measurements
+    :param opt_path: lenght of the measure cell
+    :param plot_spect: whether to plot the spectrum
+    :param plot_result: whether to plot the results
+    :return: mol/m3 ozone for each measurement in dir
+    """
+    assert validate # remove this for bad spectra parsing
+
     # read the file
     freqs, vals = parse_file(path_name=path_name, start_index=0)
     # align the spectrum with the molina absorbtion rates, and trim it to an fmin/fmax
@@ -40,6 +58,29 @@ def ozone_concentration(path_name='G:/Prive/MIJN-Documenten/TU/62-Stage/20171229
     Na = 6.02214e23  # avagadro constant
     results = [-np.log(val / vals[0]) / (opt_path * abso * Na) for val in vals]
     results_mean = [np.mean(result) for result in results]
+
+    # check stability of spectrum from mean
+    if validate:
+        for i, result in enumerate(results):
+            m = results_mean[i] # mean value of this result
+            if m != 0:
+                # low values get have higher uncertainty
+                if m < 0.0005:  # 12 PPM @ 22gr cels
+                    RS = REQUIRED_STABILITY_3
+                elif m < 0.001: # 25 PPM @ 22gr cels
+                    RS = REQUIRED_STABILITY_2
+                elif m < 0.003: # 75 PPM @ 22gr cels
+                    RS = REQUIRED_STABILITY_1
+                elif m < 0.006:  # 147 PPM
+                    RS = REQUIRED_STABILITY_0
+                else:
+                    RS = REQUIRED_STABILITY_NORMAL
+                for j, wavelength in enumerate(result):  # check all wavelengths
+                    d = (wavelength-m)/m  # percentage error relative to mean value
+                    if d > RS:
+                        print('wavelenght value: ' + str(wavelength) + ', index: '+str(j)+
+                              ' has stability '+str(d)+' with mean '+str(m))
+                        raise Exception('Unstable ozone wavelengths measurement')
     if plot_result:
         # validate the stability of the values over frequency.
         import matplotlib.pyplot as plt

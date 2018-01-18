@@ -2,7 +2,7 @@ from analyze.scope_parse.d_calc import calc_output
 import numpy as np
 
 
-def get_stability(key, loose=False):
+def get_stability(key, loose):
     """
     Required stability in
 
@@ -29,16 +29,18 @@ def get_stability(key, loose=False):
             required_stability = 0.2
         elif key in ['c_max', 'c_min', 't_rise', 't_settling', 'end', 'v_max', ]:
             required_stability = 0.8
-        elif key in ['start', 'rise_rate']:
+        elif key in ['rise_rate']:
             required_stability = 4
-        elif key in ['v_min', ]:
+        elif key in ['v_min']:
             required_stability = 15  # values close to zero have high
+        elif key in ['start']:
+            required_stability = 100 # start value depends on trigger, which can have changed.
         else:
             required_stability = 0.05
     return required_stability
 
 
-def calc_output_avg(lines, react_cap, gen_res_high=225, gen_res_low=50):
+def calc_output_avg(lines, react_cap, gen_res_high=225, gen_res_low=50, loose_stability=False):
     """
     Average the numeric values of multiple outputs from d_calc.
     List the array values of outputs together.
@@ -72,7 +74,7 @@ def calc_output_avg(lines, react_cap, gen_res_high=225, gen_res_low=50):
             data[key+'_single'] = values
             for i, v in enumerate(values):
                 # values should deviate no more than 15% of average, except for some unstable values.
-                required_stability = get_stability(key)
+                required_stability = get_stability(key, loose_stability)
 
                 if data[key] != 0 and abs((data[key] - v)/data[key]) > required_stability:
                     raise Exception('Key "' + key + '" with value (' + str(v) + ') in file ' + str(i) +

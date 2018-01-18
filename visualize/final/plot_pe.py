@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 
-from visualize.helpers.data import load_pickle, filter_data
 from visualize.helpers.plot import save_file, set_plot
-
+from visualize.helpers.data import filter_data
 
 def plot_pe(data, reactor):
     """
@@ -26,5 +25,6 @@ def plot_pe(data, reactor):
 
 
 if __name__ == '__main__':
+    from visualize.helpers.data import load_pickle
     data = load_pickle('20180115/run1')
     plot_pe(data, 'short-glass')
