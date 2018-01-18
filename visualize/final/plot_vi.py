@@ -1,10 +1,17 @@
 import matplotlib.pyplot as plt
 
-from visualize.helpers.data import load_pickle, get_values, filter_data
+from visualize.helpers.data import filter_data
 from visualize.helpers.plot import save_file, set_plot
 
 
 def plot_vi_all(data, reactor):
+    """
+    Plot voltage and current waveform. General function for plot_vi() and plot_vi_zoom()
+
+    :param data:
+    :param reactor:
+    :return:
+    """
     data = filter_data(data, input_f=10, input_l=1)[0]
     x_axis = data['output_t'][0]*1e6
     v_axis = data['output_v'][0]/1e3
@@ -28,11 +35,25 @@ def plot_vi_all(data, reactor):
 
 
 def plot_vi(data, reactor):
+    """
+    Plot voltage and current waveform, full pulse.
+
+    :param data:
+    :param reactor:
+    :return:
+    """
     fig = plot_vi_all(data, reactor)
     save_file(fig, name='vi-'+reactor, path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots_final')
 
 
 def plot_vi_zoom(data, reactor):
+    """
+    Plot voltage and current waveform, zoomed to the rising edge.
+
+    :param data:
+    :param reactor:
+    :return:
+    """
     fig = plot_vi_all(data, reactor)
     ax1 = fig.axes[0]
     ax1.set_xlim([-0.02, 0.25])

@@ -1,9 +1,14 @@
+"""
+Run all plot scripts from visualize/final
+Used to update all plots for the report at once.
+"""
 from visualize.final.plot_edens_yield import *
 from visualize.final.plot_pe import *
 from visualize.final.plot_vi import *
-from visualize.final.plot_edens_epulse import *
+from visualize.final.plot_f_epulse import *
 from visualize.final.plot_v_ppm import *
-
+from visualize.final.plot_l_ppm import *
+from matplotlib.pyplot import close
 
 for reactor in ['long-glass-46uH', 'long-glass-26uH', 'short-glass-nocoil', 'short-glass-26uH', 'short-glass-8uH']:
     if reactor == 'long-glass-46uH':
@@ -19,9 +24,9 @@ for reactor in ['long-glass-46uH', 'long-glass-26uH', 'short-glass-nocoil', 'sho
     else:
         raise Exception("No input!")
     plot_edens_yield(data, reactor)
-    plot_edens_epulse(data, reactor)
+    plot_f_epulse(data, reactor)
 
-
+close('all')
 for reactor in ['long-glass', 'short-glass']:
     data = []
     if reactor == 'long-glass': # 26uH, long glass,
@@ -31,5 +36,7 @@ for reactor in ['long-glass', 'short-glass']:
     plot_vi_zoom(data, reactor)
     plot_vi(data, reactor)
     plot_pe(data, reactor)
-    plot_v_ppm(data, reactor)
-
+    plot_v_ppm([], reactor)
+    plot_l_ppm([], reactor)
+plot_l_ppm([], 'long-glass', voltage=800)  # show effect of temperature and pulsewidth
+close('all')

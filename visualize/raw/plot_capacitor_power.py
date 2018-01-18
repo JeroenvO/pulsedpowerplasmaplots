@@ -13,7 +13,7 @@ REACTOR_ALIXPRESS = 161E-12
 
 
 # line = get_vol_cur_single('G:/Prive/MIJN-Documenten/TU/62-Stage/20180117/1000v-large-nocoil_3.csv', current_scaling=0.5, voltage_offset=53)
-lines = get_vol_cur_multiple('G:/Prive/MIJN-Documenten/TU/62-Stage/20180117/1000v-large-nocoil', current_scaling=0.5, voltage_offset=53)
+lines = get_vol_cur_multiple('G:/Prive/MIJN-Documenten/TU/62-Stage/20180117/1000v-large-nocoil', current_scaling=0.5, voltage_offset=53, delay=-5)
 # line = get_vol_cur_single('G:/Prive/MIJN-Documenten/TU/62-Stage/20180110/run4/scope/400_12.csv')
 # line = get_vol_cur_single('G:/Prive/MIJN-Documenten/TU/62-Stage/20180110/run2/scope/100_3.csv')
 fig, ax = plt.subplots(4,1,sharex=True)
@@ -23,7 +23,7 @@ v_out = v_in * 15
 
 for line in lines:
     output = calc_output(line, react_cap=REACTOR_GLASS_LONG)
-    e_cap_expected = 0.5 * REACTOR_GLASS_LONG * output['v_pulse'] ** 2
+    e_cap_expected = 2* 0.5 * REACTOR_GLASS_LONG * output['v_pulse'] ** 2
     v = output['v']
     c = output['c']
     t = output['t']

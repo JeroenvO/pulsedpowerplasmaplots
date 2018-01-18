@@ -60,10 +60,13 @@ def correct_lines(line_objs, div_zero_default=128.0, offsets=[]):
                 # first and last item
                 y.append(a)
         y = np.array(y)
+
+        # convert the oscilloscope points to the real waveform
         y = (y - div_zero) / div_point * line['val_div']
 
         if offsets:
             # sometimes val_div is not correctly exported. 'mili' tends to be ignored.
+            # also, the scope cannot set the current probe scaling to 0.5 or 0.1 v/A.
             if 'val_div_correct' in offsets[i]:
                 y /= offsets[i]['val_div_correct']
             if 'v_shift' in offsets[i]:  # vertical shift of n-elements to account for delay in probe/cables.

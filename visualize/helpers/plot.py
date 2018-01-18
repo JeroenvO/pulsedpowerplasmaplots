@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.interpolate import interp1d
 
-markers = ['+', 'o', '*', 'v', 'x', 'd', '>', '<', ',', '.']
+markers = ['o', 'D', '*', '+', 'v', 'x', 'd', '>', '<', ',', '.']
 
 
 def save_file(fig, name='plot', path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots', **kwargs):
@@ -155,8 +155,8 @@ def interpolate(x, y, num=1000, kind='cubic'):
     """
     assert any(x)
     assert any(y)
-    assert len(x) > 3
-    assert len(y) > 3
+    assert len(x) > 2
+    assert len(y) > 2
     x_i = np.linspace(min(x), max(x), num)
     f = interp1d(x, y, kind=kind)
     y_i = f(x_i)

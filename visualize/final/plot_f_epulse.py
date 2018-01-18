@@ -5,7 +5,15 @@ import numpy as np
 from visualize.helpers.data import load_pickle, filter_data, get_values
 from visualize.helpers.plot import save_file, set_plot
 
-def plot_edens_epulse(data, reactor):
+
+def plot_f_epulse(data, reactor):
+    """
+    Plots energy per pulse for various frequencies as boxplot
+
+    :param data:
+    :param reactor:
+    :return:
+    """
     data = filter_data(data, input_v_output=15e3, input_l=1)
 
     fig, ax = plt.subplots()
@@ -39,4 +47,4 @@ if __name__ == '__main__':
         data = load_pickle("20180115/run1")
     else:
         raise Exception("No input!")
-    plot_edens_epulse(data, reactor)
+    plot_f_epulse(data, reactor)

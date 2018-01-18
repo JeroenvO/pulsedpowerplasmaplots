@@ -1,16 +1,17 @@
 import matplotlib.pyplot as plt
 from scipy import integrate
 from analyze.scope_parse.c_get_lines import get_vol_cur_single
-from visualize.helpers.data import save_file
+from visualize.helpers.plot import save_file
 
 # file='../../20171227 glasstube, spectrometer, plasma/1/800v-full'
 # file='../../20171228 glasstube/1/500v-full'
 # file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-100hz/run2-1us/scope/600.csv'
 # file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run2-1us-q/scope/1000-single1.csv'
 # file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180110/run5-4/scope/200_22.csv'
-file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180115/run3/scope/700_2.csv'
+# file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180115/run3/scope/700_2.csv'
+file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180117//1000v-large-nocoil_0.csv'
 
-x_axis, vol, cur = get_vol_cur_single(file, current_scaling=0.5, voltage_offset=None)
+x_axis, vol, cur = get_vol_cur_single(file, current_scaling=0.5, voltage_offset=None, delay=-5)
 y1 = cur
 y2 = vol
 # y3=integrate.cumtrapz(y1, x_axis, initial=0)*-50

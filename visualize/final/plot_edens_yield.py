@@ -6,6 +6,13 @@ from visualize.helpers.plot import save_file, set_plot, interpolate_plot
 
 
 def plot_edens_yield(data, reactor):
+    """
+    Make various plots to energy density
+
+    :param data:
+    :param reactor:
+    :return:
+    """
     data = filter_data(data, input_v_output=15e3, input_l=1)
 
     fig, ax = plt.subplots(5, 1, sharex=True)
