@@ -3,5 +3,6 @@
 *.csv
 .idea
 molina_absorbtion.py
-plots
-plots_final
+*.pdf
+*.eps
+*.png
