@@ -39,7 +39,7 @@ def plot_v_ppm(data, reactor):
         d = filter_data(data, input_f=f)
         x = get_values(d, 'output_v_pulse')/1000
         y = get_values(d, 'o3_ppm')
-        interpolate_plot(ax, x, y, kind='linear')
+        interpolate_plot(ax, x, y) #, kind='linear'
         for x, y in zip(x, y):
             ax.scatter(x, y, c=c, marker=m)
         marker_legends.append(mlines.Line2D([], [], marker=m, label=str(f)+'Hz', color='grey', markerfacecolor='black', markeredgewidth=0))

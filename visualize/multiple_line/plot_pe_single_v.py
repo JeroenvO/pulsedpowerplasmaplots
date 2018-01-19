@@ -8,9 +8,9 @@ from analyze.scope_parse.c_get_lines import get_vol_cur_dir
 from visualize.helpers.data import filter_data
 
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500Hz/run9-20us/data.pkl")
-data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180115/run3/data.pkl")
+data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180115-def1/run1/data.pkl")
 data = filter_data(data, input_v_output=15e3)
-data = filter_data(data, input_f=800)
+data = filter_data(data, input_f=10)
 lw = 0.4  # linewidth
 colors = color_list(len(data[0]['output_t']))
 fig, ax = plt.subplots()
@@ -38,7 +38,7 @@ for j, line in enumerate(data):
         ax[2].plot(t, e_out, label=i, color=c, linewidth=lw)
 
         # energy loss in resistors
-        # ax[2].plot(t, e_res, label='generator', color='blue', linewidth=lw)
+        ax[2].plot(t, e_res, label='generator', color='blue', linewidth=lw)
 
         # total energy
         # ax[2].plot(t, [e_in] * len(t), label='input', color='green', linewidth=lw)

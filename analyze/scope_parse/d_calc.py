@@ -128,6 +128,7 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
     # 1/2*C*V^2 is energy stored in capacitor, which is lost after discharging pulse.
     e_cap = 1 / 2 * react_cap * v_pulse ** 2
     e_res = integrate.cumtrapz(p_res, t, initial=0)
+    e_res_total = e_res[-1]
     e_plasma = e[-1]  # energy to plasma is energy in positive pulse except charge on capacitor.
 
     # Correct the time axis to have 0 at the start of the pulse
@@ -155,6 +156,7 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
 
         'p_res': p_res,
         'e_res': e_res,
+        'e_res_total': e_res_total,
         'e_cap': e_cap,
         'e_plasma': e_plasma,
 

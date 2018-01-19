@@ -8,6 +8,7 @@ from visualize.final.plot_vi import *
 from visualize.final.plot_f_epulse import *
 from visualize.final.plot_v_ppm import *
 from visualize.final.plot_l_ppm import *
+from visualize.final.plot_f_eff import *
 from matplotlib.pyplot import close
 
 # combined plots of lots of data
@@ -18,6 +19,7 @@ for reactor in ['long-glass-26uH', 'short-glass-nocoil', 'short-glass-26uH']:
     elif reactor == 'long-glass-26uH':
         data = load_pickle('20180115-def1/run5')
         data += load_pickle('20180118-def2/run1')
+        data += load_pickle('20180119-def3/run1')
     elif reactor == 'short-glass-26uH':
         data = load_pickle('20180115-def1/run2')
         data += load_pickle('20180118-def2/run3')
@@ -31,6 +33,7 @@ for reactor in ['long-glass-26uH', 'short-glass-nocoil', 'short-glass-26uH']:
         raise Exception("No input!")
     plot_edens_yield(data, reactor)
     plot_f_epulse(data, reactor)
+    plot_f_eff(data, reactor)
 # close('all')
 #
 # # plots of a single waveform

@@ -165,7 +165,7 @@ def calc_run(run_dir,
                # calculated values from noted values. (This is not compensated for resistive losses in generator!!)
                'input_c': I,  # input current to generator
                'input_p': P,  # input power to generator
-               'input_pulse_energy': iEp,  # input energy per pulse in Joule
+               'input_e_pulse': iEp,  # input energy per pulse in Joule
                'input_energy_dens': P / lss,  # input energy to generator in Joule/ Liter used air
 
                # values from ozone spectrum, as obtained from spectrometer.

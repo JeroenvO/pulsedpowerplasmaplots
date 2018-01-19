@@ -12,7 +12,7 @@ def get_stability(key, loose):
     """
     if loose:
         print("Warning! Using loose average stability requirements!")
-        if key in ['e_rise', 'v_overshoot', 'e_plasma']:
+        if key in ['e_rise', 'v_overshoot', 'e_plasma', 'e_res_total']:
             required_stability = 4
         elif key in ['c_max', 'c_min', 't_rise', 'rise_rate', 't_settling', 'end', 'v_max', ]:
             required_stability = 2
@@ -25,7 +25,7 @@ def get_stability(key, loose):
     else:
         if key in ['e_rise', 'v_overshoot']:
             required_stability = 0.5
-        elif key in ['e_plasma']:
+        elif key in ['e_plasma', 'e_res_total']:
             required_stability = 0.2
         elif key in ['c_max', 'c_min', 't_rise', 't_settling', 'end', 'v_max', ]:
             required_stability = 0.8

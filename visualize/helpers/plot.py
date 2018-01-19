@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.interpolate import interp1d
 
-markers = ['o', 'D', '*', '+', 'v', 'x', 'd', '>', '<', ',', '.']
+markers = ['o','d', 'D', '*', '+', 'v', 'x', 'd', '>', '<', ',', '.']
 
 
 def save_file(fig, name='plot', path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots', **kwargs):
@@ -143,7 +143,7 @@ def align_y_axis(ax1, ax2, minresax1, minresax2, ticks=7):
                                ticks))
 
 
-def interpolate(x, y, num=1000, kind='cubic'):
+def interpolate(x, y, num=1000, kind='linear'):
     """
     Interpolate a line for all points [x, y] and return a x,y line of num length
 

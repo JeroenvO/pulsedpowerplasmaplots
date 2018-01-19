@@ -27,10 +27,22 @@ def plot_f_epulse(data, reactor):
         plotdata.append(epuls)
 
     plt.boxplot(plotdata)
-    plt.xticks(list(range(len(uf)+1)), ['']+list(uf), rotation=45)
+    # add x labels
+    num_boxes = len(uf)
+    plt.xticks(range(num_boxes+1), ['']+list(uf), rotation=45)
+
+    # add top x-labels with number of sample points
+    upperLabels = [''] + [str(len(s)) for s in plotdata]
+    ax2 = ax.twiny()
+    ax2.set_xlim(ax.get_xlim())
+    ax2.set_xticks(ax.get_xticks())
+    ax2.set_xticklabels(upperLabels)
+    ax2.set_xlabel("Number of samples")
+
+
     ax.set_xlabel('Frequency [Hz]')
     ax.set_ylabel('Pulse plasma energy [mJ]')
-    set_plot(fig)
+    set_plot(fig, plot_height=1.4)
     save_file(fig, name='epulse-'+reactor, path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots_final')
 
 

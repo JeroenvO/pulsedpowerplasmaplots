@@ -19,12 +19,12 @@ def plot_edens_yield(data, reactor):
 
     x = get_values(data, 'output_energy_dens')
 
-    interpolate_plot(ax[0], x, get_values(data, 'output_yield_gkwh'))
-    interpolate_plot(ax[1], x, get_values(data, 'o3_gramsec')*3600)
-    interpolate_plot(ax[2], x, get_values(data, 'o3_ppm'))
-    interpolate_plot(ax[3], x, get_values(data, 'input_p'))
-    interpolate_plot(ax[3], x, get_values(data, 'output_p_avg'))
-    interpolate_plot(ax[4], x, get_values(data, 'input_f'))
+    # interpolate_plot(ax[0], x, get_values(data, 'output_yield_gkwh'))
+    # interpolate_plot(ax[1], x, get_values(data, 'o3_gramsec')*3600)
+    # interpolate_plot(ax[2], x, get_values(data, 'o3_ppm'))
+    # interpolate_plot(ax[3], x, get_values(data, 'input_p'))
+    # interpolate_plot(ax[3], x, get_values(data, 'output_p_avg'))
+    # interpolate_plot(ax[4], x, get_values(data, 'input_f'))
 
     m = 'o'
     l = 'output'
@@ -40,12 +40,12 @@ def plot_edens_yield(data, reactor):
         ax[2].scatter(edens, line['o3_ppm'], label=l, c=c, marker=m)
 
         ax[3].scatter(edens, line['output_p_avg'], label=l, c=c, marker=m)
-        ax[3].scatter(edens, line['input_p'], label=l, c=c, marker='D')
+        ax[3].scatter(edens, line['input_p'], label=l, c=c, marker='d')
 
         ax[4].scatter(edens, line['input_f'], label=l, c=c, marker=m)
 
     marker_legends = [
-        mlines.Line2D([], [], marker='D', label='input power', color='grey', markerfacecolor='black', markeredgewidth=0),
+        mlines.Line2D([], [], marker='d', label='input power', color='grey', markerfacecolor='black', markeredgewidth=0),
         mlines.Line2D([], [], marker='o', label='plasma power', color='grey', markerfacecolor='black',markeredgewidth=0),
     ]
     lgd2 = ax[3].legend(handles=marker_legends, loc='upper left')
