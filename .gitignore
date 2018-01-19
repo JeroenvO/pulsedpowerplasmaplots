@@ -3,6 +3,6 @@
 *.csv
 .idea
 molina_absorbtion.py
-*.pdf
-*.eps
-*.png
+*/*.pdf
+*/*.eps
+*/*.png
