@@ -49,28 +49,27 @@ def plot_f_eff(data, reactor):
     plt.plot(uf, p_in, label='Input power [mJ]', color='black', marker='.')
 
     # plot efficiency
-    ax2 = ax.twinx()
-    eff = p_out_p / p_in *100
-    ax2.plot(uf, eff, marker='d', color='black')
+    # ax2 = ax.twinx()
+    # eff = p_out_p / p_in *100
+    # ax2.plot(uf, eff, marker='d', color='black')
 
     # legend
     marker_legends = [
+        mlines.Line2D([], [], marker='.', label='Input energy', color='black', markerfacecolor='black',
+                      markeredgewidth=0),
+
         mpatches.Patch(color=colors[2], label='Plasma energy'),
         mpatches.Patch(color=colors[1], label='Resistive energy'),
         mpatches.Patch(color=colors[0], label='Capacitive energy'),
-        mlines.Line2D([], [], marker='.', label='Input energy', color='black', markerfacecolor='black',
-                      markeredgewidth=0),
-        mlines.Line2D([], [], marker='d', label='Efficiency (%)', color='black', markerfacecolor='black',
-                      markeredgewidth=0)
+        # mlines.Line2D([], [], marker='d', label='Efficiency (%)', color='black', markerfacecolor='black',
+        #               markeredgewidth=0)
     ]
-
-
 
     ax.set_xlabel('Frequency [Hz]')
     ax.set_ylabel('Pulse energy [mJ]')
-    ax2.set_ylabel('input to plasma effiency [%]')
-    # ax.set_ylim([0, 30])
-    plt.legend(handles=marker_legends, loc='center right')
+    # ax2.set_ylabel('input to plasma effiency [%]')
+    ax.set_ylim([0, 40])
+    plt.legend(handles=marker_legends, loc='top right')
     set_plot(fig, plot_height=1.4)
     save_file(fig, name='eff-'+reactor, path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots_final')
 
