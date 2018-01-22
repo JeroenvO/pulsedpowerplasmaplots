@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.interpolate import interp1d
 
-markers = ['o','d', 'D', '*', '+', 'v', 'x', 'd', '>', '<', ',', '.']
+markers = ['o','d', '*', '+', 'v', 'x', 'D', '>', '<', ',', '.']
 
 
 def save_file(fig, name='plot', path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots', **kwargs):

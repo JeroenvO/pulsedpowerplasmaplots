@@ -9,6 +9,7 @@ from visualize.final.plot_f_epulse import *
 from visualize.final.plot_v_ppm import *
 from visualize.final.plot_l_ppm import *
 from visualize.final.plot_f_eff import *
+from visualize.final.plot_ppm_yield import *
 from matplotlib.pyplot import close
 
 # combined plots of lots of data
@@ -34,6 +35,7 @@ for reactor in ['long-glass-26uH', 'short-glass-nocoil', 'short-glass-26uH']:
     plot_edens_yield(data, reactor)
     plot_f_epulse(data, reactor)
     plot_f_eff(data, reactor)
+
 # close('all')
 #
 # # plots of a single waveform
@@ -54,4 +56,5 @@ for reactor in ['long-glass-26uH', 'short-glass-nocoil', 'short-glass-26uH']:
 #     plot_l_ppm([], reactor) # pulsewidth to ppm
 # # show effect of temperature and pulsewidth
 # plot_l_ppm([], 'long-glass', voltage=800)
+plot_ppm_yield()
 # close('all')
