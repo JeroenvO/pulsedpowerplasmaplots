@@ -7,7 +7,8 @@ from analyze.defines import *
 def get_vol_cur_single(filename,
                        current_scaling = 0.5,
                        delay=0,
-                       voltage_offset=None):
+                       voltage_offset=None,
+                       current_offset=None):
     """
     Parse voltage and current from waveforms.
 
@@ -18,7 +19,8 @@ def get_vol_cur_single(filename,
     offsets = [
         {'v_shift': delay,  # -16 works fine for exact match of waveforms with different cable length. Otherwise 0
         'div_zero': voltage_offset},  # if voltage has another div_zero than current
-        {'val_div_correct': current_scaling},  # -100 for Pearson 0.1v/a inverted.
+        {'val_div_correct': current_scaling,  # -100 for Pearson 0.1v/a inverted.
+        'div_zero': current_offset}
         # {},
         # {}
     ]

@@ -167,11 +167,30 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
         # 'test': i_time_settling
     }
     return data
-# #
-# #test_calc
-# from analyze.scope_parse.c_get_lines import get_vol_cur_single
-# import matplotlib.pyplot as plt
-#
-# file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-100hz/run2-1us/scope/600.csv'
-# line = get_vol_cur_single(file)
-# vals = calc_output(line)
+if __name__ == '__main__':
+    # plot values
+    from analyze.scope_parse.c_get_lines import get_vol_cur_single
+    import matplotlib.pyplot as plt
+
+    file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180115-def1/run1/scope/10_0.csv'
+    line = get_vol_cur_single(file, current_scaling=0.5, delay=-5, voltage_offset=30)
+    data = calc_output(line, REACTOR_GLASS_SHORT_QUAD)
+
+    x_axis = data['t'] * 1e6
+    v_axis = data['v']
+    i_axis = data['c']
+
+    fig, (ax1, ax2) = plt.subplots(2,1)
+
+    ax1.plot(x_axis, i_axis, 'b-')
+    ax2.plot(x_axis, v_axis, 'r-')  # voltage
+    ax1.axvline(data['end'])
+    ax1.axvline(data['start'])
+    ax2.axhline(data['v_pulse'])
+    ax2.axhline(data['v_max'])
+
+    ax1.set_ylabel('current [A]', color='b')
+    ax1.tick_params('y', colors='b')
+    ax2.set_ylabel('voltage [kV]', color='r')
+    ax2.tick_params('y', colors='r')
+    plt.show()

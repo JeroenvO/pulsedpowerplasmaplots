@@ -65,4 +65,4 @@ if __name__ == '__main__':
     data = []
     # reactor = 'short-glass'
     reactor = 'long-glass'
-    plot_v_ppm(data, reactor, 800)
+    plot_l_ppm(data, reactor, 1000)

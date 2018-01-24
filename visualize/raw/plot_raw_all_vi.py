@@ -8,11 +8,11 @@ from analyze.scope_parse.d_calc import calc_output
 # file='../../20171228 glasstube/1/500v-full'
 # file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-100hz/run2-1us/scope/600.csv'
 # file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180111/run2/scope/850'
-file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180115-def1/run2/scope/200_'
+file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180124-burst-1/run2-100hz-10puls/scope/4_'
 lines = []
 calcs = []
-for i in range(0,12):
-    line = get_vol_cur_single(file+str(i), current_scaling=0.5, delay=-5)
+for i in range(0,9):
+    line = get_vol_cur_single(file+str(i), current_scaling=-0.5, delay=-5, current_offset=125, voltage_offset=30)
     lines.append(line)
     calcs.append(calc_output(line, REACTOR_GLASS_LONG))
 # lines = get_vol_cur_multiple(file, voltage_offset=30)

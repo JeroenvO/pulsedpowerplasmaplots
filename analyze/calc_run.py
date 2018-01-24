@@ -47,6 +47,7 @@ def calc_run(run_dir,
              current_scaling=0.5,
              delay=0,
              voltage_offset=None,
+             current_offset=None,
              waveform_loose_stability=False):
     """
     Calculate all parameters for one measure run. Output to a pickle and xlsx file.
@@ -59,8 +60,10 @@ def calc_run(run_dir,
     :param scope_file_name_index: column of log_file that is used for the scope filenames, 0=volt, 1=freq, 2=pulsew
     :param meas: lenght of the measure cell
     :param current_scaling: Scale of the current. 20 for red sensor, 100 for green sensor
-    :param waveform_loose_stability: Set to True if the waveforms are very bad, this sets the stability checking less strict. Only used with scope_multiple=true
     :param delay: Delay for the first scope line, to align lines.
+    :param voltage_offset: Zero point for the voltage in the easyscope files. Used if scope line is not at div zero.
+    :param current_offset: Zero point for the current in the easyscope files. Used if scope line is not at div zero.
+    :param waveform_loose_stability: Set to True if the waveforms are very bad, this sets the stability checking less strict. Only used with scope_multiple=true
     :return: none
     """
     print("Calc run for "+run_dir)
@@ -122,7 +125,8 @@ def calc_run(run_dir,
                 data_row[7] = 26  # 26 uH coil with long glass reactor
         else:
             raise Exception
-
+        assert np.isfinite(data_row[7])
+        energy_loose_stability = (data_row[7] != 0)  # if using coil, energy calculation is less stable.
         # get output waveforms
         dic = {}
         try:
@@ -130,14 +134,14 @@ def calc_run(run_dir,
                 print('input csv: ' + str(data_row[scope_file_name_index]))
                 lines = get_vol_cur_multiple(run_dir + '/' + scope_dir + '/' + str(data_row[scope_file_name_index]),
                                              current_scaling=current_scaling,
-                                             delay=delay, voltage_offset=voltage_offset
+                                             delay=delay, voltage_offset=voltage_offset, current_offset=current_offset,
                                              )
                 assert any(lines)
-                output_calc = calc_output_avg(lines, react_cap=react_cap, gen_res_high=225, gen_res_low=50, loose_stability=waveform_loose_stability)
+                output_calc = calc_output_avg(lines, react_cap=react_cap, gen_res_high=225, gen_res_low=50, loose_stability=waveform_loose_stability, energy_loose_stability=energy_loose_stability)
             else:
                 line = get_vol_cur_single(run_dir + '/' + scope_dir + '/' + str(data_row[scope_file_name_index]),
                                           current_scaling=current_scaling,
-                                          delay=delay, voltage_offset=voltage_offset)
+                                          delay=delay, voltage_offset=voltage_offset, current_offset=current_offset)
                 assert line
                 # calculate output parameters from d_calc.py and append them to the dict with prepend '_output'
                 output_calc = calc_output(line, react_cap=react_cap, gen_res_high=225, gen_res_low=50)
@@ -196,8 +200,11 @@ def calc_run(run_dir,
         data = sort_data(data, 'input_f')
     elif scope_file_name_index == 2:
         data = sort_data(data, 'input_l')
+    elif scope_file_name_index in [4,8]:
+        pass
+        # data = sort_data(data, 'input_l')
     else:
-        raise Exception
+        raise Exception('Invalid scope file name index')
 
     # save pickle
     with open(run_dir + '/data.pkl', 'wb') as f:

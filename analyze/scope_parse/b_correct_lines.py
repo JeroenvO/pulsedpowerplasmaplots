@@ -50,6 +50,7 @@ def correct_lines(line_objs, div_zero_default=128.0, offsets=[]):
                     div_zero = offsets[i]['div_zero']
 
         assert abs(line['points'][0]-div_zero) < 3, 'Error! Line does not start at zero potential! (zero: %r)' % div_zero
+        assert any([(abs(p)-div_zero) > 10 for p in line['points']]), 'Error! Line has low signal!'
 
         # filter noise around zero.
         y = []

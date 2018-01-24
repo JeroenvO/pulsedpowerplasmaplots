@@ -1,9 +1,9 @@
 ﻿; This script was created using Pulover's Macro Creator
-; to record mouseclicks. 
+; to record mouseclicks.
 ; www.macrocreator.com
-; Exported to AHK and updated. 
+; Exported to AHK and updated.
 
-; Automatic capture of waveforms 
+; Automatic capture of waveforms
 ; Jeroen van Oorschot 2018
 
 #NoEnv
@@ -48,7 +48,7 @@ WaitReady() {
 F7::
 TrayTip, AHK EasyScope clicker, Started script!, 1
 Loop
-{	
+{
 	; Ask base filename
 	InputBox, filename, Give file name, file name prepend
 	if (ErrorLevel)
@@ -56,14 +56,14 @@ Loop
 		MsgBox, CANCEL was pressed.
 		Return
 	}
-	
+
 	Sleep, 500
-	Loop, 24 ; store 24 waveforms
+	Loop, 11 ; store 24 waveforms
 	{
 		Sleep, 200
 		indexzero := A_index-1
 		TrayTip, AHK EasyScope clicker, Iteration %indexzero%
-		
+
 		; check single run
 		Sleep, 200
 		Click, 316, 67 Left, Down
@@ -76,7 +76,7 @@ Loop
 			Return
 		Send, {Escape}
 		Sleep, 500
-		
+
 		; Refresh scope
 		Click, 269, 384 Left, Down
 		Click, 269, 384 Left, Up
@@ -84,12 +84,12 @@ Loop
 		if (WaitReady())
 			Return
 		Sleep, 100
-		
+
 		; Save spectrum
 		Click, 227, 144 Left, Down
 		Click, 227, 144 Left, Up
 		Sleep, 200
-		
+
 		; Select waveforms
 		WinActivate, Select the Chan ahk_class #32770
 		Sleep, 200
@@ -102,7 +102,7 @@ Loop
 		Click, 135, 58 Left, Down
 		Click, 135, 58 Left, Up
 		Sleep, 200
-		
+
 		; Save as
 		WinActivate, Save Wave Graph File ahk_class #32770
 		Sleep, 100
@@ -114,15 +114,15 @@ Loop
 		Sleep, 100
 		Send, {Enter}
 		Sleep, 100
-		
+
 		HideTrayTip()
 	}
-	
+
 	; Refresh scope
 	Click, 269, 384 Left, Down
 	Click, 269, 384 Left, Up
 	Sleep, 200
-	
+
 	MsgBox, 1, , Finished measurement %A_index%. Restart?, 100
 	IfMsgBox, Timeout
 		Return ; i.e. Assume "No" if it timed out.
