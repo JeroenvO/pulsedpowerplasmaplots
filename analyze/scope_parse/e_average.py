@@ -34,7 +34,7 @@ def get_stability(key, loose, energy_loose_stability):
             required_stability = 15  # values close to zero have high
         elif key in ['start']:
             required_stability = 100 # start value depends on trigger, which can have changed.
-        elif key in ['e_plasma', 'e_res_total']:
+        elif key in ['e_plasma', 'e_res_total', 'e_eff']:
             if energy_loose_stability:
                 required_stability = 0.2  # 20% accuracy of plasma energy for each measurement
             else:
@@ -44,13 +44,12 @@ def get_stability(key, loose, energy_loose_stability):
     return required_stability
 
 
-def calc_output_avg(lines, react_cap, gen_res_high=225, gen_res_low=50, loose_stability=False, energy_loose_stability=False):
+def calc_output_avg(lines, gen_res_high=225, gen_res_low=50, loose_stability=False, energy_loose_stability=False):
     """
     Average the numeric values of multiple outputs from d_calc.
     List the array values of outputs together.
 
     :param lines: Lines from c_get_lines. Assumes one measurement has many lines (=scope captures).
-    :param react_cap: capacitance of reactor
     :param gen_res_high: resistance on high side, start of pulse
     :param gen_res_low: resistance on low side, end of pulse
     :param energy_loose_stability: Set to true when using series coil. This loosens plasma energy stability criterium.
@@ -64,7 +63,7 @@ def calc_output_avg(lines, react_cap, gen_res_high=225, gen_res_low=50, loose_st
             length = len(line[0])
         else:
             assert len(line[0]) == length
-        output.append(calc_output(line, react_cap=react_cap, gen_res_high=gen_res_high, gen_res_low=gen_res_low))
+        output.append(calc_output(line, gen_res_high=gen_res_high, gen_res_low=gen_res_low))
 
     data = {}
     for key, value in output[-1].items():

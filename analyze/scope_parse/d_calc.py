@@ -44,12 +44,12 @@ def find_longest_ranges(range, howmany):
         return range[-1]
 
 
-def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
+def calc_output(line, react_cap=None, gen_res_high=225, gen_res_low=50):
     """
     Calc all kinds of properties for a line. The line should be an list of arrays.
 
     :param line: list of arrays: [time, voltage, current]
-    :param react_cap: capacitance of used reactor. Used to calculated capacitance loss
+    :param react_cap: capacitance of used reactor. Depricated. Capacitance use was incorrect.
     :param gen_res_high: Series resistance of generator on on-switch. Used to calculated resistive loss
     :param gen_res_low: Series resistance of generator on off-switch. Used to calculated resistive loss
     :return: dict with properties of the line.
@@ -126,7 +126,7 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
     e_rise = e[settling_start:pulse_stable][-1]
     p_res = np.append(i[0:pulse_stable] ** 2 * gen_res_high, i[pulse_stable:] ** 2 * gen_res_low)
     # 1/2*C*V^2 is energy stored in capacitor, which is lost after discharging pulse.
-    e_cap = 1 / 2 * react_cap * v_pulse ** 2
+    # e_cap = 1 / 2 * react_cap * v_pulse ** 2
     e_res = integrate.cumtrapz(p_res, t, initial=0)
     e_res_total = e_res[-1]
     e_plasma = e[-1]  # energy to plasma is energy in positive pulse except charge on capacitor.
@@ -157,7 +157,7 @@ def calc_output(line, react_cap, gen_res_high=225, gen_res_low=50):
         'p_res': p_res,
         'e_res': e_res,
         'e_res_total': e_res_total,
-        'e_cap': e_cap,
+        # 'e_cap': e_cap,
         'e_plasma': e_plasma,
 
         'start': start,

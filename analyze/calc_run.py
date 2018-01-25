@@ -37,7 +37,7 @@ from analyze.defines import *
 
 
 def calc_run(run_dir,
-             react_cap,
+             reactor,
              spect_dir='spect',
              scope_dir='scope',
              scope_multiple = False,
@@ -53,7 +53,7 @@ def calc_run(run_dir,
     Calculate all parameters for one measure run. Output to a pickle and xlsx file.
 
     :param run_dir: Directory with log file and directories for scope and spectra data.
-    :param react_cap: capacitance of the used reactor in F.
+    :param reactor: The used reactor
     :param spect_dir: subdirectory with the spectra data.
     :param scope_dir: subdirectory with the scope data
     :param log_file: name of the logfile with input parameters [voltage, freq, v18,9ohm input, spectfile, Temp, airflow]
@@ -100,11 +100,10 @@ def calc_run(run_dir,
         # 5: Temp           [deg. Cels.]
         # 6: airflow        [ls/min]
         # 7: inductance     [uH]
-        I = data_row[3] / resistor_val  # generator input current [A]
-        P = I * data_row[0]  # generator input power [W]
-        Pk = P / 3.6e6  # input power in kWh/s
-        iEp = P / data_row[1]  # input energy per pulse [J]
-        # iEpk = iEp / 1000 * 3600  # input energy per pulse {kWh]
+        input_i = data_row[3] / resistor_val  # generator input current [A]
+        input_p = input_i * data_row[0]  # generator input power [W]
+        input_p_k = input_p / 3.6e6  # input power in kWh/s
+        input_e_pulse = input_p / data_row[1]  # input energy per pulse [J]
         co3 = all_ozone[data_row[4]]  # mol/m3,
         co3g = co3 * 48  # gram/m3 o3
         lss = data_row[6] / 60  # liter air per second
@@ -112,7 +111,7 @@ def calc_run(run_dir,
         o3f = co3g * m3s  # (gram/m3)*(m3/s)=gram/second o3
 
         if len(data_row) >= 8:
-            if react_cap == REACTOR_GLASS_LONG:
+            if reactor == REACTOR_GLASS_LONG:
                 if data_row[7]:
                     assert data_row[7] in INDUCTANCE_LONG_REACTOR  # 26 uH coil with long glass reactor
                 else:
@@ -121,7 +120,7 @@ def calc_run(run_dir,
                 assert data_row[7] in INDUCTANCE_SHORT_REACTOR  # valid values for inductance
         elif len(data_row) == 7:  # inductance not supplied
             data_row.append(0)
-            if react_cap == REACTOR_GLASS_LONG:
+            if reactor == REACTOR_GLASS_LONG:
                 data_row[7] = 26  # 26 uH coil with long glass reactor
         else:
             raise Exception
@@ -137,18 +136,19 @@ def calc_run(run_dir,
                                              delay=delay, voltage_offset=voltage_offset, current_offset=current_offset,
                                              )
                 assert any(lines)
-                output_calc = calc_output_avg(lines, react_cap=react_cap, gen_res_high=225, gen_res_low=50, loose_stability=waveform_loose_stability, energy_loose_stability=energy_loose_stability)
+                output_calc = calc_output_avg(lines, gen_res_high=225, gen_res_low=50, loose_stability=waveform_loose_stability, energy_loose_stability=energy_loose_stability)
             else:
                 line = get_vol_cur_single(run_dir + '/' + scope_dir + '/' + str(data_row[scope_file_name_index]),
                                           current_scaling=current_scaling,
                                           delay=delay, voltage_offset=voltage_offset, current_offset=current_offset)
                 assert line
                 # calculate output parameters from d_calc.py and append them to the dict with prepend '_output'
-                output_calc = calc_output(line, react_cap=react_cap, gen_res_high=225, gen_res_low=50)
-            # append calculated output values to measure dict.
+                output_calc = calc_output(line, gen_res_high=225, gen_res_low=50)
+
+            # append calculated output values to the dict, this is what ends up in the pickle and excel files.
             for key, val in output_calc.items():
                 dic['output_' + key] = val
-            # output power on plasma [Watt], compensated for capacitance
+            # output power on plasma [Watt]
             output_p_plasma = (dic['output_e_plasma'] * data_row[1])
             output_p_plasma_single = np.array(dic['output_e_plasma_single']) * data_row[1]
         except IOError:
@@ -165,12 +165,13 @@ def calc_run(run_dir,
                'airflow_ls': lss,  # airflow in ls/s
                'airflow_m3s': m3s,  # airflow in m3/s
                'inductance': data_row[7],
+               'reactor': reactor,
 
                # calculated values from noted values. (This is not compensated for resistive losses in generator!!)
-               'input_c': I,  # input current to generator
-               'input_p': P,  # input power to generator
-               'input_e_pulse': iEp,  # input energy per pulse in Joule
-               'input_energy_dens': P / lss,  # input energy to generator in Joule/ Liter used air
+               'input_c': input_i,  # input current to generator
+               'input_p': input_p,  # input power to generator
+               'input_e_pulse': input_e_pulse,  # input energy per pulse in Joule
+               'input_energy_dens': input_p / lss,  # input energy to generator in Joule/ Liter used air
 
                # values from ozone spectrum, as obtained from spectrometer.
                'o3_gramm3': co3g,
@@ -179,8 +180,8 @@ def calc_run(run_dir,
                'o3_gramsec': o3f,  # o3 production in gram/second
 
                # o3 generation efficiency
-               'input_yield_gj': o3f / P if P else 0,  # efficiency in gram/Joule
-               'input_yield_gkwh': o3f / Pk if Pk else 0,  # efficiency in gram/kWh
+               'input_yield_gj': o3f / input_p if input_p else 0,  # efficiency in gram/Joule
+               'input_yield_gkwh': o3f / input_p_k if input_p_k else 0,  # efficiency in gram/kWh
                'output_p_avg': output_p_plasma,
                'output_energy_dens': output_p_plasma / lss,
                'output_yield_gj': o3f / output_p_plasma if output_p_plasma else 0,
@@ -188,6 +189,7 @@ def calc_run(run_dir,
                'output_energy_dens_single': output_p_plasma_single / lss,
                'output_yield_gj_single': o3f / output_p_plasma_single if any(output_p_plasma_single) else 0,
                'output_yield_gkwh_single': o3f / (output_p_plasma_single / 3.6e6) if any(output_p_plasma_single) else 0,
+               'e_eff': output_p_plasma / input_p if output_p_plasma else 0,
                }
 
         # add this measurement to the total list.
@@ -222,12 +224,15 @@ def calc_run(run_dir,
         ref_line = data[0]
     for key, value in sorted(ref_line.items()):
         # don't save arrays of values, it is too much information
-        try:
-            value = float(value)
-            if not np.isfinite(value):
+        if type(value) in [float, int] or type(value).__module__ == 'numpy': # all numeric values.
+            try:
+                value = float(value)
+                if not np.isfinite(value):
+                    continue
+            except:
+                # skip columns with arrays as value.
                 continue
-        except:
-            # skip columns with arrays as value.
+        elif type(value) is not str:  # all except strings, like lists and arrays, are discarded for excel data.
             continue
         keys.append(key)
     ws.append(keys)
@@ -236,12 +241,13 @@ def calc_run(run_dir,
     for meas in data:
         row = []
         for key in keys:
-            try:
-                value = meas[key]
-                if not np.isfinite(value):  # replace inf and -inf with 0
+            value = meas[key]
+            if type(value) is not str:
+                try:
+                    if not np.isfinite(value):  # replace inf and -inf with 0
+                        value = 0
+                except:
                     value = 0
-            except:
-                value = 0
             row.append(value)
         ws.append(row)
     # make unique filename because excel cannot open multiple workbooks with the same name
@@ -284,7 +290,7 @@ if __name__ == '__main__':
                      meas=meas_len,
                      scope_file_name_index=scope_file_name_index,
                      scope_multiple=scope_multiple,
-                     react_cap=react_cap,
+                     reactor=react_cap,
                      current_scaling=current_scaling,
                      delay=delay)
         else:

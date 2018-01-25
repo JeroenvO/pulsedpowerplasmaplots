@@ -11,11 +11,14 @@ LONG_MEAS_LEN = 0.113
 SHORT_MEAS_LEN = 0.036
 
 # Reactors
-REACTOR_GLASS_LONG = 14E-12  # long glass reactor capacitance
-REACTOR_GLASS_SHORT = 6.2E-12  # short glass reactor capacitance
-REACTOR_GLASS_SHORT_QUAD = 9e-12  # short glass reactor capacitance with four small electrodes parallel
-REACTOR_CERAMIC = 391E-12
-REACTOR_ALIXPRESS = 161E-12
+# REACTOR_GLASS_LONG = 14E-12  # long glass reactor capacitance
+# REACTOR_GLASS_SHORT = 6.2E-12  # short glass reactor capacitance
+# REACTOR_GLASS_SHORT_QUAD = 9e-12  # short glass reactor capacitance with four small electrodes parallel
+# REACTOR_CERAMIC = 391E-12
+# REACTOR_ALIXPRESS = 161E-12
+
+REACTOR_GLASS_LONG = 'long glass'
+REACTOR_GLASS_SHORT_QUAD = 'short glass'
 
 # Maxima and minima for waveforms
 MIN_CURRENT_MIN = -35

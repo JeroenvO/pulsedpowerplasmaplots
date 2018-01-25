@@ -27,7 +27,7 @@ for dir in dirs:
                  meas=meas_len,
                  scope_file_name_index=scope_file_name_index,
                  scope_multiple=scope_multiple,
-                 react_cap=react_cap,
+                 reactor=react_cap,
                  current_scaling=current_scaling,
                  delay=delay)
     else:
