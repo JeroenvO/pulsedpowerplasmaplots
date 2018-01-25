@@ -105,7 +105,8 @@ def calc_output(line, react_cap=None, gen_res_high=225, gen_res_low=50):
     settling_end = pulse[0] - pulse[1]  # voltage pulse stable start
     # recalculate pulse voltage
     v_pulse_new = np.mean(v[settling_end:pulse[0]])
-    assert abs(v_pulse-v_pulse_new)/v_pulse_new < 0.01
+    if v_pulse > 13e3:  # pulses for highest voltages have to be stable. Lower voltages are always less stable.
+        assert abs(v_pulse-v_pulse_new)/v_pulse_new < 0.01, 'Pulse voltage unstable.'
     t_settling_end = t[settling_end]  # voltage pulse stable start time
     v05 = 0.05 * v_pulse
     settling_start = np.where(v > v05)[0][0]
@@ -167,13 +168,15 @@ def calc_output(line, react_cap=None, gen_res_high=225, gen_res_low=50):
         # 'test': i_time_settling
     }
     return data
+
+
 if __name__ == '__main__':
     # plot values
     from analyze.scope_parse.c_get_lines import get_vol_cur_single
     import matplotlib.pyplot as plt
 
-    file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180115-def1/run1/scope/10_0.csv'
-    line = get_vol_cur_single(file, current_scaling=0.5, delay=-5, voltage_offset=30)
+    file = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180111-v-sweep/run1/scope/850_17.csv'
+    line = get_vol_cur_single(file, current_scaling=-0.5)
     data = calc_output(line, REACTOR_GLASS_SHORT_QUAD)
 
     x_axis = data['t'] * 1e6

@@ -3,7 +3,7 @@ import os
 import pickle
 
 import numpy as np
-
+from analyze.defines import *
 
 def load_pickle(path):
     if path[-4:] != '.pkl':
@@ -35,7 +35,9 @@ def get_values(dicts, key):
     :param key: the key to search each dict for
     :return: list of values
     """
-    # assert key in dicts[0]
+    assert any(dicts)
+    assert key in dicts[0]
+
     a = np.array([d[key] if key in d else 0 for d in dicts])
     # assert any(a)
     return a
@@ -79,7 +81,7 @@ def filter_data(data, **kwargs):
         op = key[1] if len(key) == 2 else 'eq'
         f = getattr(operator, op)
         # only check data[0], assume all dicts have the same keys
-        assert key[0] in data[0], 'Key is not found in dictionary!'
+        assert key[0] in data[0], 'Key %r is not found in dictionary!' % key[0]
         if op in ['contains']:  # reverse order of arguments for these ops.
             data = [d for d in data if f(value, d[key[0]])]
         else:
@@ -97,3 +99,34 @@ def sort_data(data, key):
     """
     return sorted(data, key=lambda k: k[key])
 
+
+def reactor_inducance_index(reactor, inductance):
+    """
+    Return an index based on combination of reactor and inductance
+
+    :param reactor:
+    :param inductance:
+    :return:
+    """
+    if reactor == REACTOR_GLASS_SHORT_QUAD:
+        assert inductance in INDUCTANCE_SHORT_REACTOR
+        return INDUCTANCE_SHORT_REACTOR.index(inductance)
+    elif reactor == REACTOR_GLASS_LONG:
+        assert inductance in INDUCTANCE_LONG_REACTOR
+        return INDUCTANCE_LONG_REACTOR.index(inductance) + len(INDUCTANCE_SHORT_REACTOR)
+    else:
+        raise Exception("Invalid reactor!")
+
+
+def annotate_data(data, **kwargs):
+    """
+    Annotate each item in data with a key=value from kwargs
+
+    :param data: input list of dicts
+    :param kwargs: key=val to annotate
+    :return:
+    """
+    for key, val in kwargs.items():
+        for i, line in enumerate(data):
+            data[i][key] = val
+    return data

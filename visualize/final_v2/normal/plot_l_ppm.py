@@ -58,7 +58,7 @@ def plot_l_ppm(data, reactor, voltage=1000):
     set_plot(fig)
     if voltage != 1000:
         reactor += '-'+str(voltage)
-    save_file(fig, name='l-ppm-'+reactor, path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots_final')
+    save_file(fig, name='l-ppm-'+reactor, path='plots_final_v2')
 
 
 if __name__ == '__main__':

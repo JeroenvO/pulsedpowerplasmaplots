@@ -71,7 +71,7 @@ def plot_f_eff(data, reactor):
     ax.set_ylim([0, 40])
     plt.legend(handles=marker_legends, loc='top right')
     set_plot(fig, plot_height=1.4)
-    save_file(fig, name='eff-'+reactor, path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots_final')
+    save_file(fig, name='eff-'+reactor, path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots_final_v1')
 
 
 if __name__ == '__main__':

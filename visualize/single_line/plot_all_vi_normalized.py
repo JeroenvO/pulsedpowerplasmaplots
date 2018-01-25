@@ -1,12 +1,12 @@
 import matplotlib.pyplot as plt
 
-from visualize.helpers.colors import color_list
+from visualize.helpers.colors import color_rainbow
 from visualize.helpers.data import load_pickle, save_file
 
 data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180103/run2-1us/data.pkl")
 
 # normalize
-colors = color_list(len(data))
+colors = color_rainbow(len(data))
 fig, ax = plt.subplots(2, 1)
 fig.suptitle('Normalized waveforms (1us, 1kHz, 26$\mu$H)')
 for i, line in enumerate(data):

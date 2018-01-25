@@ -60,7 +60,7 @@ def plot_edens_yield(data, reactor):
     ax[4].set_ylabel('Frequency [Hz]')
     ax[4].set_xlabel('Energy density [J/l]')
     set_plot(fig, plot_height=5)
-    save_file(fig, name='edens-'+reactor, path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots_final')
+    save_file(fig, name='edens-'+reactor, path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots_final_v1')
 
 
 if __name__ == '__main__':

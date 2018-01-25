@@ -1,7 +1,7 @@
 from scipy import integrate
 import matplotlib.pyplot as plt
 
-from visualize.helpers.colors import color_list
+from visualize.helpers.colors import color_rainbow
 from visualize.helpers.data import load_pickle
 from visualize.helpers.plot import save_file
 from analyze.scope_parse.c_get_lines import get_vol_cur_dir
@@ -12,7 +12,7 @@ data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180115-def1/run1/data
 data = filter_data(data, input_v_output=15e3)
 data = filter_data(data, input_f=10)
 lw = 0.4  # linewidth
-colors = color_list(len(data[0]['output_t']))
+colors = color_rainbow(len(data[0]['output_t']))
 fig, ax = plt.subplots()
 # fig, ax = plt.subplots(3, 1, sharex=True, figsize=(5, 15))
 ax = [None , None , ax]

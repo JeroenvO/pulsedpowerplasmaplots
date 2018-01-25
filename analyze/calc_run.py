@@ -48,7 +48,8 @@ def calc_run(run_dir,
              delay=0,
              voltage_offset=None,
              current_offset=None,
-             waveform_loose_stability=False):
+             waveform_loose_stability=False,
+             burst=False):
     """
     Calculate all parameters for one measure run. Output to a pickle and xlsx file.
 
@@ -64,6 +65,7 @@ def calc_run(run_dir,
     :param voltage_offset: Zero point for the voltage in the easyscope files. Used if scope line is not at div zero.
     :param current_offset: Zero point for the current in the easyscope files. Used if scope line is not at div zero.
     :param waveform_loose_stability: Set to True if the waveforms are very bad, this sets the stability checking less strict. Only used with scope_multiple=true
+    :param burst: number of burst mode pulses. False for normal pulses.
     :return: none
     """
     print("Calc run for "+run_dir)
@@ -100,6 +102,9 @@ def calc_run(run_dir,
         # 5: Temp           [deg. Cels.]
         # 6: airflow        [ls/min]
         # 7: inductance     [uH]
+        # 8: burst num      [n]
+        # 9: burst freq     [Hz]
+        # 10: burst inner   [kHz]
         input_i = data_row[3] / resistor_val  # generator input current [A]
         input_p = input_i * data_row[0]  # generator input power [W]
         input_p_k = input_p / 3.6e6  # input power in kWh/s
@@ -110,6 +115,7 @@ def calc_run(run_dir,
         m3s = lss / 1000  # ls/min/1000/60=m3/s
         o3f = co3g * m3s  # (gram/m3)*(m3/s)=gram/second o3
 
+        # check for correct inductance in logfile.
         if len(data_row) >= 8:
             if reactor == REACTOR_GLASS_LONG:
                 if data_row[7]:
@@ -125,7 +131,10 @@ def calc_run(run_dir,
         else:
             raise Exception
         assert np.isfinite(data_row[7])
-        energy_loose_stability = (data_row[7] != 0)  # if using coil, energy calculation is less stable.
+
+        # if using coil, energy calculation is less stable.
+        energy_loose_stability = (data_row[7] != 0)
+
         # get output waveforms
         dic = {}
         try:
@@ -145,12 +154,21 @@ def calc_run(run_dir,
                 # calculate output parameters from d_calc.py and append them to the dict with prepend '_output'
                 output_calc = calc_output(line, gen_res_high=225, gen_res_low=50)
 
+            if burst:
+                dic['burst_pulses'] = burst         # number of pulses
+                dic['burst_f'] = data_row[9]         # hz
+                dic['burst_inner_f'] = data_row[10]  # khz
+                assert dic['burst_f']*dic['burst_pulses'] == data_row[1], 'Invalid burst equivalent frequency'
+
             # append calculated output values to the dict, this is what ends up in the pickle and excel files.
             for key, val in output_calc.items():
                 dic['output_' + key] = val
             # output power on plasma [Watt]
             output_p_plasma = (dic['output_e_plasma'] * data_row[1])
-            output_p_plasma_single = np.array(dic['output_e_plasma_single']) * data_row[1]
+            if scope_multiple:
+                output_p_plasma_single = np.array(dic['output_e_plasma_single']) * data_row[1]
+            else:
+                output_p_plasma_single = []
         except IOError:
             output_p_plasma = output_p_plasma_single = 0
 
@@ -186,7 +204,7 @@ def calc_run(run_dir,
                'output_energy_dens': output_p_plasma / lss,
                'output_yield_gj': o3f / output_p_plasma if output_p_plasma else 0,
                'output_yield_gkwh': o3f / (output_p_plasma / 3.6e6) if output_p_plasma else 0,
-               'output_energy_dens_single': output_p_plasma_single / lss,
+               'output_energy_dens_single': output_p_plasma_single / lss if any(output_p_plasma_single) else 0,
                'output_yield_gj_single': o3f / output_p_plasma_single if any(output_p_plasma_single) else 0,
                'output_yield_gkwh_single': o3f / (output_p_plasma_single / 3.6e6) if any(output_p_plasma_single) else 0,
                'e_eff': output_p_plasma / input_p if output_p_plasma else 0,

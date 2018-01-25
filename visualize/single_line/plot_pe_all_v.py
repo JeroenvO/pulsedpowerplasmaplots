@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from scipy import integrate
 from visualize.helpers.data import sort_data
 
-from visualize.helpers.colors import color_list
+from visualize.helpers.colors import color_rainbow
 from visualize.helpers.data import load_pickle, save_file, filter_data
 
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run1-1us/data.pkl")
@@ -13,7 +13,7 @@ data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180115/run5/data.pkl"
 data = filter_data(data, input_v_output=15e3)
 data = filter_data(data, input_f=10)
 lw = 0.4  # linewidth
-colors = color_list(len(data))
+colors = color_rainbow(len(data))
 fig, ax = plt.subplots(6, 1, sharex=True, figsize=(5, 15))
 
 tit = fig.suptitle('Power in pulse (15kV, 1us, 100Hz-1kHz, 26$\mu$H, avg32)')

@@ -47,7 +47,9 @@ def plot_ppm_yield():
     plt.xlim([5,5000])
     ax.grid(True)
     set_plot(fig)
-    save_file(fig, name='ppm-yield', path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots_final')
+    save_file(fig, name='ppm-yield', path='plots_final_v2')
     plt.show()
 
-plot_ppm_yield()
+
+if __name__ == '__main__':
+    print("Nope")

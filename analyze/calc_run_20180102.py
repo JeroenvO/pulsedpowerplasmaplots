@@ -12,7 +12,7 @@ calc_run(base + 'run1',
          meas=SHORT_MEAS_LEN,
          current_scaling=-0.1,
          delay=0,
-         voltage_offset=None)
+         voltage_offset=None,)
 
 # run1 short meas
 calc_run(base + 'run2-longmeas',

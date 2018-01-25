@@ -21,7 +21,7 @@ def plot_pe(data, reactor):
     ax[0].set_ylabel('P [kW]')
     ax[1].set_ylabel('E [mJ]')
     set_plot(fig, 2, pulse=True)
-    save_file(fig, name='pe-'+reactor, path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots_final')
+    save_file(fig, name='pe-'+reactor, path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots_final_v1')
 
 
 if __name__ == '__main__':

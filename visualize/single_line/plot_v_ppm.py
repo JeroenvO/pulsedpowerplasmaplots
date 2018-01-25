@@ -2,7 +2,7 @@ import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
 import numpy as np
 
-from visualize.helpers.colors import color_list
+from visualize.helpers.colors import color_rainbow
 from visualize.helpers.data import load_pickles, load_pickle, get_values, save_file, sort_data, filter_data
 
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20171229/data.pkl")
@@ -41,7 +41,7 @@ w = get_values(data, 'input_l')
 
 ws = np.unique(w)
 fs = np.unique(v)
-colors = color_list(len(ws))
+colors = color_rainbow(len(ws))
 
 fig, ax = plt.subplots()
 

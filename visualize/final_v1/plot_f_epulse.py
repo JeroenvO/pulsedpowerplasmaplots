@@ -43,7 +43,7 @@ def plot_f_epulse(data, reactor):
     ax.set_xlabel('Frequency [Hz]')
     ax.set_ylabel('Pulse plasma energy [mJ]')
     set_plot(fig, plot_height=1.4)
-    save_file(fig, name='epulse-'+reactor, path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots_final')
+    save_file(fig, name='epulse-'+reactor, path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots_final_v1')
 
 
 if __name__ == '__main__':

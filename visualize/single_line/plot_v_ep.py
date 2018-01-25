@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-from visualize.helpers.colors import color_list
+from visualize.helpers.colors import color_rainbow
 from visualize.helpers.data import load_pickles, save_file, get_values, filter_data
 from analyze.scope_parse.c_get_lines import get_vol_cur_dir
 import numpy as np
@@ -13,7 +13,7 @@ data = filter_data(data, input_v__gt=600)
 lw = 0.4  # linewidth
 
 w = np.unique(get_values(data, 'input_l'))
-colors = color_list(len(w))
+colors = color_rainbow(len(w))
 
 fig, ax = plt.subplots(2, 1)
 tit = fig.suptitle('Waveforms (1kHz, 26$\mu$H, avg32)')

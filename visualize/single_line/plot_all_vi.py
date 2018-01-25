@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-from visualize.helpers.colors import color_list
+from visualize.helpers.colors import color_rainbow
 from visualize.helpers.data import load_pickle, save_file, load_pickles, filter_data, get_values
 from analyze.scope_parse.c_get_lines import get_vol_cur_dir
 import numpy as np
@@ -16,7 +16,7 @@ data_nocoil_length = 0
 lw = 0.4  # linewidth
 voltages_unique = np.unique(get_values(data, key='input_v_output'))
 
-colors = color_list(len(voltages_unique) + data_nocoil_length)
+colors = color_rainbow(len(voltages_unique) + data_nocoil_length)
 fig, ax = plt.subplots(2, 1)
 
 tit = fig.suptitle('Waveforms (1us, 1kHz, 26$\mu$H, avg32)')

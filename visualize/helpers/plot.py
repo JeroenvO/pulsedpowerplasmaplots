@@ -96,7 +96,7 @@ def move_sn_y(ax, offs=0, dig=0, side='left', omit_last=False, lower_limit=1e-3,
 
 def set_plot(fig, plot_height=1, pulse=False, subplot=True):
     """
-    Set plot settings for IEEE paper, combined with /plots_final/matplotlibrc
+    Set plot settings for IEEE paper, combined with /plots_final_v1/matplotlibrc
     https://www.bastibl.net/publication-quality-plots/
 
     :param fig: fig to set
@@ -179,3 +179,9 @@ def interpolate_plot(ax, x, y, **kwargs):
     assert any(y)
     ax.plot(x, y, c='grey', zorder=-1, lw=0.9)
 
+
+def set_unique_legend(ax):
+    from collections import OrderedDict
+    handles, labels = ax.get_legend_handles_labels()
+    by_label = OrderedDict(zip(labels, handles))
+    ax.legend(by_label.values(), by_label.keys())

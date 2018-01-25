@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from visualize.helpers.data import load_pickle, load_pickles, filter_data, get_values
 from visualize.helpers.plot import save_file
-from visualize.helpers.colors import color_list
+from visualize.helpers.colors import color_rainbow
 
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500Hz/run2-1us/data.pkl")
 # data = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180105-freq/run2-1us-q/data.pkl")
@@ -30,7 +30,7 @@ tit=plt.suptitle('Energy density (short glass 4 electr., 5Hz-500Hz, 2ls/min) ')
 w = get_values(data, 'input_l')
 
 ws = np.unique(w)
-colors = color_list(len(ws))
+colors = color_rainbow(len(ws))
 # ax_freq = [ax.twiny() for ax in ax_dens]
 # m = 'x'
 m = 'o'

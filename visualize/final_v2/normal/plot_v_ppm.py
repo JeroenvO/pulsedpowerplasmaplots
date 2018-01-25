@@ -51,7 +51,7 @@ def plot_v_ppm(data, reactor):
 
     set_plot(fig)
 
-    save_file(fig, name='v-ppm-'+reactor, path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots_final')
+    save_file(fig, name='v-ppm-'+reactor, path='plots_final_v2')
 
 
 if __name__ == '__main__':

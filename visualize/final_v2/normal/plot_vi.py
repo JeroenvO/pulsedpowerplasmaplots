@@ -60,4 +60,4 @@ def plot_vi_zoom(data, reactor):
     ax1.set_ylim(-1, 12)
     # ax2.set_ylim(0,20)
     # align_y_axis(ax1, ax2, 1, 1)
-    save_file(fig, name='vi-zoom-' + reactor, path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots_final')
+    save_file(fig, name='vi-zoom-' + reactor, path='plots_final_v2')
