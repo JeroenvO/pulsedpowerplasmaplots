@@ -68,11 +68,12 @@ def calc_run(run_dir,
     :param burst: number of burst mode pulses. False for normal pulses.
     :return: none
     """
+    assert os.path.exists(run_dir)
     print("Calc run for "+run_dir)
     if log_file not in os.listdir(run_dir):
         return
-    assert spect_dir in os.listdir(run_dir)
-    assert scope_dir in os.listdir(run_dir)
+    assert os.path.exists(run_dir+'/'+scope_dir)
+    assert os.path.exists(run_dir+'/'+spect_dir)
     # Get ozone concentrations:
     all_ozone = ozone_concentration(path_name=run_dir + '/' + spect_dir, opt_path=meas)
     all_ppm = ozone_ppm(all_ozone)

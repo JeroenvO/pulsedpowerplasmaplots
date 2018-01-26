@@ -17,9 +17,7 @@ def get_stability(key, loose, energy_loose_stability):
             required_stability = 4
         elif key in ['c_max', 'c_min', 't_rise', 'rise_rate', 't_settling', 'end', 'v_max', ]:
             required_stability = 2
-        elif key in ['start']:
-            required_stability = 6
-        elif key in ['v_min', ]:
+        elif key in ['v_min', 'start']:
             required_stability = 20  # values close to zero have high
         else:
             required_stability = 0.2
@@ -61,8 +59,8 @@ def calc_output_avg(lines, gen_res_high=225, gen_res_low=50, loose_stability=Fal
         print('Run calc for line '+str(i))
         if length == -1:
             length = len(line[0])
-        else:
-            assert len(line[0]) == length
+        # else:
+        #     assert len(line[0]) == length
         output.append(calc_output(line, gen_res_high=gen_res_high, gen_res_low=gen_res_low))
 
     data = {}
