@@ -29,7 +29,8 @@ def load_pickle(path):
 def get_values(dicts, key):
     """
     Get all values from a list of dicts with a given key
-    stop if list is empty or zero
+    stop if list is empty or zero.
+    Takes one 'column' of the data, as analogy to the generated excel file.
 
     :param dicts: the list of dicts to search
     :param key: the key to search each dict for

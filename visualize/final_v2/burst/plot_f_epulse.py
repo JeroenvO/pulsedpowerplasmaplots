@@ -15,20 +15,32 @@ def plot_f_epulse(datas):
     :param reactor:
     :return:
     """
-    colors = color_viridis(len(datas))
+
     fig, ax = plt.subplots()
+    ui = np.array([200,150,100,75,50])
+    colors = color_viridis(len(ui))
+
     for i, data in enumerate(datas):
         data = filter_data(data, input_v_output=15e3, input_l=1)
-        l = str(data[0]['burst_inner_f']) + ' kHz, ' + str(data[0]['burst_pulses']) + ' pulses'
-        c = colors[i]
+        l = str(data[0]['burst_inner_f']) + ' kHz, '
+        c = colors[np.where(data[0]['burst_inner_f'] == ui)[0][0]]
+        if data[0]['burst_f'] == 50:
+            m = '.'
+        elif data[0]['burst_f'] == 100:
+            m = '+'
+        elif data[0]['burst_f'] == 200:
+            m = '*'
+        else:
+            raise Exception('Invalid burst f')
+
         interpolate_plot(ax, range(1,1+len(data)), get_values(data, 'output_e_plasma')*1000)
         for j, line in enumerate(data):
             epuls = line['output_e_plasma']*1000  # array of values, to mJ.
-            plt.scatter(j+1, epuls, label=l, c=c)
+            plt.scatter(j+1, epuls, label=l, c=c, marker=m)
 
     # add x labels
     ax.set_xlabel('Pulse number')
     ax.set_ylabel('Pulse plasma energy [mJ]')
-    set_unique_legend(ax)
-    set_plot(fig, plot_height=1.5)
+    set_unique_legend(ax, bbox_to_anchor=(0.5, -0.2))
+    set_plot(fig, plot_height=2)
     save_file(fig, name='epulse-burst-all', path='plots_final_v2')

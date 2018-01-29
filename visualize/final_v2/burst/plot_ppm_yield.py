@@ -13,15 +13,7 @@ def plot_ppm_yield():
     :param reactor:
     :return:
     """
-    reactors = ['long-glass-26uH', 'short-glass-nocoil', 'short-glass-26uH']
-    # reactors = ['long-glass-46uH', 'long-glass-26uH', 'short-glass-nocoil', 'short-glass-26uH', 'short-glass-8uH']
-    data_long_46 = load_pickle('20180115-def1/run6')
-    data_long_26 = load_pickle('20180115-def1/run5') + load_pickle('20180118-def2/run1') + load_pickle('20180119-def3/run1')
-    data_short_26 = load_pickle('20180115-def1/run2') + load_pickle('20180118-def2/run3') + load_pickle('20180118-def2/run3-2')
-    data_short_8 = load_pickle('20180115-def1/run3')
-    data_short_0 = load_pickle('20180115-def1/run1') + load_pickle('20180118-def2/run2')
-    # data_total = [data_long_46, data_long_26, data_short_0, data_short_26, data_short_8]
-    data_total = [data_long_26, data_short_0, data_short_26]
+    #TODO
 
     markers = ['.', 'x', '+']
     marker_legends = []
@@ -47,7 +39,7 @@ def plot_ppm_yield():
     plt.xlim([5,5000])
     ax.grid(True)
     set_plot(fig)
-    save_file(fig, name='ppm-yield', path='plots_final_v2')
+    save_file(fig, name='ppm-yield-burst', path='plots_final_v2')
     plt.show()
 
 

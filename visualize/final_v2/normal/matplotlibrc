@@ -1,0 +1,11 @@
+backend      : TkAgg
+axes.formatter.use_mathtext : True
+
+font.family         : serif
+font.size           : 8.0
+
+grid.linestyle      : dotted
+savefig.pad_inches  : 0
+lines.markersize    : 5
+
+axes.axisbelow      : True

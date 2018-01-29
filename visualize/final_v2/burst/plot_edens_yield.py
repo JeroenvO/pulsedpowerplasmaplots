@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-
+import numpy as np
 from visualize.helpers.colors import color_viridis
 from visualize.helpers.data import filter_data, reactor_inducance_index
 from visualize.helpers.plot import save_file, set_plot, set_unique_legend
@@ -16,7 +16,6 @@ def plot_edens_yield(datas):
     """
 
     fig, ax = plt.subplots(3, 1, sharex=True)
-    colors = color_viridis(len(datas))
     m = 'o'
 
     # interpolate_plot(ax[0], x, get_values(data, 'output_yield_gkwh'))
@@ -26,10 +25,16 @@ def plot_edens_yield(datas):
     # interpolate_plot(ax[3], x, get_values(data, 'output_p_avg'))
     # interpolate_plot(ax[4], x, get_values(data, 'input_f'))
 
+    ui = np.array([200, 150, 100, 75, 50])
+    colors = color_viridis(len(ui))
+
+    # sort data, to keep the legend in the right order.
+    datas = sorted(datas, key=lambda x:x[0]['burst_inner_f'])
+
     for i, data in enumerate(datas):
-        l = str(data[0]['burst_inner_f']) + ' kHz, ' + str(data[0]['burst_pulses']) + ' pulses'
+        l = str(data[0]['burst_inner_f']) + ' kHz'
         data = filter_data(data, input_v_output=15e3, input_l=1, output_yield_gkwh__gt=25)
-        c = colors[i]
+        c = colors[np.where(data[0]['burst_inner_f'] == ui)[0][0]]
         burstdata = calc_burst(data)
         line = data[0] # because all data is the same in one burst run
 
@@ -52,6 +57,9 @@ def plot_edens_yield(datas):
     ax[2].set_ylabel('Energy efficiency [%]')
     # ax[3].set_ylabel('Frequency [Hz]')
     ax[2].set_xlabel('Energy density [J/l]')
+    ax[1].text(20, 220, '50 Hz')
+    ax[1].text(45, 250, '100 Hz')
+    ax[1].text(85, 550, '200 Hz')
     set_unique_legend(ax[1])
     set_plot(fig, plot_height=3)
     save_file(fig, name='edens-all-burst', path='plots_final_v2')

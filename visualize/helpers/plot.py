@@ -107,7 +107,7 @@ def set_plot(fig, plot_height=1, pulse=False, subplot=True):
     width = 3.7
     height = width / 1.618 * plot_height
     if not subplot:
-        fig.axes[0].grid(True)  # only one ax has grid
+        fig.axes[0].grid(True, z_index=-1)  # only one ax has grid
     for ax in fig.axes:
         if pulse:
             ax.set_xlim([-0.2, 2])
@@ -180,8 +180,15 @@ def interpolate_plot(ax, x, y, **kwargs):
     ax.plot(x, y, c='grey', zorder=-1, lw=0.9)
 
 
-def set_unique_legend(ax):
+def set_unique_legend(ax, **kwargs):
+    """
+    Given an axis with points with labels, make a legend without duplicate labels.
+
+    :param ax:
+    :param kwargs:
+    :return:
+    """
     from collections import OrderedDict
     handles, labels = ax.get_legend_handles_labels()
     by_label = OrderedDict(zip(labels, handles))
-    ax.legend(by_label.values(), by_label.keys())
+    ax.legend(by_label.values(), by_label.keys(), **kwargs)

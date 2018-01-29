@@ -7,6 +7,18 @@ d=-5 # delay
 base = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180126-burst-3/'
 
 # run 1 and 2 are only spectra, no waveforms.
+calc_run(base + 'run1',
+         REACTOR_GLASS_SHORT_QUAD,
+         meas=SHORT_MEAS_LEN,
+         burst=5,
+         scope_dir=None,
+        )
+calc_run(base + 'run2',
+         REACTOR_GLASS_SHORT_QUAD,
+         meas=SHORT_MEAS_LEN,
+         burst=10,
+         scope_dir=None,
+        )
 
 # short reactor
 # each run is a pulse, 5 pulses. Changed scope trigger delay. 100hz, 100khz, 5pulse

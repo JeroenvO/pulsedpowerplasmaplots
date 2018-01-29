@@ -72,7 +72,6 @@ def calc_run(run_dir,
     print("Calc run for "+run_dir)
     if log_file not in os.listdir(run_dir):
         return
-    assert os.path.exists(run_dir+'/'+scope_dir)
     assert os.path.exists(run_dir+'/'+spect_dir)
     # Get ozone concentrations:
     all_ozone = ozone_concentration(path_name=run_dir + '/' + spect_dir, opt_path=meas)
@@ -80,7 +79,7 @@ def calc_run(run_dir,
 
     # assuming format: voltage, freq, voltage on 18,9ohm input, meting spect, Temp, airflow
     log_file = run_dir + '/' + log_file
-    resistor_val = 18.9  # resistance of measure resistor for input current
+    resistor_val = INPUT_RESISTOR  # resistance of measure resistor for input current
 
     sheet = load_workbook(filename=log_file, read_only=True).active
     data = []
@@ -133,45 +132,63 @@ def calc_run(run_dir,
             raise Exception
         assert np.isfinite(data_row[7])
 
-        # if using coil, energy calculation is less stable.
-        energy_loose_stability = (data_row[7] != 0)
-
-        # get output waveforms
+        # Dictionary to have all output values at the end.
         dic = {}
-        try:
-            if scope_multiple:
-                print('input csv: ' + str(data_row[scope_file_name_index]))
-                lines = get_vol_cur_multiple(run_dir + '/' + scope_dir + '/' + str(data_row[scope_file_name_index]),
-                                             current_scaling=current_scaling,
-                                             delay=delay, voltage_offset=voltage_offset, current_offset=current_offset,
-                                             )
-                assert any(lines)
-                output_calc = calc_output_avg(lines, gen_res_high=225, gen_res_low=50, loose_stability=waveform_loose_stability, energy_loose_stability=energy_loose_stability)
-            else:
-                line = get_vol_cur_single(run_dir + '/' + scope_dir + '/' + str(data_row[scope_file_name_index]),
-                                          current_scaling=current_scaling,
-                                          delay=delay, voltage_offset=voltage_offset, current_offset=current_offset)
-                assert line
-                # calculate output parameters from d_calc.py and append them to the dict with prepend '_output'
-                output_calc = calc_output(line, gen_res_high=225, gen_res_low=50)
 
-            if burst:
-                dic['burst_pulses'] = burst         # number of pulses
-                dic['burst_f'] = data_row[9]         # hz
-                dic['burst_inner_f'] = data_row[10]  # khz
-                assert dic['burst_f']*dic['burst_pulses'] == data_row[1], 'Invalid burst equivalent frequency'
+        if scope_dir:
+            assert os.path.exists(run_dir + '/' + scope_dir)
+            # get output waveforms
 
-            # append calculated output values to the dict, this is what ends up in the pickle and excel files.
-            for key, val in output_calc.items():
-                dic['output_' + key] = val
-            # output power on plasma [Watt]
-            output_p_plasma = (dic['output_e_plasma'] * data_row[1])
-            if scope_multiple:
-                output_p_plasma_single = np.array(dic['output_e_plasma_single']) * data_row[1]
-            else:
-                output_p_plasma_single = []
-        except IOError:
-            output_p_plasma = output_p_plasma_single = 0
+            # if using coil, energy calculation is less stable.
+            energy_loose_stability = (data_row[7] != 0)
+
+            try:
+                if scope_multiple:
+                    print('input csv: ' + str(data_row[scope_file_name_index]))
+                    lines = get_vol_cur_multiple(run_dir + '/' + scope_dir + '/' + str(data_row[scope_file_name_index]),
+                                                 current_scaling=current_scaling,
+                                                 delay=delay, voltage_offset=voltage_offset, current_offset=current_offset,
+                                                 )
+                    assert any(lines)
+                    output_calc = calc_output_avg(lines, gen_res_high=225, gen_res_low=50, loose_stability=waveform_loose_stability, energy_loose_stability=energy_loose_stability)
+                else:
+                    line = get_vol_cur_single(run_dir + '/' + scope_dir + '/' + str(data_row[scope_file_name_index]),
+                                              current_scaling=current_scaling,
+                                              delay=delay, voltage_offset=voltage_offset, current_offset=current_offset)
+                    assert line
+                    # calculate output parameters from d_calc.py and append them to the dict with prepend '_output'
+                    output_calc = calc_output(line, gen_res_high=225, gen_res_low=50)
+
+                # append calculated output values to the dict, this is what ends up in the pickle and excel files.
+                for key, val in output_calc.items():
+                    dic['output_' + key] = val
+                # output power on plasma [Watt]
+                output_p_plasma = (dic['output_e_plasma'] * data_row[1])
+                if scope_multiple:
+                    output_p_plasma_single = np.array(dic['output_e_plasma_single']) * data_row[1]
+                else:
+                    output_p_plasma_single = []
+            except IOError:
+                output_p_plasma = output_p_plasma_single = 0
+
+            # add all calculated values based on output waveforms to the dict.
+            dic = {**dic,
+                   'output_p_avg': output_p_plasma,
+                   'output_energy_dens': output_p_plasma / lss,
+                   'output_yield_gj': o3f / output_p_plasma if output_p_plasma else 0,
+                   'output_yield_gkwh': o3f / (output_p_plasma / 3.6e6) if output_p_plasma else 0,
+                   'output_energy_dens_single': output_p_plasma_single / lss if any(output_p_plasma_single) else 0,
+                   'output_yield_gj_single': o3f / output_p_plasma_single if any(output_p_plasma_single) else 0,
+                   'output_yield_gkwh_single': o3f / (output_p_plasma_single / 3.6e6) if any(output_p_plasma_single) else 0,
+                   'e_eff': output_p_plasma / input_p if output_p_plasma else 0,
+                   }
+
+        if burst:
+            # add input values for burst mode from the excel log to the dic.
+            dic['burst_pulses'] = burst  # number of pulses
+            dic['burst_f'] = data_row[9]  # hz
+            dic['burst_inner_f'] = data_row[10]  # khz
+            assert dic['burst_f'] * dic['burst_pulses'] == data_row[1], 'Invalid burst equivalent frequency'
 
         dic = {**dic,
                # manually noted values (inputs)
@@ -201,20 +218,12 @@ def calc_run(run_dir,
                # o3 generation efficiency
                'input_yield_gj': o3f / input_p if input_p else 0,  # efficiency in gram/Joule
                'input_yield_gkwh': o3f / input_p_k if input_p_k else 0,  # efficiency in gram/kWh
-               'output_p_avg': output_p_plasma,
-               'output_energy_dens': output_p_plasma / lss,
-               'output_yield_gj': o3f / output_p_plasma if output_p_plasma else 0,
-               'output_yield_gkwh': o3f / (output_p_plasma / 3.6e6) if output_p_plasma else 0,
-               'output_energy_dens_single': output_p_plasma_single / lss if any(output_p_plasma_single) else 0,
-               'output_yield_gj_single': o3f / output_p_plasma_single if any(output_p_plasma_single) else 0,
-               'output_yield_gkwh_single': o3f / (output_p_plasma_single / 3.6e6) if any(output_p_plasma_single) else 0,
-               'e_eff': output_p_plasma / input_p if output_p_plasma else 0,
                }
 
         # add this measurement to the total list.
         data.append(dic)
 
-    # sort data
+    # sort data, so its is ordered by default by the variable that changed.
     if scope_file_name_index == 0:
         data = sort_data(data, 'input_v')
     elif scope_file_name_index == 1:
@@ -277,40 +286,42 @@ def calc_run(run_dir,
     return 1
 
 
-if __name__ == '__main__':
+# Uncomment any of the lines below to run directly on a directory.
+# Recommended to create a calc_run_<date>.py file instead, for reproducability.
+# if __name__ == '__main__':
     # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/" # directory with subdirectories with measurements
     # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180104-500hz/"  # directory with subdirectories with measurements
     # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180111/"  # directory with subdirectories with measurements
     # path = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180109/"  # directory with subdirectories with measurementspath = "G:/Prive/MIJN-Documenten/TU/62-Stage/20180103-1000Hz/"  # directory with subdirectories with measurements
     ### to run dir with subdirs:
-
-    dirs = glob.glob(path+'/run*')
-    ### to run one dir
-    # dirs = ['120171229']
-    # dirs = ['run2-1us-q']
-    # length of used measure cell
-    meas_len = SHORT_MEAS_LEN
-    # capacitance of used reactor
-    react_cap = REACTOR_GLASS_SHORT_QUAD
-    # which column of log.xlsx contains the filename for scope. 0=volt, 1=freq, 2=pulsew
-    scope_file_name_index = 0
-    # whether multiple scope spectra are stored for each measurement. If true, save as xxx_y.csv with y as index number
-    scope_multiple = True
-    # scaling for current sensor is not done in scope, do it manually
-    current_scaling = 0.5  # 0.5 for red current probe in v-range, -0.1 for pearson (inverted) in v-range, -100 for mv range.
-    # compensate for delay in line, in array index (=usually 1ns)
-    delay = 0
-    for dir in dirs:
-        run_dir = dir + '/'
-        run_dir = run_dir.replace('\\', '/').replace('//', '/')
-        if os.path.isdir(run_dir):
-            print(run_dir)
-            calc_run(run_dir,
-                     meas=meas_len,
-                     scope_file_name_index=scope_file_name_index,
-                     scope_multiple=scope_multiple,
-                     reactor=react_cap,
-                     current_scaling=current_scaling,
-                     delay=delay)
-        else:
-            print('Path ' + str(run_dir) + ' does not exist.')
+    #
+    # dirs = glob.glob(path+'/run*')
+    # ### to run one dir
+    # # dirs = ['120171229']
+    # # dirs = ['run2-1us-q']
+    # # length of used measure cell
+    # meas_len = SHORT_MEAS_LEN
+    # # capacitance of used reactor
+    # react_cap = REACTOR_GLASS_SHORT_QUAD
+    # # which column of log.xlsx contains the filename for scope. 0=volt, 1=freq, 2=pulsew
+    # scope_file_name_index = 0
+    # # whether multiple scope spectra are stored for each measurement. If true, save as xxx_y.csv with y as index number
+    # scope_multiple = True
+    # # scaling for current sensor is not done in scope, do it manually
+    # current_scaling = 0.5  # 0.5 for red current probe in v-range, -0.1 for pearson (inverted) in v-range, -100 for mv range.
+    # # compensate for delay in line, in array index (=usually 1ns)
+    # delay = 0
+    # for dir in dirs:
+    #     run_dir = dir + '/'
+    #     run_dir = run_dir.replace('\\', '/').replace('//', '/')
+    #     if os.path.isdir(run_dir):
+    #         print(run_dir)
+    #         calc_run(run_dir,
+    #                  meas=meas_len,
+    #                  scope_file_name_index=scope_file_name_index,
+    #                  scope_multiple=scope_multiple,
+    #                  reactor=react_cap,
+    #                  current_scaling=current_scaling,
+    #                  delay=delay)
+    #     else:
+    #         print('Path ' + str(run_dir) + ' does not exist.')
