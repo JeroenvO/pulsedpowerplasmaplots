@@ -36,7 +36,7 @@ def get_stability(key, loose, energy_loose_stability):
             if energy_loose_stability:
                 required_stability = 0.2  # 20% accuracy of plasma energy for each measurement
             else:
-                required_stability = 0.15 # 15% accuracy
+                required_stability = 0.1549  # 15% accuracy
         else:
             required_stability = 0.05
     return required_stability

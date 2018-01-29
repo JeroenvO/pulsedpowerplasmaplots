@@ -27,9 +27,9 @@ def plot_l_ppm(data, reactor, voltage=1000):
         # add synthetic zero point
         # data = [{'input_f': 100, 'input_l': 1, 'output_v_pulse': 12e3, 'o3_ppm': 0},
         #         {'input_f': 500, 'input_l': 1, 'output_v_pulse': 12e3, 'o3_ppm': 0},]
-        data += load_pickle('20180110/run2')
-        data += load_pickle('20180110/run3')
-        data += load_pickle('20180110/run4')
+        data += load_pickle('20180110-lf-sweep/run2')
+        data += load_pickle('20180110-lf-sweep/run3')
+        data += load_pickle('20180110-lf-sweep/run4')
         freqs = [100,400]
 
     data = filter_data(data, input_v=voltage) # values with l=0.5us are not correct measured.

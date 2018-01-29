@@ -230,6 +230,8 @@ def calc_run(run_dir,
         data = sort_data(data, 'input_f')
     elif scope_file_name_index == 2:
         data = sort_data(data, 'input_l')
+    elif scope_file_name_index == 6:
+        data = sort_data(data, 'airflow_lm')
     elif scope_file_name_index in [4,8]:
         pass
         # data = sort_data(data, 'input_l')

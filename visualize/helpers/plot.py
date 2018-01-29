@@ -107,7 +107,7 @@ def set_plot(fig, plot_height=1, pulse=False, subplot=True):
     width = 3.7
     height = width / 1.618 * plot_height
     if not subplot:
-        fig.axes[0].grid(True, z_index=-1)  # only one ax has grid
+        fig.axes[0].grid(True)  # only one ax has grid
     for ax in fig.axes:
         if pulse:
             ax.set_xlim([-0.2, 2])

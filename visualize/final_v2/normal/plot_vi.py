@@ -43,7 +43,7 @@ def plot_vi(data, reactor):
     :return:
     """
     fig = plot_vi_all(data, reactor)
-    save_file(fig, name='vi-'+reactor, path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots_final')
+    save_file(fig, name='vi-'+reactor, path='plots_final_v2')
 
 
 def plot_vi_zoom(data, reactor):

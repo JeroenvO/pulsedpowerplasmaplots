@@ -24,7 +24,7 @@ def plot_v_ppm(data, reactor):
         # add synthetic zero point
         data = [{'input_f': 100, 'input_l': 1, 'output_v_pulse': 12e3, 'o3_ppm': 0},
                 {'input_f': 500, 'input_l': 1, 'output_v_pulse': 12e3, 'o3_ppm': 0},]
-        data += load_pickles('20180111')
+        data += load_pickles('20180111-v-sweep')
 
     freqs = [100, 500]
 

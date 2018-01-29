@@ -25,9 +25,9 @@ def plot_f_eff(data, reactor):
     p_out_r = []
     p_in = []
 
-    if reactor[0:10] == 'long-glass':
+    if reactor[0:4] == 'long':
         c = 2.6 # mJ capacitive losses at 15kV pulses.
-    elif reactor[0:11] == 'short-glass':
+    elif reactor[0:5] == 'short':
         c = 2.25
     else:
         raise Exception('Incorrect reactor supplied')
@@ -69,7 +69,7 @@ def plot_f_eff(data, reactor):
     ax.set_ylabel('Pulse energy [mJ]')
     # ax2.set_ylabel('input to plasma effiency [%]')
     ax.set_ylim([0, 40])
-    plt.legend(handles=marker_legends, loc='top right')
+    plt.legend(handles=marker_legends, loc='best')
     set_plot(fig, plot_height=1.4)
     save_file(fig, name='eff-'+reactor, path='plots_final_v2')
 
