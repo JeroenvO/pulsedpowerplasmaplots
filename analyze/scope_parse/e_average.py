@@ -18,23 +18,23 @@ def get_stability(key, loose, energy_loose_stability):
         elif key in ['c_max', 'c_min', 't_rise', 'rise_rate', 't_settling', 'end', 'v_max', ]:
             required_stability = 2
         elif key in ['v_min', 'start']:
-            required_stability = 20  # values close to zero have high
+            required_stability = 1000  # values close to zero have high
         else:
-            required_stability = 0.2
+            required_stability = 0.2049
     else:
         if key in ['e_rise', 'v_overshoot']:
             required_stability = 0.5
         elif key in ['c_max', 'c_min', 't_rise', 't_settling', 'end', 'v_max', ]:
-            required_stability = 0.8
+            required_stability = 2
         elif key in ['rise_rate']:
             required_stability = 4
         elif key in ['v_min']:
             required_stability = 15  # values close to zero have high
         elif key in ['start']:
-            required_stability = 100 # start value depends on trigger, which can have changed.
+            required_stability = 1000 # start value depends on trigger, which can have changed.
         elif key in ['e_plasma', 'e_res_total', 'e_eff']:
             if energy_loose_stability:
-                required_stability = 0.2  # 20% accuracy of plasma energy for each measurement
+                required_stability = 0.2049  # 20% accuracy of plasma energy for each measurement
             else:
                 required_stability = 0.1549  # 15% accuracy
         else:

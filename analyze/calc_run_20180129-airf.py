@@ -2,7 +2,9 @@ from analyze.calc_run import *
 
 base = 'G:/Prive/MIJN-Documenten/TU/62-Stage/20180129-airf/'
 d=-5
+
 # short quad nocoil
+
 calc_run(base + 'run1',
          REACTOR_GLASS_SHORT_QUAD,
          scope_multiple=True,
