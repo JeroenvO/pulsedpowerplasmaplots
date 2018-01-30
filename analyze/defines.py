@@ -17,8 +17,8 @@ SHORT_MEAS_LEN = 0.036
 # REACTOR_CERAMIC = 391E-12
 # REACTOR_ALIXPRESS = 161E-12
 
-REACTOR_GLASS_LONG = 'long glass'
-REACTOR_GLASS_SHORT_QUAD = 'short glass'
+REACTOR_GLASS_LONG = 'long-glass'
+REACTOR_GLASS_SHORT_QUAD = 'short-glass'
 
 # Maxima and minima for waveforms
 MIN_CURRENT_MIN = -35
