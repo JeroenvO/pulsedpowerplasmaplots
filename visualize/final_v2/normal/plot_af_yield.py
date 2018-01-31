@@ -50,8 +50,8 @@ def plot_af_yield(data):
     ax[3].set_xlabel('Energy density [J/l]')
 
     set_plot(fig, plot_height=4)
-    save_file(fig, name='edens-yield-short-glass', path='plots_final_v2')
-    plt.show()
+    save_file(fig, name='edens-yield-short-glass', path='plots_final_v2/normal')
+
 
 if __name__ == '__main__':
     datas = load_pickle('20180115-def1/run5')
@@ -68,3 +68,4 @@ if __name__ == '__main__':
     data = filter_data(datas, reactor=reactor, inductance=ind, input_v_output=15e3, input_l=1
                        )
     plot_af_yield(data)
+    plt.show()

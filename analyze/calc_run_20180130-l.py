@@ -12,7 +12,8 @@ calc_run(base + 'run1',
          current_scaling=0.5,
          delay=d,
          voltage_offset=30,
-         scope_dir=None,)  # disable waveform parse
+         # scope_dir=None,
+         )  # disable waveform parse
 
 calc_run(base + 'run2',
          REACTOR_GLASS_SHORT_QUAD,
@@ -22,7 +23,8 @@ calc_run(base + 'run2',
          current_scaling=0.5,
          delay=d,
          voltage_offset=30,
-         scope_dir=None,) # disable waveform parse
+         # scope_dir=None,
+         ) # disable waveform parse
 
 calc_run(base + 'run3',
          REACTOR_GLASS_LONG,
@@ -31,8 +33,9 @@ calc_run(base + 'run3',
          meas=SHORT_MEAS_LEN,
          current_scaling=0.5,
          delay=d,
-         voltage_offset=30,
-         scope_dir=None,)  # disable waveform parse
+         voltage_offset=80,
+         # scope_dir=None,
+         )  # disable waveform parse
 
 calc_run(base + 'run4',
          REACTOR_GLASS_LONG,
@@ -41,5 +44,6 @@ calc_run(base + 'run4',
          meas=SHORT_MEAS_LEN,
          current_scaling=0.5,
          delay=d,
-         voltage_offset=30,
-         scope_dir=None,) # disable waveform parse
+         voltage_offset=80,
+         # scope_dir=None,
+         ) # disable waveform parse

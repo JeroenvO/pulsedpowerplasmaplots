@@ -26,7 +26,7 @@ REQUIRED_STABILITY_NORMAL = 0.04  # deviation max in individual results between 
 REQUIRED_STABILITY_0 = 0.05
 REQUIRED_STABILITY_1 = 0.10  # more error on small ppm values, up to 75 PPM
 REQUIRED_STABILITY_2 = 0.20  # more error on small ppm values, up to 25 PPM
-REQUIRED_STABILITY_3 = 1  # more error on small ppm values, up to 12 PPM
+REQUIRED_STABILITY_3 = 10  # more error on small ppm values, up to 12 PPM
 
 
 def ozone_concentration(path_name,

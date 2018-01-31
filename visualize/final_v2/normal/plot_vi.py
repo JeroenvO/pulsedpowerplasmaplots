@@ -43,7 +43,7 @@ def plot_vi(data, reactor):
     :return:
     """
     fig = plot_vi_all(data, reactor)
-    save_file(fig, name='vi-'+reactor, path='plots_final_v2')
+    save_file(fig, name='vi-'+reactor, path='plots_final_v2/normal')
 
 
 def plot_vi_zoom(data, reactor):
@@ -60,4 +60,4 @@ def plot_vi_zoom(data, reactor):
     ax1.set_ylim(-1, 12)
     # ax2.set_ylim(0,20)
     # align_y_axis(ax1, ax2, 1, 1)
-    save_file(fig, name='vi-zoom-' + reactor, path='plots_final_v2')
+    save_file(fig, name='vi-zoom-' + reactor, path='plots_final_v2/normal')

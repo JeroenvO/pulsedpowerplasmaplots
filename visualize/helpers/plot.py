@@ -4,13 +4,14 @@ from scipy.interpolate import interp1d
 markers = ['o','d', '*', '+', 'v', 'x', 'D', '>', '<', ',', '.']
 
 
-def save_file(fig, name='plot', path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots', **kwargs):
+def save_file(fig, name='plot', path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/plots', delfig=False, **kwargs):
     """
     Save a file as png, eps and pdf
 
     :param fig: figure to save
     :param name: filename to save as, without extension
     :param path: path to save the file, default to /plots/
+    :param delfig: delete figure object after saving. Set to false to be able to plot the figure
     :param kwargs: extra kwargs to send to savefig, for instance bbox_extra_artists
     :return: None
     """
@@ -19,7 +20,9 @@ def save_file(fig, name='plot', path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_py
     fig.savefig(path + '/' + name + '.png', bbox_inches='tight', **kwargs)
     # fig.savefig(path + '/' + name + '.eps', bbox_inches='tight', **kwargs)
     fig.savefig(path + '/' + name + '.pdf', bbox_inches='tight', **kwargs)
-
+    if delfig:
+        import matplotlib.pyplot as plt
+        plt.close(fig)
 
 def move_sn_y(ax, offs=0, dig=0, side='left', omit_last=False, lower_limit=1e-3, upper_limit=1e3):
     """

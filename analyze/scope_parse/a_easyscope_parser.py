@@ -69,11 +69,11 @@ def parse_file(file='ceramic-700v-measure.csv', prepend_length=4, append_length=
             print("File "+file+" line "+str(i)+' :', end='')
             vars = line[-append_length:]
             if vars[4] == 'Trig\'d\r\n':
-                raise Exception('Scope was not paused, it was triggered!')
+                raise Exception('Scope was not paused, it was triggered! File:' + file)
             elif vars[4] == 'Stop\r\n':
                 print('Scope was paused.')
             else:
-                raise Exception('Scope was not paused and not triggered!')
+                raise Exception('Scope was not paused and not triggered! File: ' + file)
             t_div = vars[0].strip()
             t_shift = to_nr(vars[1])
             val_div = to_nr(vars[2])

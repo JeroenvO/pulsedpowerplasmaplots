@@ -1,10 +1,11 @@
 import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
 
-from visualize.helpers.data import load_pickles, filter_data, get_values, sort_data
-from visualize.helpers.plot import set_plot, interpolate_plot, save_file, markers
+from visualize.helpers.data import filter_data, get_values, sort_data
+from visualize.helpers.plot import interpolate_plot, markers
 
-def plot_x_ppm(data, reactor, key, freqs=[400]):
+
+def plot_x_ppm(data, key, freqs=[400]):
     """
     Plot ppm to anything
 
@@ -15,7 +16,8 @@ def plot_x_ppm(data, reactor, key, freqs=[400]):
     assert key in ['input_v', 'input_l', 'airflow_lm', 'input_f', 'output_v_pulse']
     data = sort_data(data, key=key)
 
-    fig, ax = plt.subplots()
+    # fig, (ax_ppm, ax_yield) = plt.subplots(2,1)
+    fig, ax_ppm = plt.subplots()
     c = 'black'
     marker_legends = []
     for i, f in enumerate(freqs):
@@ -25,10 +27,14 @@ def plot_x_ppm(data, reactor, key, freqs=[400]):
         if key == 'output_v_pulse':
             x /= 1000
         y = get_values(d, 'o3_ppm')
-        interpolate_plot(ax, x, y)
+        # y2 = get_values(d, 'output_yield_gkwh')
+        interpolate_plot(ax_ppm, x, y)
+        # interpolate_plot(ax_yield, x, y2)
         for x, y in zip(x, y):
-            ax.scatter(x, y, c=c, marker=m)
+            ax_ppm.scatter(x, y, c=c, marker=m)
+            # ax_yield.scatter(x, y2, c=c, marker=m)
         marker_legends.append(mlines.Line2D([], [], marker=m, label=str(f)+'Hz', color='grey', markerfacecolor='black', markeredgewidth=0))
-    plt.ylabel('Concentration [PPM]')
+    ax_ppm.set_ylabel('Concentration [ppm]')
+    # ax_yield.set_ylabel('Yield [g/kWh]')
     plt.legend(handles=marker_legends)
     return fig

@@ -1,9 +1,9 @@
-import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
 
-from visualize.helpers.data import load_pickles, filter_data, get_values, sort_data, load_pickle
-from visualize.helpers.plot import set_plot, interpolate_plot, save_file, markers
 from visualize.final_v2.normal.plot_x_ppm import plot_x_ppm
+from visualize.helpers.data import load_pickles, filter_data, sort_data
+from visualize.helpers.plot import set_plot, save_file
+
 
 def plot_l_ppm(data, reactor, voltage=1000, freqs=[400]):
     """
@@ -15,16 +15,18 @@ def plot_l_ppm(data, reactor, voltage=1000, freqs=[400]):
     :return:
     """
 
-    data = filter_data(data, input_v=voltage) # values with l=0.5us are not correct measured.
+    data = filter_data(data, input_v=voltage, reactor=reactor)
     data = sort_data(data, key='input_l')
     if voltage != 1000:
         data = filter_data(data, input_l__le=20)  # don't plot 40us point
-    fig = plot_x_ppm(data, reactor, 'input_l', freqs, )
+    fig = plot_x_ppm(data, 'input_l', freqs, )
     fig.axes[0].set_xlabel('Pulse length [$\mu$s]')
+    fig.axes[0].set_xscale('log')
     set_plot(fig)
     if voltage != 1000:
         reactor += '-'+str(voltage)
-    save_file(fig, name='l-ppm-'+reactor, path='plots_final_v2')
+
+    save_file(fig, name='l-ppm-'+reactor, path='plots_final_v2/normal')
 
 
 if __name__ == '__main__':

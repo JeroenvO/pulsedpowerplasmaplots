@@ -1,11 +1,11 @@
-import matplotlib.lines as mlines
+import matplotlib.pyplot as plt
 import matplotlib.pyplot as plt
 import numpy as np
 
-from visualize.helpers.data import load_pickle, filter_data, get_values
-from visualize.helpers.plot import save_file, set_plot, set_unique_legend, interpolate_plot
 from visualize.helpers.colors import color_viridis
-from visualize.helpers.burst import calc_burst
+from visualize.helpers.data import filter_data, get_values
+from visualize.helpers.plot import save_file, set_plot, set_unique_legend, interpolate_plot
+
 
 def plot_f_epulse(datas):
     """
@@ -22,7 +22,7 @@ def plot_f_epulse(datas):
 
     for i, data in enumerate(datas):
         data = filter_data(data, input_v_output=15e3, input_l=1)
-        l = str(data[0]['burst_inner_f']) + ' kHz, '
+        l = str(data[0]['burst_inner_f']) + ' kHz, ' + str(data[0]['input_l']) + ' $\mu$s'
         c = colors[np.where(data[0]['burst_inner_f'] == ui)[0][0]]
         if data[0]['burst_f'] == 50:
             m = '.'
@@ -43,4 +43,4 @@ def plot_f_epulse(datas):
     ax.set_ylabel('Pulse plasma energy [mJ]')
     set_unique_legend(ax, bbox_to_anchor=(0.5, -0.2))
     set_plot(fig, plot_height=2)
-    save_file(fig, name='epulse-burst-all', path='plots_final_v2')
+    save_file(fig, name='epulse-burst-all', path='plots_final_v2/burst')

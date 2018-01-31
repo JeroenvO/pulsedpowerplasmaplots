@@ -87,6 +87,7 @@ def filter_data(data, **kwargs):
             data = [d for d in data if f(value, d[key[0]])]
         else:
             data = [d for d in data if f(d[key[0]], value)]
+    assert any(data)
     return data
 
 
@@ -98,6 +99,7 @@ def sort_data(data, key):
     :param key: key to sort
     :return: sorted list of dicts
     """
+    assert any(data)
     return sorted(data, key=lambda k: k[key])
 
 

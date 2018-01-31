@@ -30,11 +30,11 @@ datas = [
     load_pickle('20180126-burst-3/run12'),  # 75
     load_pickle('20180126-burst-3/run13'),  # 50
 
-    # 100hz, 10 pulses
-    # load_pickle('20180124-burst-1/run2') # 100, 10pulse
-]
+ ]
 plot_f_epulse(datas)
-
 plot_edens_yield(datas)
 
-plot_burst_ppm()
+datas = load_pickle('20180126-burst-3/run1')
+datas += load_pickle('20180126-burst-3/run2')
+datas += load_pickle('20180130-burst-4/run1')
+plot_burst_ppm(datas)

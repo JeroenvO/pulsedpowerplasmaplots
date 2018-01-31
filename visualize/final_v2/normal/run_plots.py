@@ -52,38 +52,37 @@ for reactor in ['long-glass', 'short-glass']:
 ## plots of dependency on voltage
 data = filter_data(load_pickles('20180126-v-sweep'), input_f=400)
 data += filter_data(load_pickles('20180111-v-sweep'), input_f=100)
-# data += filter_data(load_pickles('20180130-v-sweep'), input_f=100) #TODO
-# reactor = REACTOR_GLASS_LONG
-# freqs = [100, 400]
-# data = filter_data(data, reactor=reactor, inductance=26, input_l=1)
-# plot_v_ppm(data, reactor, freqs)
+data += filter_data(load_pickles('20180130-v-sweep'), input_f=100) #TODO
+reactor = REACTOR_GLASS_LONG
+freqs = [100, 400]
+data1 = filter_data(data, reactor=reactor, inductance=26, input_l=1)
+plot_v_ppm(data1, reactor, freqs)
 reactor = REACTOR_GLASS_SHORT_QUAD
 freqs = [400, 100]
-data = filter_data(data, reactor=reactor, inductance=0, input_l=1)
-plot_v_ppm(data, reactor, freqs)
+data2 = filter_data(data, reactor=reactor, inductance=0, input_l=1)
+plot_v_ppm(data2, reactor, freqs)
 
 ## plots of dependency on pulselength
 data = load_pickles('20180130-l')  # TODO
-# reactor = REACTOR_GLASS_LONG  # TODO
-# freqs = [100, 400]
-# plot_l_ppm(data, reactor, 1000, freqs)
+reactor = REACTOR_GLASS_LONG  # TODO
+freqs = [100, 400]
+plot_l_ppm(data, reactor, 1000, freqs)
 reactor = REACTOR_GLASS_SHORT_QUAD
-data = load_pickles('20180130-l')
 freqs = [1000, 400]
 plot_l_ppm(data, reactor, 1000, freqs)
 ## plot effect of temperature with low voltage, although this is too old data.
-reactor = REACTOR_GLASS_LONG
-data += load_pickles('20180103-1000hz')
-data += load_pickles('20180104-100hz')
-data += load_pickles('20180104-500hz')
-freqs = [100, 500, 1000]
-plot_l_ppm(data, reactor, 800, freqs)
+# reactor = REACTOR_GLASS_LONG
+# data = load_pickles('20180103-1000hz')
+# data += load_pickles('20180104-100hz')
+# data += load_pickles('20180104-500hz')
+# freqs = [100, 500, 1000]
+# plot_l_ppm(data, reactor, 800, freqs)
 
 ## plot dependency on airflow
-# reactor = REACTOR_GLASS_LONG
-# freqs = [100, 400]
-# data = load_pickles('20180130-airf') # TODO
-# plot_a_ppm(data, reactor, freqs)
+reactor = REACTOR_GLASS_LONG
+freqs = [100, 400]
+data = load_pickles('20180130-airf') # TODO
+plot_a_ppm(data, reactor, freqs)
 reactor = REACTOR_GLASS_SHORT_QUAD
 freqs = [1000, 400]
 data = load_pickles('20180129-airf')

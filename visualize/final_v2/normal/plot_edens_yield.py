@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 from visualize.helpers.colors import color_viridis
 from visualize.helpers.data import filter_data, reactor_inducance_index
-from visualize.helpers.plot import save_file, set_plot
+from visualize.helpers.plot import save_file, set_plot, set_unique_legend
 
 
 def plot_edens_yield(data):
@@ -51,14 +51,9 @@ def plot_edens_yield(data):
     ax[3].set_ylabel('Frequency [Hz]')
     ax[3].set_xlabel('Energy density [J/l]')
 
-    from collections import OrderedDict
-
-    handles, labels = plt.gca().get_legend_handles_labels()
-    by_label = OrderedDict(zip(labels, handles))
-    ax[1].legend(by_label.values(), by_label.keys())
-
+    set_unique_legend(ax[1])
     set_plot(fig, plot_height=3)
-    save_file(fig, name='edens-all', path='plots_final_v2')
+    save_file(fig, name='edens-all', path='plots_final_v2/normal')
 
 
 if __name__ == '__main__':

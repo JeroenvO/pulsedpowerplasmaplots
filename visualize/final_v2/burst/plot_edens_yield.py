@@ -33,7 +33,7 @@ def plot_edens_yield(datas):
 
     for i, data in enumerate(datas):
         l = str(data[0]['burst_inner_f']) + ' kHz'
-        data = filter_data(data, input_v_output=15e3, input_l=1, output_yield_gkwh__gt=25)
+        data = filter_data(data, input_v_output=15e3, output_yield_gkwh__gt=25)
         c = colors[np.where(data[0]['burst_inner_f'] == ui)[0][0]]
         burstdata = calc_burst(data)
         line = data[0] # because all data is the same in one burst run
@@ -62,7 +62,7 @@ def plot_edens_yield(datas):
     ax[1].text(85, 550, '200 Hz')
     set_unique_legend(ax[1])
     set_plot(fig, plot_height=3)
-    save_file(fig, name='edens-all-burst', path='plots_final_v2')
+    save_file(fig, name='edens-all-burst', path='plots_final_v2/burst')
 
 
 if __name__ == '__main__':
