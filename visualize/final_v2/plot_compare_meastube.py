@@ -2,7 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from visualize.helpers.data import load_pickle, get_values, filter_data
-
+from visualize.helpers.plot import set_plot, save_file
+from visualize.helpers.colors import color_viridis
+colors = color_viridis(4)
 # voltage sweep with two meas.
 # data2 = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/run1/data.pkl")
 # data1 = load_pickle("G:/Prive/MIJN-Documenten/TU/62-Stage/20180102/run2-longmeas/data.pkl")
@@ -25,27 +27,25 @@ x2 = get_values(data2, 'input_f')
 
 # assert len(x1) == len(v1) == len(x2) == len(v2)
 
-fig, (ax1, ax2) = plt.subplots(2,1, sharex=True)
-ax1.plot(x1, v1, label='Long measure tube', marker='o')
-ax2.plot(x2, v2, label='Short measure tube', marker='o')
+fig, ax1= plt.subplots(1,1)
+ax1.plot(x1, v1, label='Long measure cell', marker='o', c=colors[1])
+ax1.plot(x2, v2, label='Short measure cell', marker='d', c=colors[2])
 # ax1.set_xscale('log')
 # ax1.set_yscale('log')
 # ax2.set_yscale('log')
 #
-a = 4
-b = 9
-x = np.linspace(0, 1750, 10)
-y1 = (v1[b]-v1[a])/(x1[b]-x1[a]) * x
-y2 = (v2[b]-v2[a])/(x2[b]-x2[a]) * x
-ax1.plot(x, y1, label='Linear')
-ax2.plot(x, y2, label='Linear')
-ax1.set_ylim(0,1900)
-ax2.set_ylim(0,1900)
+# a = 4
+# b = 9
+# x = np.linspace(0, 1750, 10)
+# y1 = (v1[b]-v1[a])/(x1[b]-x1[a]) * x
+# y2 = (v2[b]-v2[a])/(x2[b]-x2[a]) * x
+# ax1.plot(x, y1, label='Linear')
+# ax2.plot(x, y2, label='Linear')
+# ax1.set_ylim(0,1900)
+# ax2.set_ylim(0,1900)
 plt.xlabel('Output frequency [Hz]')
-plt.ylabel('PPM')
-# plt.title('Comparison of long and short measure tube')
-ax1.grid(True)
-ax2.grid(True)
-# plt.xscale('log')
+plt.ylabel('Ozone [ppm]')
 plt.legend()
-plt.show()
+set_plot(fig)
+save_file(fig, name='compare-meastube', path='plots_final_v2')
+
