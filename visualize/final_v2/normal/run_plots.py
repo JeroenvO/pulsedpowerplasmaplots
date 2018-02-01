@@ -49,22 +49,21 @@ for reactor in ['long-glass', 'short-glass']:
     plot_pe(data, reactor)
 
 
-## plots of dependency on voltage
-data = filter_data(load_pickles('20180126-v-sweep'), input_f=400)
+## plots of dependency on voltage, waveform data is not good enough.
+data = filter_data(load_pickles('20180126-v-sweep'), input_f=400)  # both reactors on 400hz.
 data += filter_data(load_pickles('20180111-v-sweep'), input_f=100)
-data += filter_data(load_pickles('20180130-v-sweep'), input_f=100) #TODO
+data += filter_data(load_pickles('20180130-v-sweep'), input_f=100)  # long reactor 100 and 400 hz
 reactor = REACTOR_GLASS_LONG
 freqs = [100, 400]
 data1 = filter_data(data, reactor=reactor, inductance=26, input_l=1)
 plot_v_ppm(data1, reactor, freqs)
 reactor = REACTOR_GLASS_SHORT_QUAD
-freqs = [400, 100]
 data2 = filter_data(data, reactor=reactor, inductance=0, input_l=1)
 plot_v_ppm(data2, reactor, freqs)
 
 ## plots of dependency on pulselength
-data = load_pickles('20180130-l')  # TODO
-reactor = REACTOR_GLASS_LONG  # TODO
+data = load_pickles('20180130-l')
+reactor = REACTOR_GLASS_LONG
 freqs = [100, 400]
 plot_l_ppm(data, reactor, 1000, freqs)
 reactor = REACTOR_GLASS_SHORT_QUAD
@@ -81,7 +80,8 @@ plot_l_ppm(data, reactor, 1000, freqs)
 ## plot dependency on airflow
 reactor = REACTOR_GLASS_LONG
 freqs = [100, 400]
-data = load_pickles('20180130-airf') # TODO
+data = filter_data(load_pickles('20180130-airf'), input_f=400)
+data += filter_data(load_pickle('20180201-airf/run1'), input_f=100)
 plot_a_ppm(data, reactor, freqs)
 reactor = REACTOR_GLASS_SHORT_QUAD
 freqs = [1000, 400]

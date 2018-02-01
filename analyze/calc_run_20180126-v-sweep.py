@@ -15,7 +15,8 @@ calc_run(base + 'run1',
          current_scaling=0.5,
          delay=d,
          voltage_offset=30,
-         waveform_loose_stability=True)
+         waveform_loose_stability=True
+         )
 
 calc_run(base + 'run2',
          REACTOR_GLASS_SHORT_QUAD,
@@ -25,7 +26,8 @@ calc_run(base + 'run2',
          current_scaling=0.5,
          delay=d,
          voltage_offset=81,
-         waveform_loose_stability=True)
+         waveform_loose_stability=True
+         )
 
 calc_run(base + 'run3',
          REACTOR_GLASS_LONG,
@@ -34,4 +36,5 @@ calc_run(base + 'run3',
          meas=SHORT_MEAS_LEN,
          current_scaling=0.5,
          delay=d,
-         waveform_loose_stability=True)
+         waveform_loose_stability=True
+         )

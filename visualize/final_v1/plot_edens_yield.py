@@ -55,7 +55,7 @@ def plot_edens_yield(data, reactor):
     # ax_dens[1].set_ylim([0, 7e-5])
     # ax_dens[2].set_ylim([0, 2e3])
     ax[0].set_ylim([0, 120])
-    ax[2].set_ylabel('Concentration [PPM]')
+    ax[2].set_ylabel('Ozone [ppm]')
     ax[3].set_ylabel('Power [W]')
     ax[4].set_ylabel('Frequency [Hz]')
     ax[4].set_xlabel('Energy density [J/l]')

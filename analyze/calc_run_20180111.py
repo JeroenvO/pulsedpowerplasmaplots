@@ -14,7 +14,7 @@ calc_run(base + 'run1',
          current_scaling=-0.5,
          delay=0,
          voltage_offset=None,
-         waveform_loose_stability=True)
+         waveform_loose_stability=True) # because bad trigger
 
 # short quad 500hz
 calc_run(base + 'run2',
@@ -25,4 +25,4 @@ calc_run(base + 'run2',
          current_scaling=-0.5,
          delay=0,
          voltage_offset=None,
-         waveform_loose_stability=True)
+         waveform_loose_stability=True) # because bad trigger

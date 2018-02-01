@@ -12,7 +12,7 @@ calc_run(base + 'run1',
          current_scaling=0.5,
          delay=d,
          voltage_offset=30,
-         # scope_dir=None,
+         scope_dir=None,
          )  # disable waveform parse
 
 calc_run(base + 'run2',
@@ -23,7 +23,7 @@ calc_run(base + 'run2',
          current_scaling=0.5,
          delay=d,
          voltage_offset=30,
-         # scope_dir=None,
+         scope_dir=None,
          ) # disable waveform parse
 
 calc_run(base + 'run3',
@@ -34,7 +34,7 @@ calc_run(base + 'run3',
          current_scaling=0.5,
          delay=d,
          voltage_offset=80,
-         # scope_dir=None,
+         scope_dir=None,
          )  # disable waveform parse
 
 calc_run(base + 'run4',
@@ -45,5 +45,5 @@ calc_run(base + 'run4',
          current_scaling=0.5,
          delay=d,
          voltage_offset=80,
-         # scope_dir=None,
+         scope_dir=None,
          ) # disable waveform parse

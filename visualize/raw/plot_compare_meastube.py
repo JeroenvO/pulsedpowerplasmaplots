@@ -39,7 +39,7 @@ ax2 = ax.plot(x2, v2, label='Short measure tube', marker='o')
 # ax.plot(x, y, label='Short meas linear')
 
 plt.xlabel('Output frequency [Hz]')
-plt.ylabel('PPM')
+plt.ylabel('ppm')
 # plt.title('Comparison of long and short measure tube')
 ax.grid(True)
 # plt.xscale('log')

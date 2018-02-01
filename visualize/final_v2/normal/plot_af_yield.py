@@ -44,7 +44,7 @@ def plot_af_yield(data):
     # ax_dens[1].set_ylim([0, 7e-5])
     # ax_dens[2].set_ylim([0, 2e3])
     # ax[0].set_ylim([0, 120])
-    ax[1].set_ylabel('Concentration [PPM]')
+    ax[1].set_ylabel('Ozone [ppm]')
     ax[2].set_ylabel('Energy efficiency [%]')
     ax[3].set_ylabel('Frequency [Hz]')
     ax[3].set_xlabel('Energy density [J/l]')

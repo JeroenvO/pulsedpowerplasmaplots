@@ -6,7 +6,7 @@ from matplotlib.patches import Rectangle
 
 from visualize.helpers.data import load_pickle, filter_data, get_values
 from visualize.helpers.plot import save_file, set_plot
-from visualize.helpers.colors import colors
+from visualize.helpers.colors import color_plasma_3
 
 
 def plot_f_eff(data, reactor):
@@ -18,7 +18,7 @@ def plot_f_eff(data, reactor):
     :return:
     """
     data = filter_data(data, input_v_output=15e3, input_l=1)
-
+    colors = color_plasma_3
     fig, ax = plt.subplots()
     uf = np.unique(get_values(data, 'input_f'))
     p_out_p = []

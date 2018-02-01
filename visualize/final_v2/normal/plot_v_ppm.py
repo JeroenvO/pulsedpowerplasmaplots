@@ -17,16 +17,5 @@ def plot_v_ppm(data, reactor, freqs):
     data = filter_data(data, input_l=1) # values with l=0.5us are not correct measured.
     fig = plot_x_ppm(data, 'output_v_pulse', freqs)
     fig.axes[0].set_xlabel('Pulse voltage [kV]')
-    set_plot(fig)
+    set_plot(fig, plot_height=1)
     save_file(fig, name='v-ppm-'+reactor, path='plots_final_v2/normal')
-
-
-if __name__ == '__main__':
-    reactor = 'long-glass'
-    data = filter_data(load_pickles('20180126-v-sweep'), input_f=400)
-    data += filter_data(load_pickles('20180111-v-sweep'), input_f=100)
-    data += filter_data(load_pickles('20180130-v-sweep'), input_f=100)
-    data = filter_data(data, reactor=reactor, inductance=0, input_l=1)
-    freqs = [100, 400]
-    plot_v_ppm(data, reactor, freqs)
-    plt.show()

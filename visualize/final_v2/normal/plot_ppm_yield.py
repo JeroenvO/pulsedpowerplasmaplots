@@ -1,5 +1,5 @@
 import os
-
+import pickle
 import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
 
@@ -26,7 +26,7 @@ def plot_ppm_yield():
             data += load_pickles(dir)
     data = [line for line in data if 'output_yield_gkwh' in line.keys()]
     # data = filter_data(data, output_yield_gkwh__gt=20)
-    markers = ['x', '+']
+    markers = ['.', 'x', '+']
     fig, ax = plt.subplots()
     cm = plt.cm.get_cmap('viridis')
     # scatterplot for each point
@@ -36,14 +36,20 @@ def plot_ppm_yield():
         if line['reactor'] == REACTOR_GLASS_LONG:
             m = markers[0]
         elif line['reactor'] == REACTOR_GLASS_SHORT_QUAD:
-            m = markers[1]
+            if line['inductance'] == 0:
+                m = markers[1]
+            else:
+                m = markers[2]
         else:
             raise Exception('invalid reactor')
         c = line['output_energy_dens']
         plt.scatter(x, y, c=c, marker=m, s=20, cmap=cm, vmin=1.3, vmax=300)
+
+
     marker_legends = [
-        (mlines.Line2D([], [], color='black', marker=markers[0], label='Long glass', linewidth=0)),
-        (mlines.Line2D([], [], color='black', marker=markers[1], label='Short glass', linewidth=0))
+        (mlines.Line2D([], [], color='black', marker=markers[0], label='Long glass, coil', linewidth=0)),
+        (mlines.Line2D([], [], color='black', marker=markers[1], label='Short glass, no coil', linewidth=0)),
+        (mlines.Line2D([], [], color='black', marker=markers[2], label='Short glass, coil', linewidth=0))
         ]
     plt.legend(handles=marker_legends, loc='lower right')
     plt.text(550, 85, '← Higher airflow')

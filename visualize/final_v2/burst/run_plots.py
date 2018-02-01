@@ -36,5 +36,5 @@ plot_edens_yield(datas)
 
 datas = load_pickle('20180126-burst-3/run1')
 datas += load_pickle('20180126-burst-3/run2')
-datas += load_pickle('20180130-burst-4/run1')
+# datas += load_pickle('20180130-burst-4/run1')  # burst with 500ns pulses instead of 1us.
 plot_burst_ppm(datas)

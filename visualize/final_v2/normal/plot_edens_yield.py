@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 
-from visualize.helpers.colors import color_viridis
+from visualize.helpers.colors import color_plasma_3
 from visualize.helpers.data import filter_data, reactor_inducance_index
-from visualize.helpers.plot import save_file, set_plot, set_unique_legend
+from visualize.helpers.plot import save_file, set_plot, set_unique_legend, markers
 
 
 def plot_edens_yield(data):
@@ -15,8 +15,8 @@ def plot_edens_yield(data):
     """
     data = filter_data(data, input_v_output=15e3, input_l=1, output_yield_gkwh__gt=25)
     fig, ax = plt.subplots(4, 1, sharex=True)
-    colors = color_viridis(3)
-    m = 'o'
+    colors = color_plasma_3
+    # m = 'o'
 
     # interpolate_plot(ax[0], x, get_values(data, 'output_yield_gkwh'))
     # interpolate_plot(ax[1], x, get_values(data, 'o3_gramsec')*3600)
@@ -31,6 +31,7 @@ def plot_edens_yield(data):
         i = reactor_inducance_index(reactor, inductance)
         l = reactor + ' ' + (str(inductance)+'$\,\mu H$' if inductance else 'no coil')
         c = colors[i]
+        m = markers[i]
         edens = line['output_energy_dens']
         ax[0].scatter(edens, line['output_yield_gkwh'], label=l, c=c, marker=m)
         # ax_freq[0].scatter(freq, line['input_yield_gkwh'])
@@ -46,7 +47,7 @@ def plot_edens_yield(data):
     # ax_dens[1].set_ylim([0, 7e-5])
     # ax_dens[2].set_ylim([0, 2e3])
     # ax[0].set_ylim([0, 120])
-    ax[1].set_ylabel('Concentration [PPM]')
+    ax[1].set_ylabel('Ozone [ppm]')
     ax[2].set_ylabel('Energy efficiency [%]')
     ax[3].set_ylabel('Frequency [Hz]')
     ax[3].set_xlabel('Energy density [J/l]')

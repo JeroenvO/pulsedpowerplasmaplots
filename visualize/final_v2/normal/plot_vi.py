@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 from visualize.helpers.data import filter_data
 from visualize.helpers.plot import save_file, set_plot
-
+from visualize.helpers.colors import color_plasma_2
 
 def plot_vi_all(data, reactor):
     """
@@ -18,18 +18,14 @@ def plot_vi_all(data, reactor):
     i_axis = data['output_c'][0]
 
     fig, ax1 = plt.subplots()
-
-    ax1.plot(x_axis, i_axis, 'b-')
-
-    ax1.set_ylabel('current [A]', color='b')
-    ax1.tick_params('y', colors='b')
+    ax1.plot(x_axis, i_axis, color=color_plasma_2[0])
+    ax1.set_ylabel('current [A]', color=color_plasma_2[0])
+    ax1.tick_params('y', colors=color_plasma_2[0])
 
     ax2 = ax1.twinx()
-    ax2.plot(x_axis, v_axis, 'r-')  # voltage
-
-    ax2.set_ylabel('voltage [kV]', color='r')
-
-    ax2.tick_params('y', colors='r')
+    ax2.plot(x_axis, v_axis, color=color_plasma_2[1])  # voltage
+    ax2.set_ylabel('voltage [kV]', color=color_plasma_2[1])
+    ax2.tick_params('y', colors=color_plasma_2[1])
     set_plot(fig, pulse=True, subplot=False)
     return fig
 
@@ -61,3 +57,15 @@ def plot_vi_zoom(data, reactor):
     # ax2.set_ylim(0,20)
     # align_y_axis(ax1, ax2, 1, 1)
     save_file(fig, name='vi-zoom-' + reactor, path='plots_final_v2/normal')
+
+
+if __name__ == '__main__':
+    from visualize.helpers.data import load_pickle
+    for reactor in ['long-glass', 'short-glass']:
+        data = []
+        if reactor == 'long-glass':  # 26uH, long glass,
+            data = load_pickle('20180115-def1/run5')
+        elif reactor == 'short-glass':
+            data = load_pickle('20180115-def1/run1')
+        plot_vi_zoom(data, reactor)
+        plot_vi(data, reactor)

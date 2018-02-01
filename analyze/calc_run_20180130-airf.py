@@ -5,6 +5,7 @@ d=-5
 
 # long glass 26uh
 
+# Wrong waveform data
 calc_run(base + 'run1',
          REACTOR_GLASS_LONG,
          scope_multiple=True,
@@ -12,7 +13,8 @@ calc_run(base + 'run1',
          meas=SHORT_MEAS_LEN,
          current_scaling=0.5,
          delay=d,
-         voltage_offset=80,)
+         voltage_offset=80,
+         scope_dir=False) # disable waveforms!
 
 calc_run(base + 'run2',
          REACTOR_GLASS_LONG,
