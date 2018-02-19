@@ -43,5 +43,6 @@ def color_plasma(length):
 # prop_cycle = plt.rcParams['axes.prop_cycle']
 # colors = prop_cycle.by_key()['color']
 c8 = color_plasma(9)
-color_plasma_2 = [c8[2], c8[8]]
+# color2 = [c8[2], c8[8]]
+color2 = ['xkcd:sky blue', 'xkcd:red']
 color_plasma_3 = [c8[2], c8[5], c8[8]]

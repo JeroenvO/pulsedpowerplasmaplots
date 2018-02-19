@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from visualize.helpers.colors import color_viridis
+from visualize.helpers.colors import color_plasma
 from visualize.helpers.data import filter_data, reactor_inducance_index
 from visualize.helpers.plot import save_file, set_plot, set_unique_legend
 from visualize.helpers.burst import calc_burst
@@ -26,7 +26,7 @@ def plot_edens_yield(datas):
     # interpolate_plot(ax[4], x, get_values(data, 'input_f'))
 
     ui = np.array([200, 150, 100, 75, 50])
-    colors = color_viridis(len(ui))
+    colors = color_plasma(len(ui))
 
     # sort data, to keep the legend in the right order.
     datas = sorted(datas, key=lambda x:x[0]['burst_inner_f'])

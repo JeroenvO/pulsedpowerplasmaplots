@@ -26,6 +26,7 @@ def calc_burst(data):
     output_p_plasma = freq * burst_energy
     lss = np.average(get_values(data, 'airflow_ls'))
     o3f = np.average(get_values(data, 'o3_gramsec'))
+    ppm = np.average(get_values(data, 'o3_ppm'))
     input_p = np.average(get_values(data, 'input_p'))
     dic ={
         'e_plasma_burst': burst_energy,
@@ -35,5 +36,6 @@ def calc_burst(data):
         'output_yield_gj': o3f / output_p_plasma if output_p_plasma else 0,
         'output_yield_gkwh': o3f / (output_p_plasma / 3.6e6) if output_p_plasma else 0,
         'e_eff': output_p_plasma / input_p if output_p_plasma else 0,
+        'ppm': ppm,
     }
     return dic

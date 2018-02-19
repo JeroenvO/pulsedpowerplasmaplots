@@ -49,7 +49,8 @@ def calc_run(run_dir,
              voltage_offset=None,
              current_offset=None,
              waveform_loose_stability=False,
-             burst=False):
+             burst=False,
+             splitted_pulse = False):
     """
     Calculate all parameters for one measure run. Output to a pickle and xlsx file.
 
@@ -66,6 +67,7 @@ def calc_run(run_dir,
     :param current_offset: Zero point for the current in the easyscope files. Used if scope line is not at div zero.
     :param waveform_loose_stability: Set to True if the waveforms are very bad, this sets the stability checking less strict. Only used with scope_multiple=true
     :param burst: number of burst mode pulses. False for normal pulses.
+    :param splitted_pulse: If the falling and rising edge are in two different scope csv's
     :return: none
     """
     assert os.path.exists(run_dir)
@@ -145,10 +147,31 @@ def calc_run(run_dir,
             try:
                 if scope_multiple:
                     print('input csv: ' + str(data_row[scope_file_name_index]))
-                    lines = get_vol_cur_multiple(run_dir + '/' + scope_dir + '/' + str(data_row[scope_file_name_index]),
-                                                 current_scaling=current_scaling,
-                                                 delay=delay, voltage_offset=voltage_offset, current_offset=current_offset,
-                                                 )
+                    if splitted_pulse:
+                        lines_a = get_vol_cur_multiple(  # rising edge
+                            run_dir + '/' + scope_dir + '/' + str(data_row[scope_file_name_index]) + 'a',
+                            current_scaling=current_scaling,
+                            delay=delay, voltage_offset=voltage_offset, current_offset=current_offset,
+                            )
+                        lines_b = get_vol_cur_multiple(  # falling edge
+                            run_dir + '/' + scope_dir + '/' + str(data_row[scope_file_name_index]) + 'b',
+                            current_scaling=current_scaling,
+                            delay=delay, voltage_offset=voltage_offset, current_offset=current_offset,
+                            )
+                        lines = []
+                        for line_a, line_b in zip(lines_a, lines_b):
+                            # correct time
+                            line_b[0] += line_a[0][-1] - line_b[0][0]
+                            lines.append([np.append(line_a[0][:-6], line_b[0][:-6]),
+                                          np.append(line_a[1][:-6], line_b[1][:-6]),
+                                          np.append(line_a[2][:-6], line_b[2][:-6])]
+                                         )
+                    else:
+                        lines = get_vol_cur_multiple(
+                            run_dir + '/' + scope_dir + '/' + str(data_row[scope_file_name_index]),
+                            current_scaling=current_scaling,
+                            delay=delay, voltage_offset=voltage_offset, current_offset=current_offset,
+                            )
                     assert any(lines)
                     output_calc = calc_output_avg(lines, gen_res_high=225, gen_res_low=50, loose_stability=waveform_loose_stability, energy_loose_stability=energy_loose_stability)
                 else:

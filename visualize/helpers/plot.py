@@ -159,8 +159,8 @@ def interpolate(x, y, num=1000, kind='linear'):
     """
     assert any(x)
     assert any(y)
-    assert len(x) > 2
-    assert len(y) > 2
+    assert len(x) > 1
+    assert len(y) > 1
     x_i = np.linspace(min(x), max(x), num)
     f = interp1d(x, y, kind=kind)
     y_i = f(x_i)

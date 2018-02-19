@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 from visualize.helpers.data import filter_data
 from visualize.helpers.plot import save_file, set_plot
-from visualize.helpers.colors import color_plasma_2
+from visualize.helpers.colors import color2
 
 def plot_vi_all(data, reactor):
     """
@@ -18,14 +18,14 @@ def plot_vi_all(data, reactor):
     i_axis = data['output_c'][0]
 
     fig, ax1 = plt.subplots()
-    ax1.plot(x_axis, i_axis, color=color_plasma_2[0])
-    ax1.set_ylabel('current [A]', color=color_plasma_2[0])
-    ax1.tick_params('y', colors=color_plasma_2[0])
+    ax1.plot(x_axis, i_axis, color=color2[0])
+    ax1.set_ylabel('current [A]', color=color2[0])
+    ax1.tick_params('y', colors=color2[0])
 
     ax2 = ax1.twinx()
-    ax2.plot(x_axis, v_axis, color=color_plasma_2[1])  # voltage
-    ax2.set_ylabel('voltage [kV]', color=color_plasma_2[1])
-    ax2.tick_params('y', colors=color_plasma_2[1])
+    ax2.plot(x_axis, v_axis, color=color2[1])  # voltage
+    ax2.set_ylabel('voltage [kV]', color=color2[1])
+    ax2.tick_params('y', colors=color2[1])
     set_plot(fig, pulse=True, subplot=False)
     return fig
 

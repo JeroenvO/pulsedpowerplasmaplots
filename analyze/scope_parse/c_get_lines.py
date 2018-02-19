@@ -8,7 +8,8 @@ def get_vol_cur_single(filename,
                        current_scaling = 0.5,
                        delay=0,
                        voltage_offset=None,
-                       current_offset=None):
+                       current_offset=None,
+                       splitted_pulse=False):
     """
     Parse voltage and current from waveforms.
 
@@ -29,6 +30,7 @@ def get_vol_cur_single(filename,
     v = y_axes[0]
     i = y_axes[1]
 
+    # for splitted pulse, disable these assertions.
     assert MAX_VOLTAGE_MIN < max(v) < MAX_VOLTAGE_MAX, "Voltage max (%r) scaling incorrect!" % max(v)
     assert MIN_VOLTAGE_MIN < min(v) < MIN_VOLTAGE_MAX, "Voltage min (%r) scaling incorrect!" % min(v)
 

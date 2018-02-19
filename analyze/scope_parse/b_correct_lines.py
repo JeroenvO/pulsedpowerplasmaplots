@@ -49,6 +49,7 @@ def correct_lines(line_objs, div_zero_default=128.0, offsets=[]):
                 if offsets[i]['div_zero'] is not None:
                     div_zero = offsets[i]['div_zero']
 
+        # for splitted pulse, disable these assertions
         assert abs(line['points'][1]-div_zero) < 3, 'Error! Line does not start at zero potential! (zero: %r)' % div_zero
         assert any([(abs(p)-div_zero) > 10 for p in line['points']]), 'Error! Line has low signal!'
 

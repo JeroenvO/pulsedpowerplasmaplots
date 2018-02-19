@@ -77,7 +77,7 @@ def calc_output(line, react_cap=None, gen_res_high=225, gen_res_low=50):
 
     # some validation
     assert c_peak_time < c_valley_time, 'Current valley before peak, signal is inverted!'
-    assert MAX_VOLTAGE_MIN <= v_max < MAX_VOLTAGE_MAX, 'Max voltage error (%r' % v_max
+    assert MAX_VOLTAGE_MIN <= v_max < MAX_VOLTAGE_MAX, 'Max voltage error (%r)' % v_max
     assert MAX_CURRENT_MIN <= c_max < MAX_CURRENT_MAX, 'Max current error (%r)' % c_max
 
     # Find the settling time of the current. Than use the time where the current is stable

@@ -2,12 +2,13 @@
 Run all plot scripts from visualize/final
 Used to update all plots for the report at once.
 """
-from visualize.final_v2.burst.plot_edens_yield import *
-from visualize.final_v2.burst.plot_ppm_yield import *
-from visualize.final_v2.burst.plot_f_epulse import *
 from visualize.final_v2.burst.plot_burst_ppm import plot_burst_ppm
+from visualize.final_v2.burst.plot_edens_yield import *
+from visualize.final_v2.burst.plot_f_epulse import *
+from visualize.final_v2.burst.plot_ppm_yield import *
 
-from visualize.helpers.data import annotate_data
+plot_f_epulse(load_pickle('20180124-burst-1/run2'))
+
 datas = [
     # 100hz, 5 pulses
     load_pickle('20180124-burst-1/run4'), # 50
@@ -31,10 +32,12 @@ datas = [
     load_pickle('20180126-burst-3/run13'),  # 50
 
  ]
-plot_f_epulse(datas)
-plot_edens_yield(datas)
 
-datas = load_pickle('20180126-burst-3/run1')
-datas += load_pickle('20180126-burst-3/run2')
+plot_edens_yield(datas)
+plot_ppm_yield(datas)
+
+datas = [load_pickle('20180126-burst-3/run1'),
+         load_pickle('20180126-burst-3/run2'),
+         ]
 # datas += load_pickle('20180130-burst-4/run1')  # burst with 500ns pulses instead of 1us.
 plot_burst_ppm(datas)

@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from visualize.helpers.data import get_values, load_pickle, sort_data
 from visualize.helpers.plot import set_plot, save_file, markers
-from visualize.helpers.colors import color_plasma_2
+from visualize.helpers.colors import color2
 
 def plot_burst_ppm(datas):
     fig, ax = plt.subplots()
@@ -10,7 +10,7 @@ def plot_burst_ppm(datas):
         x = get_values(data, 'burst_inner_f')
         y = get_values(data, 'o3_ppm')
         l = str(data[0]['burst_pulses'])+' pulses'
-        plt.plot(x,y, label=l, marker=markers[i], color=color_plasma_2[i])
+        plt.plot(x,y, label=l, marker=markers[i], color=color2[i])
     plt.text(2, 1080, ' ← 1kHz normal pulses')
     plt.xlabel('Burst inner frequency [kHz]')
     plt.ylabel('Ozone [ppm]')

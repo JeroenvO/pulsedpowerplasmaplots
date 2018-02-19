@@ -2,8 +2,8 @@ import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
 
 from visualize.helpers.data import filter_data, get_values, sort_data, load_pickles, load_pickle
-from visualize.helpers.plot import interpolate_plot, markers
-from visualize.helpers.colors import color_plasma_2
+from visualize.helpers.plot import interpolate_plot, markers, save_file
+from visualize.helpers.colors import color2
 from analyze.defines import REACTOR_GLASS_SHORT_QUAD
 
 def plot_inv_ppm(data_nor, data_inv):
@@ -17,7 +17,7 @@ def plot_inv_ppm(data_nor, data_inv):
     fig, (ax_ppm, ax_yield) = plt.subplots(2, 1, sharex=True)
     for i, d in enumerate([data_nor, data_inv]):
         m = markers[i]
-        c=color_plasma_2[i]
+        c=color2[i]
         x = get_values(d, key='input_f')
         y = get_values(d, 'o3_ppm')
         y2 = get_values(d, 'output_yield_gkwh')
@@ -27,13 +27,13 @@ def plot_inv_ppm(data_nor, data_inv):
             ax_ppm.scatter(x, y, c=c, marker=m)
             ax_yield.scatter(x, y2, c=c, marker=m)
     marker_legends = [
-        (mlines.Line2D([], [], marker=markers[0], label='Normal', color='grey', markerfacecolor='black', markeredgewidth=0)),
-        (mlines.Line2D([], [], marker=markers[1], label='Inverted', color='grey', markerfacecolor='black', markeredgewidth=0)),
+        (mlines.Line2D([], [], marker=markers[0], label='Normal', color='grey', markerfacecolor=color2[0], markeredgewidth=0)),
+        (mlines.Line2D([], [], marker=markers[1], label='Inverted', color='grey', markerfacecolor=color2[1], markeredgewidth=0)),
     ]
     ax_ppm.set_ylabel('Concentration [ppm]')
     ax_yield.set_ylabel('Yield [g/kWh]')
     plt.legend(handles=marker_legends)
-    #TODO save fig
+    save_file(fig, name='inv-ppm', path='plots_final_v2/normal')
 
 
 if __name__ == '__main__':
