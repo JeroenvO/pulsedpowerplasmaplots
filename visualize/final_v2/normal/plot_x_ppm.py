@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from visualize.helpers.data import filter_data, get_values, sort_data
 from visualize.helpers.plot import interpolate_plot, markers
 from visualize.helpers.colors import color2
+from analyze.defines import REACTOR_GLASS_SHORT_QUAD
 
 def plot_x_ppm(data, key, freqs=[400], plt_yield=False):
     """
@@ -39,6 +40,10 @@ def plot_x_ppm(data, key, freqs=[400], plt_yield=False):
             d = [x for x in d if 'output_yield_gkwh' in x]  # only values that have waveform data
             y2 = get_values(d, 'output_yield_gkwh')
             x2 = get_values(d, key=key)
+            if key == 'output_v_pulse':
+                x2 /= 1000
+                if f == 100 and d[0]['reactor'] == REACTOR_GLASS_SHORT_QUAD:  # this line is bs
+                    continue
             interpolate_plot(ax_yield, x2, y2)
             for x2a, y2a in zip(x2, y2):
                 ax_yield.scatter(x2a, y2a, c=c, marker=m)

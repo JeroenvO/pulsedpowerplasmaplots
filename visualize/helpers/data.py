@@ -87,7 +87,7 @@ def filter_data(data, **kwargs):
             data = [d for d in data if f(value, d[key[0]])]
         else:
             data = [d for d in data if f(d[key[0]], value)]
-    assert any(data)
+    assert any(data), "Filter on key %r returned no data!" % str(key)
     return data
 
 

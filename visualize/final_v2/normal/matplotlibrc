@@ -11,3 +11,5 @@ lines.markersize    : 4
 axes.axisbelow      : True
 
 figure.max_open_warning: 0
+
+image.cmap           : plasma

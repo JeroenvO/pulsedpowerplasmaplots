@@ -2,6 +2,7 @@ import os
 import pickle
 import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
+import matplotlib.pylab as pl
 
 from analyze.defines import REACTOR_GLASS_LONG, REACTOR_GLASS_SHORT_QUAD
 from visualize.helpers.data import load_pickles
@@ -28,7 +29,7 @@ def plot_ppm_yield():
     # data = filter_data(data, output_yield_gkwh__gt=20)
     markers = ['.', 'x', '+']
     fig, ax = plt.subplots()
-    cm = plt.cm.get_cmap('viridis')
+    cm = plt.cm.get_cmap('plasma')
     # scatterplot for each point
     for line in data:
         x = line['o3_ppm']
@@ -41,7 +42,7 @@ def plot_ppm_yield():
             else:
                 m = markers[2]
         else:
-            raise Exception('invalid reactor')
+            raise Exception('invalid reactor: '+line['reactor'])
         c = line['output_energy_dens']
         plt.scatter(x, y, c=c, marker=m, s=20, cmap=cm, vmin=1.3, vmax=300)
 
