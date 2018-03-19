@@ -39,15 +39,20 @@ def plot_x_ppm(data, key, freqs=[400], plt_yield=False):
         if plt_yield:
             d = [x for x in d if 'output_yield_gkwh' in x]  # only values that have waveform data
             y2 = get_values(d, 'output_yield_gkwh')
+            z2 = get_values(d, 'output_yield_gkwh_single')
             x2 = get_values(d, key=key)
             if key == 'output_v_pulse':
                 x2 /= 1000
                 if f == 100 and d[0]['reactor'] == REACTOR_GLASS_SHORT_QUAD:  # this line is bs
                     continue
             interpolate_plot(ax_yield, x2, y2)
-            for x2a, y2a in zip(x2, y2):
-                ax_yield.scatter(x2a, y2a, c=c, marker=m)
-    ax_ppm.set_ylabel('Concentration [ppm]')
+            for x2a, y2a, z2a in zip(x2, y2, z2):
+                # x2a2 = [x2a]*len(z2a)
+                ax_yield.scatter(x2a, y2a, c=c, marker=m,zorder=10)
+            mi = [y2a-min(z2a) for z2a, y2a in zip(z2,y2)]
+            ma = [max(z2a)-y2a for z2a, y2a in zip(z2, y2)]
+            ax_yield.errorbar(x2, y2, yerr=[mi, ma], xerr=None, ecolor=c, fmt='none', capsize=3)
+    ax_ppm.set_ylabel('Ozone [ppm]')
     if plt_yield:
         ax_yield.set_ylabel('Yield [g/kWh]')
     plt.legend(handles=marker_legends)

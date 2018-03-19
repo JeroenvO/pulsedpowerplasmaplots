@@ -41,7 +41,7 @@ def plot_ppm_yield():
         label = reactor #str(iw) + " $\mu$s"
         marker_legends.append(mlines.Line2D([], [], color='black', marker=m, label=label, linewidth=0))
     plt.legend(handles=marker_legends, loc='best')
-    plt.xlabel('Concentration [PPM]')
+    plt.xlabel('Ozone [ppm]')
     plt.ylabel('Yield [g/kWh]')
     plt.xscale('log')
     plt.xlim([5,5000])

@@ -54,7 +54,7 @@ def plot_ppm_yield():
         ]
     plt.legend(handles=marker_legends, loc='lower right')
     plt.text(550, 85, '← Higher airflow')
-    plt.xlabel('Concentration [ppm]')
+    plt.xlabel('Ozone [ppm]')
     plt.ylabel('Yield [g/kWh]')
     cb = plt.colorbar(orientation='horizontal', pad=0.2)
     cb.set_label('Energy density [J/l]')
