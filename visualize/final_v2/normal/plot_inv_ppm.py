@@ -54,6 +54,7 @@ def plot_inv_ppm(data_nor, data_inv):
     ]
     ax_ppm.set_ylabel('Ozone [ppm]')
     ax_yield.set_ylabel('Yield [g/kWh]')
+    ax_yield.set_xlabel('Frequency [Hz]')
     plt.legend(handles=marker_legends)
     set_plot(fig, plot_height=1.9)
     save_file(fig, name='inv-ppm', path='plots_final_v2/normal')

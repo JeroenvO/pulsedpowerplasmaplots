@@ -4,7 +4,7 @@ Used to update all plots for the report at once.
 """
 from analyze.defines import *
 from visualize.final_v2.normal.plot_a_ppm import *
-from visualize.final_v2.normal.plot_edens_yield_3 import *
+from visualize.final_v2.normal.plot_edens_yield import *
 from visualize.final_v2.normal.plot_f_eff import *
 from visualize.final_v2.normal.plot_f_epulse import *
 from visualize.final_v2.normal.plot_l_ppm import *
@@ -36,7 +36,7 @@ datas += load_pickle('20180118-def2/run2')
 #
 # # conclusion plots for frequency data
 plot_edens_yield(datas)
-# plot_ppm_yield()
+plot_ppm_yield()
 
 #
 # # plots of a single waveform

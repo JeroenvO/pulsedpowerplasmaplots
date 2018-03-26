@@ -91,7 +91,7 @@ def plot_edens_yield(data):
     ax[4].set_ylabel('Pulse plasma energy [mJ]')
     ax[4].set_xlabel('Energy density [J/l]')
 
-    set_unique_legend(ax[1])
+    set_unique_legend(ax[0])
     set_plot(fig, plot_height=4)
     save_file(fig, name='edens-all', path='plots_final_v2/normal')
 
