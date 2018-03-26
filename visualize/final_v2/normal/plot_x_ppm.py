@@ -49,8 +49,8 @@ def plot_x_ppm(data, key, freqs=[400], plt_yield=False):
             for x2a, y2a, z2a in zip(x2, y2, z2):
                 # x2a2 = [x2a]*len(z2a)
                 ax_yield.scatter(x2a, y2a, c=c, marker=m,zorder=10)
-            mi = [y2a-min(z2a) for z2a, y2a in zip(z2,y2)]
-            ma = [max(z2a)-y2a for z2a, y2a in zip(z2, y2)]
+            mi = [y2a-min(z2a) for z2a, y2a in zip(z2, y2)]  # list of minima of y
+            ma = [max(z2a)-y2a for z2a, y2a in zip(z2, y2)]  # list of maxima of y
             ax_yield.errorbar(x2, y2, yerr=[mi, ma], xerr=None, ecolor=c, fmt='none', capsize=3)
     ax_ppm.set_ylabel('Ozone [ppm]')
     if plt_yield:

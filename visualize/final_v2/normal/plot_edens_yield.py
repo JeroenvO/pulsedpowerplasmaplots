@@ -7,7 +7,7 @@ from visualize.helpers.plot import save_file, set_plot, set_unique_legend, marke
 
 def plot_edens_yield(data):
     """
-    Make various plots to energy density
+    Make various plots to energy density as scatterplot
 
     :param data:
     :param reactor:
