@@ -82,7 +82,7 @@ def filter_data(data, **kwargs):
         op = key[1] if len(key) == 2 else 'eq'
         f = getattr(operator, op)
         # only check data[0], assume all dicts have the same keys
-        assert key[0] in data[0], '%r is not found in dictionary!' % key[0]  # for unknown reasons, key[0] is not printed
+        assert key[0] in data[0], '%r is not found in dictionary!' % key[0]
         if op in ['contains']:  # reverse order of arguments for these ops.
             data = [d for d in data if f(value, d[key[0]])]
         else:

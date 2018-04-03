@@ -49,9 +49,10 @@ def plot_inv_ppm(data_nor, data_inv):
         ax_yield.errorbar(ux, uy2, yerr=[mi, ma], xerr=None, ecolor=c, fmt='none', capsize=3)
 
     marker_legends = [
-        (mlines.Line2D([], [], marker=markers[0], label='Normal', linewidth=0, markerfacecolor=color2[0], markeredgewidth=0)),
-        (mlines.Line2D([], [], marker=markers[1], label='Inverted', linewidth=0, markerfacecolor=color2[1], markeredgewidth=0)),
+        (mlines.Line2D([], [], marker=markers[0], label='Normal', color='grey', markerfacecolor=color2[0], markeredgewidth=0)),
+        (mlines.Line2D([], [], marker=markers[1], label='Inverted', color='grey', markerfacecolor=color2[1], markeredgewidth=0)),
     ]
+
     ax_ppm.set_ylabel('Ozone [ppm]')
     ax_yield.set_ylabel('Yield [g/kWh]')
     ax_yield.set_xlabel('Frequency [Hz]')

@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from visualize.helpers.data import load_pickle, get_values, filter_data
-from visualize.helpers.plot import set_plot, save_file
+from visualize.helpers.plot import set_plot, save_file, markers
 from visualize.helpers.colors import color2
 colors = color2
 # voltage sweep with two meas.
@@ -18,8 +18,10 @@ v2 = get_values(data2, 'o3_ppm')
 x1 = get_values(data1, 'input_f')
 x2 = get_values(data2, 'input_f')
 fig, ax1= plt.subplots()
-ax1.plot(x1, v1, label='Long measure cell', marker='o', c=colors[0])
-ax1.plot(x2, v2, label='Short measure cell', marker='d', c=colors[1])
+i=0
+ax1.plot(x1, v1, label='Long measure cell', marker=markers[i], markerfacecolor=color2[i], linewidth=0.9, color='grey', markeredgewidth=0, markersize=5)
+i=1
+ax1.plot(x2, v2, label='Short measure cell', marker=markers[i], markerfacecolor=color2[i], linewidth=0.9, color='grey', markeredgewidth=0, markersize=5)
 plt.xlabel('Plasma energy [pulses/second, Hz]')
 plt.ylabel('Ozone [ppm]')
 plt.legend()

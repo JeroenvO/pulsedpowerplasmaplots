@@ -10,7 +10,7 @@ def plot_burst_ppm(datas):
         x = get_values(data, 'burst_inner_f')
         y = get_values(data, 'o3_ppm')
         l = str(data[0]['burst_pulses'])+' pulses'
-        plt.plot(x,y, label=l, marker=markers[i], color=color2[i])
+        plt.plot(x,y, label=l, marker=markers[i], markerfacecolor=color2[i], linewidth=0.9, color='grey', markeredgewidth=0, markersize=5)
     plt.text(2, 1080, ' ← 1kHz normal pulses')
     plt.xlabel('Burst inner frequency [kHz]')
     plt.ylabel('Ozone [ppm]')
