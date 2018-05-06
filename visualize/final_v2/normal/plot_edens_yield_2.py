@@ -62,8 +62,9 @@ def plot_edens_yield(data):
 
         uf = np.unique(get_values(data, 'input_f'))
         center = []
-        mins = []
-        maxs = []
+        # mins = []
+        # maxs = []
+        std = []
         xs = []
         for f in uf:
             d = filter_data(data, input_f=f)
@@ -74,11 +75,12 @@ def plot_edens_yield(data):
             epuls = np.array(v) * 1000  # array of values
             mn = np.mean(epuls)
             xs.append(np.mean((get_values(d, key='output_energy_dens'))))
-            mins.append(mn - min(epuls))
-            maxs.append(max(epuls) - mn)
+            # mins.append(mn - min(epuls))
+            # maxs.append(max(epuls) - mn)
+            std.append(np.std(epuls))
             center.append(mn)
         ax[4].scatter(xs, center, c=c, marker=m)
-        ax[4].errorbar(xs, center, yerr=[mins, maxs], xerr=None, ecolor=c, capsize=3)
+        ax[4].errorbar(xs, center, yerr=std, xerr=None, ecolor=c, capsize=3)
 
     ax[0].set_ylabel('Yield [g/kWh]')
     # ax[1].set_ylabel('Production [g/h]')

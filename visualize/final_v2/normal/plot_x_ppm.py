@@ -1,6 +1,6 @@
 import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
-
+import numpy as np
 from visualize.helpers.data import filter_data, get_values, sort_data
 from visualize.helpers.plot import interpolate_plot, markers
 from visualize.helpers.colors import color2
@@ -49,9 +49,11 @@ def plot_x_ppm(data, key, freqs=[400], plt_yield=False):
             for x2a, y2a, z2a in zip(x2, y2, z2):
                 # x2a2 = [x2a]*len(z2a)
                 ax_yield.scatter(x2a, y2a, c=c, marker=m,zorder=10)
-            mi = [y2a-min(z2a) for z2a, y2a in zip(z2, y2)]  # list of minima of y
-            ma = [max(z2a)-y2a for z2a, y2a in zip(z2, y2)]  # list of maxima of y
-            ax_yield.errorbar(x2, y2, yerr=[mi, ma], xerr=None, ecolor=c, fmt='none', capsize=3)
+            # std = np.std(z2, 1)  # list of minima of y
+            std = []
+            for z2a in z2:
+                std.append(np.std(z2a))
+            ax_yield.errorbar(x2, y2, yerr=std, xerr=None, ecolor=c, fmt='none', capsize=3)
     ax_ppm.set_ylabel('Ozone [ppm]')
     if plt_yield:
         ax_yield.set_ylabel('Yield [g/kWh]')

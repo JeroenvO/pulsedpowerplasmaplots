@@ -44,9 +44,13 @@ def plot_inv_ppm(data_nor, data_inv):
             ax_ppm.scatter(xa, ya, c=c, marker=m)
             ax_yield.scatter(xa, y2a, c=c, marker=m)
 
-        mi = [y2a - min(z2a) for z2a, y2a in zip(uz2, uy2)]
-        ma = [max(z2a) - y2a for z2a, y2a in zip(uz2, uy2)]
-        ax_yield.errorbar(ux, uy2, yerr=[mi, ma], xerr=None, ecolor=c, fmt='none', capsize=3)
+        # mi = [y2a - min(z2a) for z2a, y2a in zip(uz2, uy2)]
+        # ma = [max(z2a) - y2a for z2a, y2a in zip(uz2, uy2)]
+        std = []
+        for z2a in uz2:
+            std.append(np.std(z2a))
+        # std = np.std(z2, 1)  # list of minima of y
+        ax_yield.errorbar(ux, uy2, yerr=std, xerr=None, ecolor=c, fmt='none', capsize=3)
 
     marker_legends = [
         (mlines.Line2D([], [], marker=markers[0], label='Normal', color='grey', markerfacecolor=color2[0], markeredgewidth=0)),

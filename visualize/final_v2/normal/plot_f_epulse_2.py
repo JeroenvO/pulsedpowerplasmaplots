@@ -19,9 +19,10 @@ def plot_f_epulse(data, reactor):
     fig, ax = plt.subplots()
     uf = np.unique(get_values(data, 'input_f'))
     center = []
-    mins = []
-    maxs = []
+    # mins = []
+    # maxs = []
     xs = []
+    std = []
     for f in uf:
         d = filter_data(data, input_f=f)
         l = get_values(d, key='output_e_plasma_single')  # returns list of arrays with values.
@@ -31,13 +32,14 @@ def plot_f_epulse(data, reactor):
         epuls = np.array(v)*1000  # array of values
         mn = np.mean(epuls)
         xs.append(np.mean((get_values(d, key='output_energy_dens'))))
-        mins.append(mn-min(epuls))
-        maxs.append(max(epuls)-mn)
+        # mins.append(mn-min(epuls))
+        # maxs.append(max(epuls)-mn)
+        std.append(np.std(epuls))
         center.append(mn)
 
     c='black'
     ax.scatter(xs, center, c=c)
-    ax.errorbar(xs, center, yerr=[mins, maxs], xerr=None, ecolor=c, fmt='none', capsize=3)
+    ax.errorbar(xs, center, yerr=std, xerr=None, ecolor=c, fmt='none', capsize=3)
 
     ax.set_xlabel('Energy density [J/l]')
     # ax.set_xlabel('Frequency [Hz]')

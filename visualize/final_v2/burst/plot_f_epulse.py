@@ -37,9 +37,10 @@ def plot_f_epulse(datas):
         marker_legends.append(
             mlines.Line2D([], [], marker=m, label=str(len(data))+' pulses', color='grey', markerfacecolor=c, markeredgewidth=0))
 
-        mi = [y2a - min(z2a) for z2a, y2a in zip(all, center)]  # list of minima of y
-        ma = [max(z2a) - y2a for z2a, y2a in zip(all, center)]  # list of maxima of y
-        ax.errorbar(x, center, yerr=[mi, ma], xerr=None, ecolor=c, fmt='none', capsize=3)
+        # mi = [y2a - min(z2a) for z2a, y2a in zip(all, center)]  # list of minima of y
+        # ma = [max(z2a) - y2a for z2a, y2a in zip(all, center)]  # list of maxima of y
+        std = [np.std(z2a) for z2a in all]
+        ax.errorbar(x, center, yerr=std, xerr=None, ecolor=c, fmt='none', capsize=3)
 
     # add x labels
     ax.set_xlabel('Pulse number')
