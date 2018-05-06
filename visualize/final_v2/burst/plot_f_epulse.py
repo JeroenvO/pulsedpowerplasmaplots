@@ -46,5 +46,6 @@ def plot_f_epulse(datas):
     ax.set_xlabel('Pulse number')
     ax.set_ylabel('Pulse plasma energy [mJ]')
     ax.legend(handles=marker_legends)
+    ax.set_xlim(left=0)
     set_plot(fig)
     save_file(fig, name='epulse-burst', path='plots_final_v2/burst')

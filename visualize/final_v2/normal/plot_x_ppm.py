@@ -34,7 +34,7 @@ def plot_x_ppm(data, key, freqs=[400], plt_yield=False):
         for xa, ya in zip(x, y):
             ax_ppm.scatter(xa, ya, c=c, marker=m)
         marker_legends.append(
-            mlines.Line2D([], [], marker=m, label=str(f) + 'Hz', color='grey', markerfacecolor=c, markeredgewidth=0))
+            mlines.Line2D([], [], marker=m, label=str(f) + '$\,$Hz', color='grey', markerfacecolor=c, markeredgewidth=0))
 
         if plt_yield:
             d = [x for x in d if 'output_yield_gkwh' in x]  # only values that have waveform data

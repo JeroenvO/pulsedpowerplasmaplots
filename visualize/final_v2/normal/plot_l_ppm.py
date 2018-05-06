@@ -20,7 +20,7 @@ def plot_l_ppm(data, reactor, voltage=1000, freqs=[400]):
     if voltage != 1000:
         data = filter_data(data, input_l__le=20)  # don't plot 40us point
     fig = plot_x_ppm(data, 'input_l', freqs) #, plt_yield=True)
-    fig.axes[0].set_xlabel('Pulse length [$\mu$s]')
+    fig.axes[0].set_xlabel('Pulse length [$\mathrm{\mu}$s]')
     fig.axes[0].set_xscale('log')
     set_plot(fig, plot_height=1)
     if voltage != 1000:
