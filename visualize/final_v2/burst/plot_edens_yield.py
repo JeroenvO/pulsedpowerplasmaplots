@@ -61,7 +61,7 @@ def plot_edens_yield(datas):
     ax[1].text(45, 250, '100 Hz')
     ax[1].text(85, 550, '200 Hz')
     set_unique_legend(ax[1])
-    set_plot(fig, plot_height=3)
+    set_plot(fig, plot_height=3, from_zero=False)
     save_file(fig, name='edens-all-burst', path='plots_final_v2/burst')
 
 

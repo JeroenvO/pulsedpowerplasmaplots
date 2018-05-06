@@ -97,7 +97,7 @@ def move_sn_y(ax, offs=0, dig=0, side='left', omit_last=False, lower_limit=1e-3,
         return locs
 
 
-def set_plot(fig, plot_height=1, pulse=False, subplot=True):
+def set_plot(fig, plot_height=1, pulse=False, subplot=True, from_zero=True):
     """
     Set plot settings for IEEE paper, combined with /plots_final_v1/matplotlibrc
     https://www.bastibl.net/publication-quality-plots/
@@ -105,6 +105,7 @@ def set_plot(fig, plot_height=1, pulse=False, subplot=True):
     :param fig: fig to set
     :param plot_height: number of subplots in height
     :param pulse: Whether a pulse is shown (cuts the plot to 1us pulse time)
+    :param from_zero: Whether to set lower y-lim to zero.
     :return:
     """
     width = 3.7
@@ -115,6 +116,8 @@ def set_plot(fig, plot_height=1, pulse=False, subplot=True):
         if pulse:
             ax.set_xlim([-0.2, 2])
             ax.set_xlabel('time [$\mu$s]')
+        if from_zero:
+            ax.set_ylim(bottom=0)
         if subplot:
             ax.grid(True)
         # locs = move_sn_y(ax, offs=0.03, side='left', dig=1)

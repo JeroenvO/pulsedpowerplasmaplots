@@ -31,7 +31,7 @@ def plot_ppm_yield(datas):
     plt.xscale('log')
     # plt.xlim([5,5000])
     ax.grid(True)
-    set_plot(fig)
+    set_plot(fig, from_zero=False)
     save_file(fig, name='ppm-yield-burst', path='plots_final_v2/burst')
     plt.show()
 

@@ -24,7 +24,7 @@ def plot_edens_yield(data):
     for reactor, ind in [(REACTOR_GLASS_LONG, 26), (REACTOR_GLASS_SHORT_QUAD, 0), (REACTOR_GLASS_SHORT_QUAD, 26)]:
         data = filter_data(datas, reactor=reactor, inductance=ind)
         i = reactor_inducance_index(reactor, ind)
-        l = reactor + ' ' + (str(ind) + '$\,\mu H$' if ind else 'no coil')
+        l = reactor.replace('-', ' ') + ' ' + (str(ind) + '$\,\mathrm{\mu}$H')
         c = colors[i]
         m = markers[i]
         data = sort_data(data, key='output_energy_dens')
@@ -73,7 +73,7 @@ def plot_edens_yield(data):
     ax[3].set_ylim([1, 15])
     ax[4].set_xlabel('Energy density [J/l]')
 
-    set_unique_legend(ax[0])
+    set_unique_legend(ax[1])
     set_plot(fig, plot_height=4)
     save_file(fig, name='edens-all-3', path='plots_final_v2/normal')
 

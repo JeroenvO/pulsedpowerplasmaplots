@@ -14,7 +14,7 @@ def plot_burst_ppm(datas):
     plt.text(2, 1080, ' ← 1kHz normal pulses')
     plt.xlabel('Burst inner frequency [kHz]')
     plt.ylabel('Ozone [ppm]')
-    ax.legend(loc='center right')
+    ax.legend(loc=1)
     set_plot(fig, plot_height=1.1)
     save_file(fig, name='burst-ppm', path='plots_final_v2/burst')
 
