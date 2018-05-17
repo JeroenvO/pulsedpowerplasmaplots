@@ -3,7 +3,9 @@ from visualize.helpers.data import get_values, load_pickle, sort_data
 from visualize.helpers.plot import set_plot, save_file, markers
 from visualize.helpers.colors import color2
 
+
 def plot_burst_ppm(datas):
+    datas.reverse()
     fig, ax = plt.subplots()
     for i, data in enumerate(datas):
         data = sort_data(data, 'burst_inner_f')
