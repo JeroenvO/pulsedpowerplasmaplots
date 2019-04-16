@@ -26,7 +26,7 @@ def plot_vi_all(data, reactor):
     ax2.plot(x_axis, v_axis, color=color2[1])  # voltage
     ax2.set_ylabel('voltage [kV]', color=color2[1])
     ax2.tick_params('y', colors=color2[1])
-    set_plot(fig, pulse=True, subplot=False)
+    set_plot(fig, pulse=True, subplot=False, plot_height=0.8)
     return fig
 
 

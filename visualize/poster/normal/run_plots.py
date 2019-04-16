@@ -43,11 +43,11 @@ plot_ppm_yield()
 # plots of a single waveform
 for reactor in [REACTOR_GLASS_SHORT_QUAD]:
     data = []
-    if reactor == 'long-glass': # 26uH, long glass,
-        data = load_pickle('20180115-def1/run5')
-    elif reactor == 'short-glass':
+    # if reactor == 'long-glass': # 26uH, long glass,
+    #     data = load_pickle('20180115-def1/run5')
+    if reactor == 'short-glass':
         data = load_pickle('20180115-def1/run1')
-    plot_vi_zoom(data, reactor)
+    # plot_vi_zoom(data, reactor)
     plot_vi(data, reactor)
     # plot_pe(data, reactor)
 

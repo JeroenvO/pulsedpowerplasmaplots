@@ -17,7 +17,7 @@ def load_pickle(path):
 
     if not os.path.exists(path):
         # path = 'G:/Prive/MIJN-Documenten/TU/62-Stage/' + path  # try full path.
-        path = 'D:/ownCloud/DATA/MIJN-Documenten/TU/Vakken/62-Stage/' + path
+        path = 'D:/ownCloud/DATA/MIJN-Documenten/TU/6-Stage/' + path
 
     assert os.path.exists(path)
 
@@ -54,7 +54,7 @@ def load_pickles(dir, filename='data.pkl'):
     """
     data = []
     if not os.path.exists(dir):
-        dir = 'D:/ownCloud/DATA/MIJN-Documenten/TU/Vakken/62-Stage/' + dir  # try full path.
+        dir = 'D:/ownCloud/DATA/MIJN-Documenten/TU/6-Stage/' + dir  # try full path.
 
     dirs = os.listdir(dir, )
 

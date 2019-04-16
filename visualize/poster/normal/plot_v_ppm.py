@@ -15,7 +15,7 @@ def plot_v_ppm(data, reactor, freqs):
     :return:
     """
     data = filter_data(data, input_l=1) # values with l=0.5us are not correct measured.
-    fig = plot_x_ppm(data, 'output_v_pulse', freqs, plt_yield=True)
-    fig.axes[1].set_xlabel('Pulse voltage [kV]')
-    set_plot(fig, plot_height=1.9)
+    fig = plot_x_ppm(data, 'output_v_pulse', freqs, plt_yield=False)
+    # fig.axes[1].set_xlabel('Pulse voltage [kV]')
+    set_plot(fig, plot_height=0.8)
     save_file(fig, name='v-ppm-'+reactor, path='plots_poster/normal')

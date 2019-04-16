@@ -17,7 +17,7 @@ def plot_ppm_yield():
     :param reactor:
     :return:
     """
-    dirs = sorted(os.listdir('D:/ownCloud/DATA/MIJN-Documenten/TU/Vakken/62-Stage/'))
+    dirs = sorted(os.listdir('D:/ownCloud/DATA/MIJN-Documenten/TU/6-Stage/'))
     # dirs = sorted(os.listdir('G:/Prive/MIJN-Documenten/TU/62-Stage/'))
     start = dirs.index('20180115-def1')
     end = dirs.index('20180130-v-sweep')
@@ -36,11 +36,13 @@ def plot_ppm_yield():
         x = line['o3_ppm']
         y = line['output_yield_gkwh']
         if line['reactor'] == REACTOR_GLASS_LONG:
+            continue
             m = markers[0]
         elif line['reactor'] == REACTOR_GLASS_SHORT_QUAD:
             if line['inductance'] == 0:
                 m = markers[1]
             else:
+                continue
                 m = markers[2]
         else:
             raise Exception('invalid reactor: '+line['reactor'])
@@ -52,18 +54,18 @@ def plot_ppm_yield():
         (mlines.Line2D([], [], color='black', marker=markers[1], label='Short glass, no coil', linewidth=0)),
         (mlines.Line2D([], [], color='black', marker=markers[2], label='Short glass, coil', linewidth=0))
         ]
-    plt.legend(handles=marker_legends, loc='lower right')
+    # plt.legend(handles=marker_legends, loc='lower right')
     plt.text(550, 85, '← Higher airflow')
     plt.xlabel('Ozone [ppm]')
     plt.ylabel('Yield [g/kWh]')
-    cb = plt.colorbar(orientation='horizontal', pad=0.2)
+    cb = plt.colorbar(orientation='vertical', pad=0.05)
     cb.set_label('Energy density [J/l]')
     # cb.ax.set_xticks(rotation=45)
     # cb.ax.set_ylabel('Energy density [J/l]', rotation=90)
     # plt.xscale('log')
     # plt.xlim([5,5000])
     ax.grid(True)
-    set_plot(fig, plot_height=1.3)
+    set_plot(fig, plot_height=0.8)
     save_file(fig, name='ppm-yield-total', path='plots_poster/normal')
 
 
