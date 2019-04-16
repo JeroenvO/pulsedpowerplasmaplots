@@ -7,4 +7,5 @@ molina_absorbtion.py
 */*.eps
 */*.png
 *.png
-/plots*
+__pycache__
+plots*
