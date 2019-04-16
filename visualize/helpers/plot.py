@@ -16,7 +16,8 @@ def save_file(fig, name='plot', path='G:/Prive/MIJN-Documenten/TU/62-Stage/05_py
     :return: None
     """
     if path[0:2] != 'G:':
-        path = 'G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/' + path
+        path = 'D:/ownCloud/DATA/MIJN-Documenten/TU/Vakken/62-Stage/05_python/' + path
+        # path = 'G:/Prive/MIJN-Documenten/TU/62-Stage/05_python/' + path
     fig.savefig(path + '/' + name + '.png', bbox_inches='tight', **kwargs)
     # fig.savefig(path + '/' + name + '.eps', bbox_inches='tight', **kwargs)
     fig.savefig(path + '/' + name + '.pdf', bbox_inches='tight', **kwargs)

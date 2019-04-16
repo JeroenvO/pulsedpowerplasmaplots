@@ -1,0 +1,15 @@
+backend      : TkAgg
+axes.formatter.use_mathtext : True
+
+font.family         : serif
+font.size           : 8.0
+
+grid.linestyle      : dotted
+savefig.pad_inches  : 0
+lines.markersize    : 4
+
+axes.axisbelow      : True
+
+figure.max_open_warning: 0
+
+image.cmap           : plasma
