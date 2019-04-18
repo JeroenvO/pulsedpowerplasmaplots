@@ -14,7 +14,7 @@ def plot_inv_ppm(data_nor, data_inv):
     :param reactor: long or short glass reactor
     :return:
     """
-    fig, (ax_ppm, ax_yield) = plt.subplots(2, 1, sharex=True)
+    fig, ax_ppm  = plt.subplots(1, 1, sharex=True)
     for i, d in enumerate([data_nor, data_inv]):
         m = markers[i]
         c=color2[i]
@@ -38,11 +38,11 @@ def plot_inv_ppm(data_nor, data_inv):
             uz2.append(uz2a)
             uy.append(uya)
 
-        interpolate_plot(ax_yield, ux, uy2)
+        # interpolate_plot(ax_yield, ux, uy2)
         interpolate_plot(ax_ppm, ux, uy)
         for xa, ya, y2a in zip(ux, uy, uy2):
             ax_ppm.scatter(xa, ya, c=c, marker=m)
-            ax_yield.scatter(xa, y2a, c=c, marker=m)
+            # ax_yield.scatter(xa, y2a, c=c, marker=m)
 
         # mi = [y2a - min(z2a) for z2a, y2a in zip(uz2, uy2)]
         # ma = [max(z2a) - y2a for z2a, y2a in zip(uz2, uy2)]
@@ -50,7 +50,7 @@ def plot_inv_ppm(data_nor, data_inv):
         for z2a in uz2:
             std.append(np.std(z2a))
         # std = np.std(z2, 1)  # list of minima of y
-        ax_yield.errorbar(ux, uy2, yerr=std, xerr=None, ecolor=c, fmt='none', capsize=3)
+        # ax_yield.errorbar(ux, uy2, yerr=std, xerr=None, ecolor=c, fmt='none', capsize=3)
 
     marker_legends = [
         (mlines.Line2D([], [], marker=markers[0], label='Normal', color='grey', markerfacecolor=color2[0], markeredgewidth=0)),
@@ -58,10 +58,10 @@ def plot_inv_ppm(data_nor, data_inv):
     ]
 
     ax_ppm.set_ylabel('Ozone [ppm]')
-    ax_yield.set_ylabel('Yield [g/kWh]')
-    ax_yield.set_xlabel('Frequency [Hz]')
+    # ax_yield.set_ylabel('Yield [g/kWh]')
+    ax_ppm.set_xlabel('Frequency [Hz]')
     plt.legend(handles=marker_legends)
-    set_plot(fig, plot_height=1.9)
+    set_plot(fig, plot_height=0.8)
     save_file(fig, name='inv-ppm', path='plots_poster/normal')
 
 

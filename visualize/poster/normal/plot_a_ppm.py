@@ -14,7 +14,9 @@ def plot_a_ppm(data, reactor, freqs):
     data = filter_data(data, input_l=1) # values with l=0.5us are not correct measured.
     data = sort_data(data, key='airflow_lm')
     fig = plot_x_ppm(data, 'airflow_lm', freqs, plt_yield=False)
-    # fig.axes[1].set_xlabel('Airflow [$\mathrm{l_s/min.}$]')
+    fig.axes[0].set_xlabel('Flow [$\mathrm{l_s/min.}$]')
+    fig.axes[0].xaxis.set_label_coords(-0.05, -0.07)
+
     # fig.axes[1].set_xlim(left=0)
 
     set_plot(fig, plot_height=0.9)

@@ -2,6 +2,7 @@
 *.txt
 *.csv
 .idea
+.pdf
 molina_absorbtion.py
 */*.pdf
 */*.eps

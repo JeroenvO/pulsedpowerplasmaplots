@@ -65,7 +65,7 @@ def plot_ppm_yield():
     # plt.xscale('log')
     # plt.xlim([5,5000])
     ax.grid(True)
-    set_plot(fig, plot_height=0.8)
+    set_plot(fig, plot_height=1)
     save_file(fig, name='ppm-yield-total', path='plots_poster/normal')
 
 
