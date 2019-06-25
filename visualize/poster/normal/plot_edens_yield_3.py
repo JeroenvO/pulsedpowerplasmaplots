@@ -16,7 +16,7 @@ def plot_edens_yield(data):
     :return:
     """
     data = filter_data(data, input_v_output=15e3, input_l=1, output_yield_gkwh__gt=25, output_energy_dens__lt=190)
-    fig, ax = plt.subplots(2, 1, sharex=True)
+    fig, ax = plt.subplots(1, 1, sharex=True)
     colors = color2
 
     # energy per pulse
@@ -30,19 +30,19 @@ def plot_edens_yield(data):
         data = sort_data(data, key='output_energy_dens')
         edens = get_values(data, 'output_energy_dens')
 
-
-        y = get_values(data, 'o3_ppm')
-        ax[0].scatter(edens, y, label=l, c=c, marker=m)
-        fit = np.polyfit(edens, y, 3)
-        fit_fn = np.poly1d(fit)
-        ax[0].plot(edens, fit_fn(edens), '--', c=c, lw=0.9)
+        #
+        # y = get_values(data, 'o3_ppm')
+        # ax[0].scatter(edens, y, label=l, c=c, marker=m)
+        # fit = np.polyfit(edens, y, 3)
+        # fit_fn = np.poly1d(fit)
+        # ax[0].plot(edens, fit_fn(edens), '--', c=c, lw=0.9)
 
         y = get_values(data, 'output_yield_gkwh')
-        ax[1].scatter(edens, y, label=l, c=c, marker=m)
+        ax.scatter(edens, y, label=l, c=c, marker=m)
         fit = np.polyfit(edens, y, 3)
         fit_fn = np.poly1d(fit)
-        ax[1].plot(edens, fit_fn(edens), '--', c=c, lw=0.9)
-        ax[1].set_ylim([0, 80])
+        ax.plot(edens, fit_fn(edens), '--', c=c, lw=0.9)
+        ax.set_ylim([0, 80])
 
         # y=get_values(data, 'input_f')
         # ax[2].scatter(edens, y, label=l, c=c, marker=m)
@@ -62,20 +62,20 @@ def plot_edens_yield(data):
         # fit_fn = np.poly1d(fit)
         # ax[4].plot(edens, fit_fn(edens), '--', c=c, lw=0.9)
 
-    ax[1].set_ylabel('Yield [g/kWh]')
+    ax.set_ylabel('Yield [g/kWh]')
     # ax[1].set_ylabel('Production [g/h]')
     # ax_dens[1].set_ylim([0, 7e-5])
     # ax_dens[2].set_ylim([0, 2e3])
     # ax[0].set_ylim([0, 120])
-    ax[0].set_ylabel('Ozone [ppm]')
+    # ax[0].set_ylabel('Ozone [ppm]')
     # ax[4].set_ylabel('Energy efficiency [%]')
     # ax[2].set_ylabel('Frequency [Hz]')
     # ax[3].set_ylabel('Pulse plasma energy [mJ]')
     # ax[3].set_ylim([1, 15])
-    ax[1].set_xlabel('Energy density [J/l]')
+    ax.set_xlabel('Energy density [J/l]')
 
-    set_unique_legend(ax[1])
-    set_plot(fig, plot_height=1.5)
+    # set_unique_legend(ax[1])
+    set_plot(fig, plot_height=0.8)
     save_file(fig, name='edens-all', path='plots_poster/normal')
 
 

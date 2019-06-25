@@ -49,23 +49,24 @@ def plot_ppm_yield():
         c = line['output_energy_dens']
         plt.scatter([x], [y], c=[c], marker=m, s=20, cmap=cm, vmin=1.3, vmax=300)
 
-    marker_legends = [
-        (mlines.Line2D([], [], color='black', marker=markers[0], label='Long glass, coil', linewidth=0)),
-        (mlines.Line2D([], [], color='black', marker=markers[1], label='Short glass, no coil', linewidth=0)),
-        (mlines.Line2D([], [], color='black', marker=markers[2], label='Short glass, coil', linewidth=0))
-        ]
+    # marker_legends = [
+    #     (mlines.Line2D([], [], color='black', marker=markers[0], label='Long glass, coil', linewidth=0)),
+    #     (mlines.Line2D([], [], color='black', marker=markers[1], label='Short glass, no coil', linewidth=0)),
+    #     (mlines.Line2D([], [], color='black', marker=markers[2], label='Short glass, coil', linewidth=0))
+    #     ]
     # plt.legend(handles=marker_legends, loc='lower right')
     plt.text(550, 85, '← Higher airflow')
     plt.xlabel('Ozone [ppm]')
     plt.ylabel('Yield [g/kWh]')
-    cb = plt.colorbar(orientation='vertical', pad=0.05)
+    cb = plt.colorbar(orientation='horizontal', pad=0.2)
+
     cb.set_label('Energy density [J/l]')
     # cb.ax.set_xticks(rotation=45)
     # cb.ax.set_ylabel('Energy density [J/l]', rotation=90)
     # plt.xscale('log')
     # plt.xlim([5,5000])
     ax.grid(True)
-    set_plot(fig, plot_height=1)
+    set_plot(fig, plot_height=1.3)
     save_file(fig, name='ppm-yield-total', path='plots_poster/normal')
 
 
