@@ -116,7 +116,7 @@ def set_plot(fig, plot_height=1, pulse=False, subplot=True, from_zero=True):
     for ax in fig.axes:
         if pulse:
             ax.set_xlim([-0.2, 2])
-            ax.set_xlabel('time [$\mathrm{\mu}$s]')
+            ax.set_xlabel('Time [$\mathrm{\mu}$s]')
         elif from_zero:
             ax.set_ylim(bottom=0)
         if subplot:

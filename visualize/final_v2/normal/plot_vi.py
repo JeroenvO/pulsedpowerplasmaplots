@@ -19,12 +19,12 @@ def plot_vi_all(data, reactor):
 
     fig, ax1 = plt.subplots()
     ax1.plot(x_axis, i_axis, color=color2[0])
-    ax1.set_ylabel('current [A]', color=color2[0])
+    ax1.set_ylabel('Current [A]', color=color2[0])
     ax1.tick_params('y', colors=color2[0])
 
     ax2 = ax1.twinx()
     ax2.plot(x_axis, v_axis, color=color2[1])  # voltage
-    ax2.set_ylabel('voltage [kV]', color=color2[1])
+    ax2.set_ylabel('Voltage [kV]', color=color2[1])
     ax2.tick_params('y', colors=color2[1])
     set_plot(fig, pulse=True, subplot=False)
     return fig
